@@ -1,0 +1,93 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>503 - Service Unavailable</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-bg: #050a05;
+            --color-main: #39ff14;
+            --color-text: #e0e0e0;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: var(--color-bg);
+            font-family: 'Share Tech Mono', monospace;
+            color: var(--color-text);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+        .gear-container {
+            font-size: 5rem;
+            color: var(--color-main);
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        .gear {
+            animation: rotate 4s infinite linear;
+            display: inline-block;
+        }
+        .gear-rev {
+            animation: rotate-rev 4s infinite linear;
+            display: inline-block;
+        }
+        .error-code {
+            font-size: 7rem;
+            font-weight: bold;
+            color: var(--color-main);
+            letter-spacing: 10px;
+            text-shadow: 0 0 10px var(--color-main);
+        }
+        .message-title {
+            font-size: 1.8rem;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+        }
+        .message-desc {
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 40px;
+            text-align: center;
+            max-width: 500px;
+        }
+        .btn-back {
+            text-decoration: none;
+            color: var(--color-main);
+            border: 1px solid var(--color-main);
+            padding: 10px 30px;
+            transition: all 0.3s;
+        }
+        .btn-back:hover {
+            background-color: var(--color-main);
+            color: var(--color-bg);
+            box-shadow: 0 0 20px var(--color-main);
+        }
+        @@keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @@keyframes rotate-rev { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
+    </style>
+</head>
+<body>
+    <div class="gear-container">
+        <span class="gear">⚙</span>
+        <span class="gear-rev">⚙</span>
+    </div>
+    <div class="error-code">503</div>
+    <div class="message-title">UNDER MAINTENANCE</div>
+    <p class="message-desc">
+        Hệ thống đang được nâng cấp để mang lại trải nghiệm tốt hơn.<br>
+        Chúng tôi sẽ trở lại trong giây lát.
+    </p>
+    <a href="/" class="btn-back">KIỂM TRA LẠI</a>
+</body>
+</html>

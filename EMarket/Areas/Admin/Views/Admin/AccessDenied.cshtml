@@ -1,0 +1,237 @@
+﻿@{
+    Layout = null; // Trang này nên đứng độc lập, không dùng Layout chung để tránh lỗi giao diện
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>403 - Access Denied</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        /* --- CẤU HÌNH CƠ BẢN --- */
+        :root {
+            --color-bg: #111111;
+            --color-red: #ff3333;
+            --color-white: #e0e0e0;
+            --color-dark-red: #5c0000;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--color-bg);
+            font-family: 'Share Tech Mono', monospace; /* Font kiểu kỹ thuật số */
+            color: var(--color-white);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Hiệu ứng lưới nền (Grid Background) */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background:
+                linear-gradient(rgba(255, 51, 51, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 51, 51, 0.03) 1px, transparent 1px);
+            background-size: 30px 30px;
+            z-index: -1;
+        }
+
+        /* --- Ổ KHÓA CSS (PURE CSS LOCK) --- */
+        .lock-container {
+            width: 80px;
+            height: 70px;
+            margin-bottom: 20px;
+            position: relative;
+            animation: shake 0.5s ease-in-out infinite; /* Ổ khóa rung lắc */
+        }
+
+        .lock-shackle {
+            width: 40px;
+            height: 35px;
+            border: 6px solid var(--color-red);
+            border-bottom: none;
+            border-radius: 20px 20px 0 0;
+            position: absolute;
+            top: -25px;
+            left: 20px;
+            transition: transform 0.3s;
+        }
+
+        .lock-body {
+            width: 80px;
+            height: 60px;
+            background-color: var(--color-red);
+            border-radius: 8px;
+            position: relative;
+            box-shadow: 0 0 15px var(--color-red);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lock-keyhole {
+            width: 12px;
+            height: 20px;
+            background-color: var(--color-bg);
+            border-radius: 10px;
+        }
+
+        /* --- CHỮ GLITCH (NHIỄU SÓNG) --- */
+        .error-code {
+            font-size: 8rem;
+            font-weight: bold;
+            color: var(--color-white);
+            position: relative;
+            text-shadow: 2px 2px var(--color-red);
+            letter-spacing: -5px;
+        }
+
+        .error-code::before,
+        .error-code::after {
+            content: "403";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--color-bg);
+        }
+
+        .error-code::before {
+            color: #00ffff; /* Màu xanh cyan tạo hiệu ứng 3D */
+            text-shadow: -2px 0 #ff00c1;
+            clip-path: polygon(0 0, 100% 0, 100% 30%, 0 30%);
+            animation: glitch-anim-1 2s infinite linear alternate-reverse;
+        }
+
+        .error-code::after {
+            color: #ff00c1;
+            text-shadow: -2px 0 #00ffff;
+            clip-path: polygon(0 60%, 100% 60%, 100% 100%, 0 100%);
+            animation: glitch-anim-2 3s infinite linear alternate-reverse;
+        }
+
+        /* --- TEXT NỘI DUNG --- */
+        .message-title {
+            font-size: 2rem;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            color: var(--color-red);
+            text-shadow: 0 0 5px var(--color-red);
+        }
+
+        .message-desc {
+            font-size: 1.1rem;
+            color: #888;
+            margin-bottom: 30px;
+            text-align: center;
+            max-width: 500px;
+            line-height: 1.5;
+        }
+
+        /* --- NÚT BẤM (BUTTON) --- */
+        .btn-home {
+            text-decoration: none;
+            color: var(--color-bg);
+            background-color: var(--color-red);
+            padding: 12px 30px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 4px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px var(--color-red);
+            position: relative;
+            overflow: hidden;
+            border: 2px solid var(--color-red);
+        }
+
+        .btn-home:hover {
+            background-color: transparent;
+            color: var(--color-red);
+            box-shadow: 0 0 20px var(--color-red);
+        }
+
+        /* --- KEYFRAMES ANIMATION --- */
+        @@keyframes shake {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-5deg); }
+            75% { transform: rotate(5deg); }
+        }
+
+        @@keyframes glitch-anim-1 {
+            0% { clip-path: inset(20% 0 80% 0); transform: translate(-2px, 1px); }
+            20% { clip-path: inset(60% 0 10% 0); transform: translate(2px, -1px); }
+            40% { clip-path: inset(40% 0 50% 0); transform: translate(-2px, 2px); }
+            60% { clip-path: inset(80% 0 5% 0); transform: translate(2px, -2px); }
+            80% { clip-path: inset(10% 0 70% 0); transform: translate(-1px, 1px); }
+            100% { clip-path: inset(30% 0 50% 0); transform: translate(1px, -1px); }
+        }
+
+        @@keyframes glitch-anim-2 {
+            0% { clip-path: inset(10% 0 60% 0); transform: translate(2px, -1px); }
+            20% { clip-path: inset(80% 0 5% 0); transform: translate(-2px, 2px); }
+            40% { clip-path: inset(30% 0 20% 0); transform: translate(2px, 1px); }
+            60% { clip-path: inset(15% 0 80% 0); transform: translate(-1px, -2px); }
+            80% { clip-path: inset(55% 0 10% 0); transform: translate(1px, 2px); }
+            100% { clip-path: inset(40% 0 30% 0); transform: translate(-2px, 1px); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="lock-container">
+        <div class="lock-shackle"></div>
+        <div class="lock-body">
+            <div class="lock-keyhole"></div>
+        </div>
+    </div>
+
+    <div class="error-code">403</div>
+
+    <div class="message-title">ACCESS DENIED</div>
+
+    <p class="message-desc">
+        Hệ thống phát hiện bạn không có quyền truy cập vào khu vực này.
+        <br />
+        Vui lòng liên hệ Admin nếu bạn nghĩ đây là sự nhầm lẫn.
+    </p>
+
+    <a href="@Url.Action("Login", "Login", new { area = "Admin" })" class="btn-home">
+        QUAY LẠI ĐĂNG NHẬP
+    </a>
+    <script type="text/javascript">
+    window.history.pushState(null, null, window.location.href);
+
+    window.onpopstate = function () {
+        window.history.pushState(null, null, window.location.href);
+
+        if(typeof FormUtils !== 'undefined') {
+            FormUtils.showNotification("Tài khoản đã bị khóa, bạn không thể quay lại!", "error");
+        }
+    };
+        window.addEventListener('pageshow', function (event) {
+            if (event.persisted || (typeof window.performance != "undefined" && window.performance.navigation.type === 2)) {
+                window.location.reload();
+            }
+        });
+    setTimeout(function() {
+        window.location.replace("/Admin/Login/Login");
+    }, 5000);
+    </script>
+</body>
+</html>

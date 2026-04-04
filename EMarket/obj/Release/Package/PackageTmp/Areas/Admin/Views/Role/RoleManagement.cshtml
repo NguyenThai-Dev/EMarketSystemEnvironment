@@ -1,0 +1,379 @@
+﻿@{
+    ViewBag.Title = "Phân quyền Hệ thống";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="page-wrapper">
+    <div class="content">
+        <div class="page-header">
+            <div class="page-title">
+                <h4>Danh sách Vai trò (Roles)</h4>
+                <h6>Cấu hình quyền hạn cho từng vai trò trong hệ thống</h6>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="tblRoles" class="table datanew w-100">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Tên Vai trò</th>
+                                <th>Số lượng Quyền</th>
+                                <th class="text-end">Phân quyền</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalPermission" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-auto-width modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header bg-light">
+                <h5 class="modal-title fw-bold">Phân quyền Vai trò</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="RoleId" value="0" />
+
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h5 class="text-primary fw-bold" id="RoleNameDisplay">Vai trò: ...</h5>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered" id="tblPermissionMatrix">
+                        <thead class="bg-light">
+                            <tr id="matrixHeader"></tr>
+                        </thead>
+                        <tbody id="matrixBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <button class="btn btn-submit" id="btnSavePermissions">
+                    <i class="fas fa-save me-1"></i> Lưu Cấu hình
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        let tblRoles;
+        let allPermissions = [];
+
+        $(document).ready(function () {
+
+            // 1. Load Master Data Permissions trước (để vẽ modal sẵn)
+            $.get('/Admin/Role/GetAllPermission', function (res) {
+                if (res.success) {
+                    allPermissions = res.data;
+                }
+            });
+
+            if ($.fn.DataTable.isDataTable('#tblRoles')) {
+                $('#tblRoles').DataTable().clear().destroy();
+            }
+
+            $.extend(true, $.fn.dataTable.defaults, {
+                dom: 't<"bottom_controls"lp>',
+                language: {
+                    search: "",
+                    searchPlaceholder: "Search...",
+                    info: "",
+                    infoEmpty: "",
+                    infoFiltered: "",
+                },
+            });
+
+            // 2. Init Datatable
+            tblRoles = $('#tblRoles').DataTable({
+                processing: true,
+                serverSide: false,
+                ajax: {
+                    url: '/Admin/Role/GetAllRole',
+                    type: 'GET'
+                },
+                columnDefs: [
+                    {
+                        targets: [0, 2],
+                        className: 'text-center',
+                    }
+                ],
+                columns: [
+                    {
+                        data: 'RoleId', width: "50px", orderable: false
+                    },
+                    {
+                        data: 'Name',
+                        orderable: false,
+                        className: 'fw-bold',
+                        render: function (d) {
+                            if (d === 'System Admin') return `<span class="text-danger">${d}</span>`;
+                            return `<span class="text-primary">${d}</span>`;
+                        }
+                    },
+                    {
+                        data: 'Permissions',
+                        orderable: false,
+                        render: d => `<span class="badges bg-lightgreen">${d ? d.length : 0} permissions</span>`
+                    },
+                    {
+                        data: null, orderable: false, className: 'text-end',
+                        render: (data) => `
+                                    <a class="me-3 btn-permission" href="javascript:void(0)"
+                                       data-id="${data.RoleId}" data-name="${data.Name}">
+                                        <img src="/assets/img/icons/settings.svg" alt="img" title="Cấu hình quyền">
+                                    </a>
+                                `
+                    }
+                ]
+            });
+
+            // 3. Sự kiện mở Modal Phân Quyền
+            $(document).on('click', '.btn-permission', function () {
+                let roleId = $(this).data('id');
+                let roleName = $(this).data('name');
+
+                $('#RoleId').val(roleId);
+                $('#RoleNameDisplay').text('Vai trò: ' + roleName);
+
+                // Lấy quyền hiện tại của Role
+                $.get(`/Admin/Role/GetRolePermissions?roleId=${roleId}`, function (res) {
+                    if (res.success) {
+                        renderMatrix(allPermissions, res.data); // Gọi hàm vẽ ma trận
+                        $('#modalPermission').modal('show');
+                    }
+                });
+            });
+
+            function renderMatrix(masterData, checkedIds) {
+                // Bước A: Phân tích dữ liệu để lấy danh sách Cột (Actions) và Hàng (Modules)
+                let uniqueActions = new Set();
+                let groupedData = {}; // Key: ModuleName, Value: { ActionName: PermissionId }
+
+                masterData.forEach(p => {
+                    // Làm sạch tên hành động (Nếu tên là "View Product" -> lấy "View")
+                    // Nếu tên của bạn đã sạch (chỉ có "View", "Create") thì bỏ dòng replace đi
+                    let actionName = p.Name.replace(p.Module, '').trim();
+
+                    uniqueActions.add(actionName);
+
+                    if (!groupedData[p.Module]) {
+                        groupedData[p.Module] = {};
+                    }
+                    groupedData[p.Module][actionName] = p.PermissionId;
+                });
+
+                // Chuyển Set thành Array và sắp xếp (View lên đầu, Delete xuống cuối...)
+                // Bạn có thể custom thứ tự ưu tiên ở đây
+                let actionColumns = Array.from(uniqueActions).sort((a, b) => {
+                    const priority = ['View', 'Create', 'Edit', 'Update', 'Delete', 'Import', 'Export', 'Print'];
+                    let idxA = priority.indexOf(a);
+                    let idxB = priority.indexOf(b);
+                    if (idxA === -1) idxA = 99;
+                    if (idxB === -1) idxB = 99;
+                    return idxA - idxB;
+                });
+
+                // Bước B: Render Header (Các cột hành động)
+                let theadHtml = `<th>Module / Chức năng</th>`;
+                actionColumns.forEach(action => {
+                    theadHtml += `<th>${action}</th>`;
+                });
+                theadHtml += `<th>Tất cả</th>`; // Cột chọn hết dòng
+                $('#matrixHeader').html(theadHtml);
+
+                // Bước C: Render Body (Các dòng Module)
+                let tbodyHtml = '';
+                for (const [module, actionsMap] of Object.entries(groupedData)) {
+                    tbodyHtml += `<tr>`;
+                    tbodyHtml += `<td>${module}</td>`; // Tên Module
+
+                    // Render từng ô Checkbox theo cột Action
+                    actionColumns.forEach(action => {
+                        let permId = actionsMap[action]; // Lấy ID quyền tương ứng giao điểm (Module, Action)
+
+                        if (permId) {
+                            let isChecked = checkedIds.includes(permId) ? 'checked' : '';
+                            tbodyHtml += `
+                            <td>
+                                <label class="table-check text-center align-middle">
+                                    <input type="checkbox" class="perm-check" value="${permId}" ${isChecked} />
+                                    <span class="checkmark"></span>
+                                </label>
+                            </td>
+                        `;
+                        } else {
+                            // Nếu Module này không có hành động này (Ví dụ: Report không có Create)
+                            tbodyHtml += `<td class="bg-light"></td>`;
+                        }
+                    });
+
+                    // Cột "Chọn tất cả" cho dòng này
+                    tbodyHtml += `
+                    <td>
+                        <label class="table-check">
+                            <input type="checkbox" class="row-select-all" />
+                            <span class="checkmark"></span>
+                        </label>
+                    </td>
+                `;
+                    tbodyHtml += `</tr>`;
+                }
+                $('#matrixBody').html(tbodyHtml);
+
+                // Bước D: Đăng ký lại sự kiện cho các nút "Chọn tất cả"
+                setupMatrixEvents();
+            }
+
+            function setupMatrixEvents() {
+                // Logic: Click nút cuối dòng -> Chọn hết dòng
+                $('.row-select-all').change(function () {
+                    let isChecked = $(this).is(':checked');
+                    $(this).closest('tr').find('.perm-check').prop('checked', isChecked);
+                });
+
+                // Logic: Nếu bỏ chọn 1 ô con -> Bỏ chọn nút "Tất cả"
+                $('.perm-check').change(function () {
+                    let $row = $(this).closest('tr');
+                    let total = $row.find('.perm-check').length;
+                    let checked = $row.find('.perm-check:checked').length;
+                    $row.find('.row-select-all').prop('checked', total === checked);
+                });
+
+                // Trigger check trạng thái ban đầu của nút Select All
+                $('.row-select-all').each(function () {
+                    let $row = $(this).closest('tr');
+                    let total = $row.find('.perm-check').length;
+                    let checked = $row.find('.perm-check:checked').length;
+                    if (total > 0 && total === checked) $(this).prop('checked', true);
+                });
+            }
+
+            // 4. Lưu Phân Quyền
+            $('#btnSavePermissions').click(function () {
+                let roleId = $('#RoleId').val();
+                let selectedIds = [];
+                $('.perm-check:checked').each(function () {
+                    selectedIds.push(parseInt($(this).val()));
+                });
+
+                $.ajax({
+                    url: '/Admin/Role/UpdateRolePermissions',
+                    type: 'POST',
+                    data: ({ RoleId: roleId, PermissionIds: selectedIds }),
+                    success: function (res) {
+                        if (res.success) {
+                            $('#modalPermission').modal('hide');
+                            Swal.fire('Thành công', 'Đã cập nhật quyền hạn!', 'success');
+                            tblRoles.ajax.reload(null, false);
+                        } else {
+                            Swal.fire('Lỗi', res.message, 'error');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+}
+
+@section Styles {
+    <style>
+        /* Canh giữa checkbox trong ô bảng */
+        #tblPermissionMatrix thead th,
+        #tblPermissionMatrix tbody td {
+            text-align: center !important;
+            vertical-align: middle !important;
+            white-space: nowrap;
+        }
+
+            #tblPermissionMatrix td:first-child, #tblPermissionMatrix th:first-child {
+                text-align: left; /* Cột tên Module canh trái */
+                font-weight: 600;
+                background-color: #f9f9f9;
+            }
+
+        /* Style checkbox DreamPOS đè vào Table */
+        #tblPermissionMatrix .table-check {
+            position: relative;
+            display: inline-flex !important;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            margin: 0 auto;
+        }
+
+            .table-check input {
+                position: absolute;
+                opacity: 0;
+                cursor: pointer;
+                height: 0;
+                width: 0;
+            }
+
+        #tblPermissionMatrix .table-check .checkmark {
+            position: relative !important;
+            top: 0 !important;
+            left: 0 !important;
+            transform: none !important;
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+        }
+
+            .table-check:hover input ~ .checkmark {
+                background-color: #ccc;
+            }
+
+            .table-check input:checked ~ .checkmark {
+                background-color: #ff9f43;
+            }
+            /* Màu cam DreamPOS */
+            .table-check .checkmark:after {
+                content: "";
+                position: absolute;
+                display: none;
+            }
+
+            .table-check input:checked ~ .checkmark:after {
+                display: block;
+            }
+
+            .table-check .checkmark:after {
+                left: 7px;
+                top: 3px;
+                width: 6px;
+                height: 12px;
+                border: solid white;
+                border-width: 0 2px 2px 0;
+                transform: rotate(45deg);
+            }
+
+        .modal-auto-width {
+            max-width: 95vw; /* không vượt màn hình */
+            width: fit-content;
+            height: auto;
+        }
+
+        #modalPermission .table-responsive {
+            padding: 0.75rem;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: inset 0 0 0 1px #e5e7eb;
+        }
+
+    </style>
+    }

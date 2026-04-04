@@ -1,0 +1,290 @@
+﻿<div class="card mb-3">
+    <div class="card-body">
+        <div class="row g-3 align-items-end">
+            <div class="col-xl-4 col-lg-4 col-md-6">
+                <label class="form-label fw-bold">Sản phẩm</label>
+                <select id="selectProduct" class="select w-100"></select>
+            </div>
+
+            <div class="col-xl-3 col-lg-3 col-md-3">
+                <label class="form-label">Từ ngày</label>
+                <input type="date" id="startDate" class="form-control">
+            </div>
+
+            <div class="col-xl-3 col-lg-3 col-md-3">
+                <label class="form-label">Đến ngày</label>
+                <input type="date" id="endDate" class="form-control">
+            </div>
+
+            <div class="col-xl-2 col-lg-2 col-md-12">
+                <button class="btn btn-primary w-100" onclick="loadChart()">
+                    <i class="fas fa-brain me-1"></i> Phân tích
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-3" id="ai-insights" style="display:none">
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-body text-center">
+                <h6 class="text-muted">Trung bình / ngày</h6>
+                <h4 id="avgQty">0</h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-body text-center">
+                <h6 class="text-muted">Đỉnh cao nhất</h6>
+                <h4 id="maxQty">0</h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-body text-center">
+                <h6 class="text-muted">Xu hướng</h6>
+                <h4 id="trendTxt">—</h4>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="card-title mb-0">Biến động & Dự báo</h5>
+        <small class="text-muted">Actual Sales</small>
+    </div>
+
+    <div class="card-body p-2">
+        <div id="chart-loading" class="text-center py-5" style="display:none">
+            <div class="spinner-border text-primary"></div>
+            <p class="mt-2">Đang xử lý dữ liệu...</p>
+        </div>
+
+        <div class="chart-container">
+            <canvas id="salesChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<style>
+    .chart-container {
+        display: flex;
+        width: 100%;
+        height: 420px;
+    }
+
+    @@media (max-width: 768px) {
+        .chart-container {
+            height: 300px;
+        }
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1"></script>
+
+<script>
+    (function () {
+        function parseDotNetDate(dotNetDate) {
+            if (!dotNetDate) return null;
+
+            // /Date(1705078800000)/
+            const match = /Date\((\d+)\)/.exec(dotNetDate);
+            return match ? new Date(parseInt(match[1], 10)) : new Date(dotNetDate);
+        }
+
+
+        function safeInit(fn) {
+            if (window.jQuery) fn();
+            else document.addEventListener("DOMContentLoaded", fn);
+        }
+
+        safeInit(function () {
+            const $ = window.jQuery;
+            let salesChart = null;
+
+            $(document).ready(function () {
+
+                // Load product list
+                $.get('/Admin/AIAnalysis/GetSystemData', function (res) {
+                    if (!res || !res.success) return;
+
+                    let html = '';
+                    res.data.forEach(p => {
+                        html += `<option value="${p.ProductId}">${p.ProductName}</option>`;
+                    });
+
+                    $('#selectProduct').html(html);
+
+                    if ($.fn.select2) {
+                        $('.select').select2({ width: '100%' });
+                    }
+
+                    loadChart();
+                });
+            });
+
+            window.loadChart = function () {
+                const productId = $('#selectProduct').val();
+                const startDate = $('#startDate').val();
+                const endDate = $('#endDate').val();
+
+                if (!productId) return;
+
+                $('#chart-loading').show();
+                $('#salesChart').hide();
+                $('#ai-insights').hide();
+
+                // GỌI SONG SONG 2 API: Lịch sử và Dự báo
+                const historyReq = $.get('/Admin/AIAnalysis/GetProductHistory', {
+                    productId: productId,
+                    branchId: 1,
+                    startDate: startDate,
+                    endDate: endDate
+                });
+
+                const forecastReq = $.get('/Admin/AIAnalysis/GetSalesForecast', { 
+                    productId: productId,
+                    branchId: 1
+                });
+
+                $.when(historyReq, forecastReq).done(function (resHistory, resForecast) {
+                    $('#chart-loading').hide();
+                    $('#salesChart').show();
+
+                    const historyData = resHistory[0];
+                    const forecastData = resForecast[0];
+
+                    if (!historyData || !historyData.success) return;
+
+                    // 1. Parse dữ liệu lịch sử (Đường nét liền)
+                    const historyPoints = historyData.data.map(x => ({
+                        x: parseDotNetDate(x.Date),
+                        y: x.Qty
+                    })).sort((a, b) => a.x - b.x);
+
+                    // 2. Parse dữ liệu dự báo (Đường nét đứt)
+                    let forecastPoints = [];
+                    if (forecastData && forecastData.success && forecastData.data) {
+                        forecastPoints = forecastData.data.map(x => ({
+                            x: parseDotNetDate(x.ForecastDate),
+                            y: x.PredictedQty
+                        })).sort((a, b) => a.x - b.x);
+
+                        // MẸO: Nối điểm cuối của lịch sử với điểm đầu của dự báo để biểu đồ không bị đứt quãng
+                        if (historyPoints.length > 0 && forecastPoints.length > 0) {
+                            forecastPoints.unshift(historyPoints[historyPoints.length - 1]);
+                        }
+                    }
+
+                    // 3. Cập nhật Stats (Insights)
+                    updateInsights(historyPoints);
+
+                    // 4. Vẽ biểu đồ kép
+                    renderCombinedChart(historyPoints, forecastPoints);
+                });
+            };
+
+            function updateInsights(data) {
+                if (data.length === 0) return;
+
+                const qtys = data.map(d => d.y);
+                const avg = qtys.reduce((a, b) => a + b, 0) / qtys.size; // Nếu dùng tập hợp lớn
+                const sum = qtys.reduce((a, b) => a + b, 0);
+                const max = Math.max(...qtys);
+
+                // Tính xu hướng đơn giản (So sánh nửa đầu và nửa sau)
+                const mid = Math.floor(data.length / 2);
+                const firstHalfAvg = qtys.slice(0, mid).reduce((a, b) => a + b, 0) / mid;
+                const secondHalfAvg = qtys.slice(mid).reduce((a, b) => a + b, 0) / (data.length - mid);
+
+                let trend = "Ổn định";
+                let trendClass = "text-muted";
+                if (secondHalfAvg > firstHalfAvg * 1.1) { trend = "Tăng trưởng"; trendClass = "text-success"; }
+                else if (secondHalfAvg < firstHalfAvg * 0.9) { trend = "Giảm dần"; trendClass = "text-danger"; }
+
+                $('#avgQty').text(Math.round(sum / data.length));
+                $('#maxQty').text(max);
+                $('#trendTxt').text(trend).removeClass("text-success text-danger text-muted").addClass(trendClass);
+                $('#ai-insights').fadeIn();
+            }
+
+            function renderCombinedChart(historyPoints, forecastPoints) {
+                if (salesChart) salesChart.destroy();
+
+                const ctx = document.getElementById('salesChart');
+                salesChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        datasets: [
+                            {
+                                label: 'Thực tế (Quá khứ)',
+                                data: historyPoints,
+                                borderColor: '#6f42c1',
+                                backgroundColor: 'rgba(111,66,193,0.1)',
+                                borderWidth: 3,
+                                fill: true,
+                                tension: 0.3,
+                                pointRadius: 2
+                            },
+                            {
+                                label: 'Dự báo (AI)',
+                                data: forecastPoints,
+                                borderColor: '#2ecc71', // Màu xanh lá cho tương lai
+                                borderDash: [5, 5], // TẠO ĐƯỜNG NÉT ĐỨT
+                                borderWidth: 3,
+                                pointRadius: 4,
+                                pointBackgroundColor: '#2ecc71',
+                                fill: false,
+                                tension: 0.3
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: {
+                                type: 'time',
+                                time: {
+                                    unit: 'day',
+                                    displayFormats: { day: 'dd/MM' }
+                                },
+                                title: { display: true, text: 'Thời gian (Trước & Sau hiện tại)' }
+                            },
+                            y: { beginAtZero: true }
+                        },
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function (context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) label += ': ';
+                                        if (context.parsed.y !== null) label += context.parsed.y + ' đơn vị';
+                                        return label;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            function autoTimeUnit(totalPoints) {
+                if (totalPoints <= 60) return 'day';
+                if (totalPoints <= 180) return 'week';
+                if (totalPoints <= 400) return 'month';
+                return 'month';
+            }
+
+        });
+
+    })();
+</script>

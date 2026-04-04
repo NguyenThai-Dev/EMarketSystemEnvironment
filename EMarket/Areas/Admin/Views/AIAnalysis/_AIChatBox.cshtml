@@ -1,0 +1,1220 @@
+﻿<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+<style>
+    :root {
+        --primary: #667eea;
+        --primary-dark: #5a67d8;
+        --primary-light: #8a9aff;
+        --secondary: #764ba2;
+        --success: #48bb78;
+        --danger: #f56565;
+        --warning: #f39c12;
+        --bg-dark: #1a202c;
+        --bg-light: #f8f9fa;
+        --border: #e2e8f0;
+        --text-primary: #2d3748;
+        --text-secondary: #718096;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    #ai-chat-trigger {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 64px;
+        height: 64px;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 26px;
+        cursor: pointer;
+        box-shadow: 0 8px 24px rgba(102, 126, 234, 0.35);
+        z-index: 9999;
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        border: none;
+        outline: none;
+    }
+
+    #ai-chat-trigger:hover {
+        transform: scale(1.12) rotate(15deg);
+        box-shadow: 0 12px 32px rgba(102, 126, 234, 0.45);
+    }
+
+    #ai-chat-trigger:active {
+        transform: scale(1.08);
+    }
+
+    .pulse-ring {
+        background-color: rgba(0, 212, 255, 0.15);
+        border: 3px solid rgba(0, 212, 255, 0.4);
+        position: absolute;
+        top: -8px;
+        left: -8px;
+        right: -8px;
+        bottom: -8px;
+        border-radius: 50%;
+        animation: pulse 2.5s infinite cubic-bezier(0.4, 0, 0.6, 1);
+    }
+
+    @@keyframes pulse {
+        0% {
+            transform: scale(1);
+            opacity: 1;
+        }
+        100% {
+            transform: scale(1.4);
+            opacity: 0;
+        }
+    }
+
+    #ai-chat-window {
+        display: flex;
+        position: fixed;
+        bottom: 110px;
+        right: 30px;
+        width: 460px;
+        height: 700px;
+        max-height: 85vh;
+        flex-direction: column;
+        z-index: 1000;
+        overflow: hidden;
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.14);
+        border: 1px solid var(--border);
+        animation: slideUp 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @@keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px) scale(0.95);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    .ai-header {
+        padding: 16px 20px;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-shrink: 0;
+        border-radius: 20px 20px 0 0;
+    }
+
+    .ai-header-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 600;
+        font-size: 15px;
+    }
+
+    .ai-status-dot {
+        width: 10px;
+        height: 10px;
+        background: #10b981;
+        border-radius: 50%;
+        box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+        animation: blink 2s infinite;
+    }
+
+    @@keyframes blink {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+    }
+
+    .ai-header-actions {
+        display: flex;
+        gap: 16px;
+        font-size: 16px;
+    }
+
+    .ai-header-actions i {
+        cursor: pointer;
+        opacity: 0.85;
+        transition: all 0.2s;
+        padding: 5px;
+    }
+
+    .ai-header-actions i:hover {
+        opacity: 1;
+        transform: scale(1.15);
+    }
+
+    .ai-toolbar {
+        background: var(--bg-light);
+        padding: 12px 15px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-shrink: 0;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .toggle-group {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .toggle-checkbox {
+        display: none;
+    }
+
+    .toggle-label {
+        width: 44px;
+        height: 24px;
+        background: #cbd5e0;
+        display: block;
+        border-radius: 24px;
+        position: relative;
+        cursor: pointer;
+        margin: 0;
+        transition: all 0.3s;
+    }
+
+    .toggle-switch {
+        width: 20px;
+        height: 20px;
+        background: white;
+        border-radius: 50%;
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        transition: all 0.3s;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .toggle-checkbox:checked + .toggle-label {
+        background: var(--primary);
+    }
+
+    .toggle-checkbox:checked + .toggle-label .toggle-switch {
+        left: 22px;
+    }
+
+    .mode-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text-secondary);
+        min-width: 60px;
+    }
+
+    .btn-run-mini {
+        background: white;
+        border: 1.5px solid var(--border);
+        color: var(--primary);
+        padding: 6px 12px;
+        border-radius: 18px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .btn-run-mini:hover {
+        background: var(--primary);
+        color: white;
+        border-color: var(--primary);
+    }
+
+    .ai-body {
+        flex: 1;
+        padding: 16px 15px;
+        overflow-y: auto;
+        background: var(--bg-light);
+        scroll-behavior: smooth;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .ai-body::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .ai-body::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .ai-body::-webkit-scrollbar-thumb {
+        background: #cbd5e0;
+        border-radius: 3px;
+    }
+
+    .ai-body::-webkit-scrollbar-thumb:hover {
+        background: #a0aec0;
+    }
+
+    .ai-message {
+        display: flex;
+        gap: 10px;
+        animation: fadeInUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        max-width: 100%;
+    }
+
+    @@keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(8px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .ai-message.ai-user {
+        flex-direction: row-reverse;
+        justify-content: flex-end;
+    }
+
+    .ai-avatar {
+        width: 36px;
+        height: 36px;
+        background: linear-gradient(135deg, #e0e7ff 0%, #f0f4ff 100%);
+        color: var(--primary);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        font-size: 16px;
+        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
+    }
+
+    .ai-user .ai-avatar {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        color: white;
+        font-size: 14px;
+    }
+
+    .ai-bubble {
+        max-width: 85%;
+        padding: 12px 16px;
+        border-radius: 16px;
+        font-size: 14px;
+        line-height: 1.6;
+        word-wrap: break-word;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    }
+
+    .ai-bot .ai-bubble {
+        background: white;
+        color: var(--text-primary);
+        border: 1px solid var(--border);
+        border-top-left-radius: 4px;
+    }
+
+    .ai-user .ai-bubble {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        color: white;
+        border-top-right-radius: 4px;
+    }
+
+    .ai-bubble table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 10px 0;
+        font-size: 13px;
+        background: #fafbfc;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .ai-bubble th {
+        background: linear-gradient(135deg, #edf2f7 0%, #e2e8f0 100%);
+        padding: 9px 10px;
+        border-bottom: 2px solid var(--border);
+        text-align: left;
+        font-weight: 600;
+        color: var(--text-primary);
+        font-size: 12px;
+    }
+
+    .ai-bubble td {
+        padding: 9px 10px;
+        border-bottom: 1px solid var(--border);
+        color: var(--text-secondary);
+    }
+
+    .ai-bubble td:first-child {
+        color: var(--text-primary);
+        font-weight: 500;
+    }
+
+    .ai-bubble p {
+        margin: 0 0 6px 0;
+    }
+
+    .ai-bubble p:last-child {
+        margin-bottom: 0;
+    }
+
+    .ai-quick-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        padding: 12px 15px;
+        background: white;
+        border-bottom: 1px solid var(--border);
+        flex-shrink: 0;
+    }
+
+    .ai-quick-actions button {
+        background: white;
+        border: 1.5px solid var(--border);
+        color: var(--text-secondary);
+        padding: 10px 14px;
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .ai-quick-actions button:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+        background: rgba(102, 126, 234, 0.05);
+        transform: translateX(4px);
+    }
+
+    .ai-quick-actions button:active {
+        transform: translateX(2px);
+    }
+
+    .ai-footer {
+        padding: 14px 15px;
+        background: white;
+        border-top: 1px solid var(--border);
+        flex-shrink: 0;
+    }
+
+    .ai-footer .input-group {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+    }
+
+    .ai-footer input {
+        border-radius: 24px;
+        padding: 10px 16px;
+        font-size: 14px;
+        height: 40px;
+        border: 1.5px solid var(--border);
+        flex: 1;
+        outline: none;
+        transition: all 0.2s;
+        color: var(--text-primary);
+    }
+
+    .ai-footer input::placeholder {
+        color: #a0aec0;
+    }
+
+    .ai-footer input:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .ai-footer .btn-send {
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        color: white;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        font-size: 16px;
+    }
+
+    .ai-footer .btn-send:hover {
+        transform: scale(1.08);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+
+    .ai-footer .btn-send:active {
+        transform: scale(0.95);
+    }
+
+    .text-danger {
+        color: var(--danger) !important;
+        font-weight: 700;
+    }
+
+    .text-success {
+        color: var(--success) !important;
+        font-weight: 700;
+    }
+
+    .text-warning {
+        color: var(--warning) !important;
+        font-weight: 700;
+    }
+
+    .chart-link {
+        color: var(--primary);
+        cursor: pointer;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.2s;
+        border-bottom: 1px solid transparent;
+    }
+
+    .chart-link:hover {
+        text-decoration: underline;
+        border-bottom-color: var(--primary);
+    }
+
+    .loading-dots {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        padding: 6px 0;
+    }
+
+    .loading-dots div {
+        width: 7px;
+        height: 7px;
+        background: var(--primary);
+        border-radius: 50%;
+        animation: bounce 1.4s infinite cubic-bezier(0.4, 0, 0.6, 1);
+    }
+
+    .loading-dots div:nth-child(1) {
+        animation-delay: -0.32s;
+    }
+
+    .loading-dots div:nth-child(2) {
+        animation-delay: -0.16s;
+    }
+
+    @@keyframes bounce {
+        0%, 80%, 100% {
+            transform: scale(0);
+            opacity: 0.5;
+        }
+        40% {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+
+    @@media (max-width: 768px) {
+        #ai-chat-window {
+            width: 100%;
+            height: 100%;
+            bottom: 0;
+            right: 0;
+            border-radius: 0;
+            max-height: none;
+        }
+
+        #ai-chat-trigger {
+            bottom: 20px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            font-size: 22px;
+        }
+
+        .ai-bubble {
+            max-width: 90%;
+        }
+
+        .ai-quick-actions {
+            flex-direction: row;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .ai-quick-actions button {
+            flex: 1;
+            min-width: calc(50% - 3px);
+            font-size: 12px;
+            padding: 8px 10px;
+        }
+
+        .ai-toolbar {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .toggle-group,
+        .btn-run-mini {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+</style>
+
+<button id="ai-chat-trigger" onclick="toggleChat()">
+    <i class="fas fa-robot"></i>
+    <span class="pulse-ring"></span>
+</button>
+
+<div id="ai-chat-window">
+    <div class="ai-header">
+        <div class="ai-header-left">
+            <div class="ai-status-dot"></div>
+            <span>AI Trợ lý thông minh</span>
+        </div>
+        <div class="ai-header-actions">
+            <i class="fas fa-eraser" onclick="clearChat()" title="Xóa lịch sử"></i>
+            <i class="fas fa-times" onclick="toggleChat()" title="Đóng"></i>
+        </div>
+    </div>
+
+    <div class="ai-toolbar">
+        <div class="toggle-group">
+            <input type="checkbox" id="ai-mode-toggle" class="toggle-checkbox" onchange="switchMode()">
+            <label for="ai-mode-toggle" class="toggle-label">
+                <span class="toggle-switch"></span>
+            </label>
+            <span class="mode-label" id="mode-label-text">System</span>
+        </div>
+        <button class="btn-run-mini" onclick="triggerAnalysis()" id="btn-run" title="Cập nhật dữ liệu">
+            <i class="fas fa-sync-alt"></i> Phân tích
+        </button>
+    </div>
+
+    <div id="quick-actions-container" class="ai-quick-actions"></div>
+
+    <div class="ai-body" id="ai-chat-body">
+        <div class="ai-message ai-bot">
+            <div class="ai-avatar"><i class="fas fa-robot"></i></div>
+            <div class="ai-bubble">
+                <strong>Chào bạn!</strong><br>
+                Tôi là AI EMarket. Bạn có thể bấm các nút dưới để xem báo cáo nhanh, hoặc hỏi tôi trực tiếp về dữ liệu kinh doanh.
+            </div>
+        </div>
+    </div>
+
+    <div class="ai-footer">
+        <div class="input-group">
+            <input type="text" id="ai-user-input" placeholder="Hỏi AI về kinh doanh..." autocomplete="off">
+            <button class="btn-send" onclick="sendMessage()" title="Gửi"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function () {
+        const EXTERNAL_AI_URL = "https://localhost:5001/api/chat/ask";
+        const INTERNAL_API_BASE = "/Admin/AIAnalysis";
+        var chartInstance;
+
+        if (window.marked) {
+            marked.setOptions({
+                gfm: true,
+                breaks: true,
+                pedantic: false
+            });
+        }
+
+        function waitForJQuery(callback) {
+            if (window.jQuery) callback();
+            else setTimeout(function () { waitForJQuery(callback); }, 50);
+        }
+
+        function loadProductList() {
+            const today = new Date();
+            const lastMonth = new Date();
+            lastMonth.setMonth(today.getMonth() - 1);
+
+            const formatDate = (date) => date.toISOString().split('T')[0];
+
+            $("#startDate").val(formatDate(lastMonth));
+            $("#endDate").val(formatDate(today));
+
+            var branchId = $('#ddlBranch').val() || 1;
+            $.get('/Admin/AIAnalysis/GetSystemData', { branchId: branchId }).done(function (res) {
+                if (!res || !res.success || !res.data) return;
+
+                let html = '<option value="">-- Chọn Sản phẩm --</option>';
+                res.data.Insights.forEach(p => {
+                    html += `<option value="${p.ProductId}">${p.ProductName}</option>`;
+                });
+
+                $('#selectProduct').html(html);
+
+                if ($.fn.select2) {
+                    $('#selectProduct').trigger('change');
+                }
+            });
+        }
+
+        waitForJQuery(function () {
+            var $ = window.jQuery;
+            var currentMode = 'system';
+
+            window.tempForecastData = [];
+            window.tempDeadstockData = [];
+            window.tempTrendData = [];
+            window.tempSystemData = [];
+
+            $(document).ready(function () {
+                renderQuickActions();
+                loadProductList();
+                $('#ai-chat-window').hide();
+                window.toggleChat = function () {
+                    const $window = $('#ai-chat-window');
+                    if ($window.is(':visible')) {
+                        $window.fadeOut(200);
+                    } else {
+                        $window.fadeIn(200, function () {
+                            $('#ai-user-input').focus();
+                        });
+                    }
+                };
+
+                window.clearChat = function () {
+                    $('#ai-chat-body .ai-message').not(':first').remove();
+                };
+
+                window.switchMode = function () {
+                    var isChecked = $('#ai-mode-toggle').is(':checked');
+                    currentMode = isChecked ? 'ai' : 'system';
+                    var label = $('#mode-label-text');
+
+                    if (isChecked) label.text("AI Prophet").css('color', 'var(--primary)');
+                    else label.text("System").css('color', 'var(--text-secondary)');
+
+                    renderQuickActions();
+                    appendMessage(`Đã chuyển sang chế độ <b>${isChecked ? "AI Cao Cấp" : "Hệ Thống"}</b>.`, 'bot');
+                };
+
+                function renderQuickActions() {
+                    var html = '';
+                    if (currentMode === 'system') {
+                        html = `<button onclick="askSystem('urgent')"><i class="fas fa-fire"></i> Cần nhập gấp</button>
+                                <button onclick="askSystem('insight')"><i class="fas fa-lightbulb"></i> Xem Insight</button>`;
+                    } else {
+                        html = `<button onclick="askAI('forecast')"><i class="fas fa-box"></i> Dự báo Nhập</button>
+                                <button onclick="askAI('deadstock')"><i class="fas fa-warning"></i> Hàng tồn đọng</button>
+                                <button onclick="askAI('trend')"><i class="fas fa-chart-line"></i> Xu hướng bán</button>`;
+                    }
+                    $('#quick-actions-container').html(html);
+                }
+
+                window.askSystem = function (type) {
+                    var branchId = $('#ddlBranch').val() || 1;
+                    showLoading();
+                    $.get(INTERNAL_API_BASE + '/GetSystemData', { branchId: branchId }).done(function (res) {
+                        removeLoading();
+                        if (!res.success) {
+                            appendMessage("Lỗi API System.", 'bot');
+                            return;
+                        }
+
+                        var html = '';
+                        if (type === 'urgent') {
+                            var list = res.data.Recommendations || [];
+                            if (list.length == 0) {
+                                html = "System: Kho hàng ổn định.";
+                            } else {
+                                list.sort((a, b) => {
+                                    if (a.CurrentStock === 0 && b.CurrentStock > 0) return -1;
+                                    if (a.CurrentStock > 0 && b.CurrentStock === 0) return 1;
+                                    return b.ForecastDemand - a.ForecastDemand;
+                                });
+
+                                html = `<b>System Gợi ý (${list.length} SP):</b><table>
+                                    <thead><tr><th>Sản phẩm</th><th style="text-align:right;">SL</th></tr></thead><tbody>`;
+
+                                list.slice(0, 5).forEach(x => {
+                                    html += `<tr>
+                                        <td><span class="chart-link" onclick="loadChart(${x.ProductId})">${x.ProductName}</span><br><small>${x.Reason}</small></td>
+                                        <td style="text-align:right;" class="text-danger">${x.RecommendedMin}</td>
+                                    </tr>`;
+                                });
+                                html += `</tbody></table>`;
+
+                                if (list.length > 5) {
+                                    html += `<div style="text-align:center;margin-top:8px;"><button style="background:#667eea;color:white;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:12px;" onclick="showFullList('system')">Xem toàn bộ</button></div>`;
+                                    window.tempSystemData = list;
+                                }
+                            }
+                        }
+                        else if (type === 'insight') {
+                            var ins = res.data.Insights || [];
+                            ins.sort((a, b) => b.ContributionPercent - a.ContributionPercent);
+                            html = "<b>Top Sản phẩm Chủ lực:</b><br/>";
+                            ins.slice(0, 5).forEach(x => {
+                                html += `- <span class="chart-link" onclick="loadChart(${x.ProductId})">${x.ProductName}</span> (${Math.round(x.ContributionPercent)}%)<br>`;
+                            });
+                        }
+                        appendMessage(html, 'bot');
+                    });
+                };
+
+                window.askAI = function (type) {
+                    showLoading();
+                    var branchId = $('#ddlBranch').val() || 1;
+                    if (type === 'forecast' || type === 'trend') {
+                        $.get(INTERNAL_API_BASE + '/GetInventoryForecast', { branchId: branchId }).done(function (res) {
+                            removeLoading();
+                            var list = res.data || [];
+                            window.tempForecastData = list;
+
+                            if (type === 'forecast') {
+                                var needImport = list.filter(x => x.SuggestedQty > 0)
+                                    .sort((a, b) => b.SuggestedQty - a.SuggestedQty);
+
+                                if (needImport.length === 0) {
+                                    appendMessage("AI: Dự báo kho an toàn, chưa cần nhập thêm.", 'bot');
+                                } else {
+                                    var html = `<b>AI Dự báo cần nhập (${needImport.length} SP):</b><table>
+                                        <thead><tr><th>Sản phẩm</th><th style="text-align:right;">Tồn</th><th style="text-align:right;">Cần nhập</th></tr></thead><tbody>`;
+
+                                    needImport.slice(0, 5).forEach(x => {
+                                        html += `<tr>
+                                            <td><span class="chart-link" onclick="loadChart(${x.ProductId})">${x.ProductName}</span></td>
+                                            <td style="text-align:right;">${x.CurrentStock}</td>
+                                            <td style="text-align:right;" class="text-danger">${x.SuggestedQty}</td>
+                                        </tr>`;
+                                    });
+                                    html += `</tbody></table>`;
+
+                                    if (needImport.length > 5) {
+                                        html += `<div style="text-align:center;margin-top:8px;"><button style="background:#667eea;color:white;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:12px;" onclick="showFullList('forecast')">Xem toàn bộ</button></div>`;
+                                    }
+                                    appendMessage(html, 'bot');
+                                }
+                            }
+                            else if (type === 'trend') {
+                                var branchId = $('#ddlBranch').val() || 1;
+                                $.get(INTERNAL_API_BASE + '/GetTopForecast', { branchId: branchId }).done(function (res) {
+                                    removeLoading();
+                                    if (!res.success || !res.data) {
+                                        appendMessage("Không thể lấy dữ liệu dự báo.", 'bot');
+                                        return;
+                                    }
+
+                                    var list = res.data;
+                                    window.tempTrendData = list;
+
+                                    var html = `<b>Top 5 Dự báo bán chạy (30 ngày):</b><table>
+                                        <thead><tr><th>Sản phẩm</th><th style="text-align:right;">Dự kiến</th></tr></thead><tbody>`;
+
+                                    list.slice(0, 5).forEach((x, i) => {
+                                        html += `<tr>
+                                            <td>#${i + 1} <span class="chart-link" onclick="loadChart(${x.ProductId})">${x.ProductName}</span></td>
+                                            <td style="text-align:right;" class="text-success">${Math.round(x.TotalPredictedQty)}</td>
+                                        </tr>`;
+                                    });
+                                    html += `</tbody></table>`;
+
+                                    if (list.length > 5) {
+                                        html += `<div style="text-align:center;margin-top:8px;"><button style="background:#667eea;color:white;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:12px;" onclick="showFullList('trend')">Xem tất cả</button></div>`;
+                                    }
+                                    appendMessage(html, 'bot');
+                                });
+                            }
+                        });
+                    }
+                    else if (type === 'deadstock') {
+                        var branchId = $('#ddlBranch').val() || 1;
+                        $.get(INTERNAL_API_BASE + '/GetDeadstockAnalysis', { branchId: branchId }).done(function (res) {
+                            removeLoading();
+                            var list = res.data || [];
+                            window.tempDeadstockData = list;
+
+                            if (list.length === 0) {
+                                appendMessage("AI: Không ghi nhận rủi ro tồn kho.", 'bot');
+                            } else {
+                                var html = `<b>Cảnh báo Rủi ro Kho (${list.length} SP):</b><table>
+                                    <thead><tr><th>Sản phẩm</th><th style="text-align:right;">Hết sau</th><th style="text-align:right;">Loại</th></tr></thead><tbody>`;
+
+                                list.slice(0, 5).forEach(x => {
+                                    var dayTxt = x.DaysToExhaust > 365 ? "N/A" : x.DaysToExhaust + " ngày";
+                                    var dayCls = x.DaysToExhaust < 7 ? "text-danger" : "";
+
+                                    html += `<tr>
+                                        <td><b>${x.ProductName}</b><br><small>${x.Recommendation}</small></td>
+                                        <td style="text-align:right;" class="${dayCls}">${dayTxt}</td>
+                                        <td style="text-align:right;"><small>${x.WarningType}</small></td>
+                                    </tr>`;
+                                });
+                                html += `</tbody></table>`;
+
+                                if (list.length > 5) {
+                                    html += `<div style="text-align:center;margin-top:8px;"><button style="background:#667eea;color:white;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:12px;" onclick="showFullList('deadstock')">Xem tất cả</button></div>`;
+                                }
+                                appendMessage(html, 'bot');
+                            }
+                        });
+                    }
+                };
+
+                window.sendMessage = function () {
+                    var txt = $('#ai-user-input').val().trim();
+                    if (!txt) return;
+
+                    appendMessage(txt, 'user');
+                    $('#ai-user-input').val('');
+                    showLoading();
+
+                    $.ajax({
+                        url: EXTERNAL_AI_URL,
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({ prompt: txt, userName: window.CURRENTUSERNAME }),
+                        timeout: 10000,
+                        success: function (res) {
+                            removeLoading();
+                            let rawContent = res.answer || res.response || res;
+                            let htmlContent = window.marked ? marked.parse(rawContent) : rawContent;
+                            appendMessage(htmlContent, 'bot');
+                        },
+                        error: function () {
+                            removeLoading();
+                            if (xhr.status === 429) {
+                                appendMessage("Mình sống chậm lại chút nhé.", 'bot');
+                            } else {
+                                appendMessage("Lỗi kết nối AI.", 'bot');
+                            }
+                        }
+                    });
+                };
+
+
+
+                window.loadChart = function (productId = null) {
+                    var pId = productId || $('#selectProduct').val();
+                    if (!pId) return;
+                    if ($('#selectProduct').length) $('#selectProduct').val(pId).trigger('change');
+                    $('#chart-loading').show();
+                    $('#salesChart').css('opacity', 0.3);
+                    if ($('#ai-insights').length) $('#ai-insights').hide();
+                    // 1. Khai báo 2 Request gọi song song
+                    var historyReq = $.get('/Admin/AIAnalysis/GetProductHistory', {
+                        productId: pId,
+                        branchId: $("#ddlBranch").val() || 1,
+                        startDate: $('#startDate').val(),
+                        endDate: $('#endDate').val(),
+                    });
+
+                    // Lấy dự báo bán hàng (AI Forecast)
+                    var forecastReq = $.get('/Admin/AIAnalysis/GetSalesForecast', {
+                        productId: pId,
+                        branchId: $("#ddlBranch").val() || 1,
+                    });
+
+                    $.when(historyReq, forecastReq)
+                        .done(function (resHistory, resForecast) {
+                            $('#chart-loading').hide();
+                            $('#salesChart').css('opacity', 1);
+                            var history = resHistory[0];
+                            var forecast = resForecast[0];
+                            if (!history.success) return;
+
+                            // --- Xử lý dữ liệu Lịch sử ---
+                            var historyPoints = (history.data || [])
+                                .map((item) => {
+                                    var timestamp = parseInt(item.Date.replace(/\/Date\((-?\d+)\)\//, '$1'));
+                                    return [timestamp, item.Qty];
+                                })
+                                .sort((a, b) => a[0] - b[0]);
+
+                            var forecastPoints = [];
+
+                            if (forecast.success && forecast.data) {
+                                forecastPoints = forecast.data
+                                    .map((item) => {
+
+                                        var timestamp = item.ForecastDate
+                                            ? new Date(parseInt(item.ForecastDate.replace(/\/Date\((-?\d+)\)\//, '$1'))).getTime()
+                                            : 0;
+
+                                        return [timestamp, item.PredictedQty];
+                                    })
+                                    .sort((a, b) => a[0] - b[0]);
+
+                                // Mẹo nối điểm cuối lịch sử vào đầu dự báo để biểu đồ không bị "đứt gãy"
+
+                                if (historyPoints.length > 0 && forecastPoints.length > 0) {
+                                    forecastPoints.unshift(historyPoints[historyPoints.length - 1]);
+                                }
+                            }
+
+                            if (window.updateInsights) updateInsights(historyPoints);
+
+                            renderDualApexChart(historyPoints, forecastPoints);
+                        })
+                        .fail(function () {
+                            $('#chart-loading').hide();
+                            $('#salesChart').css('opacity', 1);
+                            console.error('Lỗi khi tải dữ liệu phân tích AI');
+                        });
+                };
+
+                function renderDualApexChart(historyData, forecastData) {
+                    var options = {
+                        // 1. Cấu hình 2 Series riêng biệt
+
+                        series: [
+                            {
+                                name: 'Thực tế (Quá khứ)',
+                                data: historyData,
+                            },
+                            {
+                                name: 'Dự báo (AI)',
+                                data: forecastData,
+                            },
+                        ],
+
+                        chart: {
+                            type: 'area',
+                            height: 420,
+                            fontFamily: 'Nunito, sans-serif',
+                            animations: { enabled: false }, // Tắt hiệu ứng để render nhanh
+                            toolbar: { show: true },
+                        },
+                        dataLabels: { enabled: false },
+                        // 2. Kỹ thuật tạo nét đứt (Dash)
+                        stroke: {
+                            curve: 'smooth',
+                            width: 3,
+                            // [0] = nét liền cho series 1 (History)
+                            // [5] = nét đứt 5px cho series 2 (Forecast)
+                            dashArray: [0, 5],
+                        },
+                        // 3. Màu sắc phân biệt
+                        colors: ['#6f42c1', '#2ecc71'], // Tím (Lịch sử) - Xanh lá (Dự báo)
+                        // 4. Hiệu ứng tô màu nền (Fill)
+                        fill: {
+                            type: ['gradient', 'solid'], // Series 1 dùng Gradient, Series 2 dùng Solid
+                            gradient: {
+                                shadeIntensity: 1,
+                                opacityFrom: 0.6,
+                                opacityTo: 0.1,
+                                stops: [0, 100],
+                            },
+                            solid: {
+                                opacity: 0.1, // Để dự báo mờ mờ thôi cho đỡ rối
+                            },
+                        },
+
+                        xaxis: {
+                            type: 'datetime',
+                            tooltip: { enabled: false },
+                        },
+
+                        yaxis: {
+                            labels: {
+                                formatter: function (val) {
+                                    return val.toFixed(0); // Làm tròn số lượng
+                                },
+                            },
+                        },
+
+                        tooltip: {
+                            x: { format: 'dd MMM yyyy' },
+                            shared: true, // QUAN TRỌNG: Di chuột vào 1 điểm hiện cả 2 giá trị để so sánh
+                            intersect: false,
+                        },
+
+                        grid: { borderColor: '#f1f1f1' },
+                        legend: { position: 'top', horizontalAlign: 'right' },
+                    };
+
+                    // Render lại Chart
+                    if (chartInstance) {
+                        chartInstance.destroy();
+                    }
+                    chartInstance = new ApexCharts(document.querySelector('#salesChart'), options);
+                    chartInstance.render();
+                }
+
+
+                window.triggerAnalysis = function () {
+                    var btn = $('#btn-run');
+                    var oldHtml = btn.html();
+                    btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Phân tích');
+                    appendMessage("Đang chạy lại pipeline dự báo...", 'bot');
+
+                    var branchId = $('#ddlBranch').val() || 1;
+                    $.post(INTERNAL_API_BASE + '/RunAnalysis', { mode: currentMode,branchId: branchId }).done(function (res) {
+                        appendMessage(res.success ? "Đã cập nhật dữ liệu mới nhất." : "Lỗi: " + res.message, 'bot');
+                    }).always(function () {
+                        btn.prop('disabled', false).html(oldHtml);
+                    });
+                };
+
+                window.showFullList = function (source) {
+                    var data = [];
+                    var title = "";
+                    var thead = "";
+                    var tbody = "";
+
+                    if (source === 'forecast') {
+                        data = window.tempForecastData.filter(x => x.SuggestedQty > 0);
+                        title = "Chi tiết Dự báo & Gợi ý Nhập hàng";
+                        thead = `<tr>
+                            <th>Sản phẩm</th>
+                            <th>Hiện tại</th>
+                            <th>Dự báo (30đ)</th>
+                            <th style="text-align:right;">Cần Nhập</th>
+                            <th>Độ tin cậy</th>
+                            <th>Ưu tiên</th>
+                        </tr>`;
+
+                        data.forEach(x => {
+                            let confidencePercent = Math.round(x.ConfidenceScore * 100);
+                            let color = confidencePercent > 80 ? 'bg-success' : (confidencePercent > 50 ? 'bg-warning' : 'bg-danger');
+                            let badgeClass = x.PriorityLevel === 'URGENT' ? 'badge-danger' : (x.PriorityLevel === 'HIGH' ? 'badge-warning' : 'badge-info');
+
+                            tbody += `<tr>
+                                <td><b>${x.ProductName}</b></td>
+                                <td>${x.CurrentStock}</td>
+                                <td>${x.ExpectedDemand30d}</td>
+                                <td style="text-align:right;" class="text-danger">${x.SuggestedQty}</td>
+                                <td><div class="progress" style="height: 6px;"><div class="progress-bar ${color}" style="width: ${confidencePercent}%"></div></div></td>
+                                <td><span class="badge ${badgeClass}">${x.PriorityLevel}</span></td>
+                            </tr>`;
+                        });
+                    }
+                    else if (source === 'deadstock') {
+                        data = window.tempDeadstockData;
+                        title = "Phân tích Rủi ro & Hàng tồn đọng";
+                        thead = `<tr>
+                            <th>Sản phẩm</th>
+                            <th>Tồn thực</th>
+                            <th>Trạng thái (Ngày)</th>
+                            <th style="text-align:right;">Đề xuất</th>
+                        </tr>`;
+
+                        data.forEach(x => {
+                            let statusHtml = x.WarningType.includes("Deadstock") || x.DaysToExhaust > 100
+                                ? `<span class="text-muted">Tồn ${x.DaysToExhaust} ngày</span>`
+                                : `<span class="${x.DaysToExhaust < 7 ? 'text-danger' : 'text-warning'}">Hết sau ${x.DaysToExhaust} ngày</span>`;
+
+                            tbody += `<tr>
+                                <td><b>${x.ProductName}</b><br><small class="text-muted">${x.WarningType}</small></td>
+                                <td>${x.CurrentStock}</td>
+                                <td>${statusHtml}</td>
+                                <td style="text-align:right;"><span class="badge ${x.DaysToExhaust < 7 ? 'bg-danger' : 'bg-secondary'}">${x.Recommendation}</span></td>
+                            </tr>`;
+                        });
+                    }
+                    else if (source === 'trend') {
+                        data = window.tempTrendData;
+                        title = "Top 50 Sản phẩm Dự báo Bán chạy (30 ngày)";
+                        thead = `<tr>
+                            <th>Hạng</th>
+                            <th>Sản phẩm</th>
+                            <th style="text-align:right;">Tổng dự báo</th>
+                        </tr>`;
+
+                        data.forEach((x, i) => {
+                            let rankIcon = i === 0 ? "🥇" : (i === 1 ? "🥈" : (i === 2 ? "🥉" : `#${i + 1}`));
+                            tbody += `<tr>
+                                <td>${rankIcon}</td>
+                                <td><b>${x.ProductName}</b></td>
+                                <td style="text-align:right;" class="text-success">${Math.round(x.TotalPredictedQty)}</td>
+                            </tr>`;
+                        });
+                    }
+                    else if (source === 'system') {
+                        data = window.tempSystemData;
+                        title = "System Suggestion";
+                        thead = `<tr><th>Sản phẩm</th><th>Lý do</th><th>Tồn</th><th style="text-align:right;">Gợi ý</th></tr>`;
+                        data.forEach(x => {
+                            tbody += `<tr>
+                                <td>${x.ProductName}</td>
+                                <td>${x.Reason}</td>
+                                <td>${x.CurrentStock}</td>
+                                <td style="text-align:right;" class="text-danger">${x.RecommendedMin}</td>
+                            </tr>`;
+                        });
+                    }
+
+                    if ($('#aiDetailsModal').length === 0) {
+                        $('body').append(`
+                            <div class="modal fade" id="aiDetailsModal" tabindex="-1">
+                                <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                                    <div class="modal-content">
+                                        <div class="modal-header bg-light">
+                                            <h5 class="modal-title" id="aiModalTitle"></h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="modal-body p-0">
+                                            <table class="table table-striped table-hover mb-0" style="font-size:13px;">
+                                                <thead class="table-light" id="aiModalHead"></thead>
+                                                <tbody id="aiModalBody"></tbody>
+                                            </table>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Đóng</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>`);
+                    }
+
+                    $('#aiModalTitle').text(title);
+                    $('#aiModalHead').html(thead);
+                    $('#aiModalBody').html(tbody);
+
+                    var modal = new bootstrap.Modal(document.getElementById('aiDetailsModal'));
+                    modal.show();
+                };
+
+                function appendMessage(html, sender) {
+                    var msgClass = sender === 'bot' ? 'ai-bot' : 'ai-user';
+                    var ava = sender === 'bot' ? '<div class="ai-avatar"><i class="fas fa-robot"></i></div>' : '<div class="ai-avatar"><i class="fas fa-user"></i></div>';
+                    $('#ai-chat-body').append(`<div class="ai-message ${msgClass}">${ava}<div class="ai-bubble">${html}</div></div>`);
+
+                    var $body = $('#ai-chat-body');
+                    $body.animate({ scrollTop: $body.prop("scrollHeight") }, 300, 'swing');
+                }
+
+                function showLoading() {
+                    $('#ai-chat-body').append('<div id="loading" class="ai-message ai-bot"><div class="ai-avatar"><i class="fas fa-robot"></i></div><div class="ai-bubble"><div class="loading-dots"><div></div><div></div><div></div></div></div></div>');
+                    var $body = $('#ai-chat-body');
+                    $body.animate({ scrollTop: $body.prop("scrollHeight") }, 300, 'swing');
+                }
+
+                function removeLoading() {
+                    $('#loading').remove();
+                }
+
+                $('#ai-user-input').off('keypress').on('keypress', function (e) {
+                    if (e.which == 13) {
+                        e.preventDefault();
+                        sendMessage();
+                    }
+                });
+            });
+        });
+    })();
+</script>

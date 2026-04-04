@@ -1,0 +1,384 @@
+﻿@{
+    ViewBag.Title = "Print Barcode";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="page-wrapper">
+    <div class="content">
+
+        <!-- HEADER -->
+        <div class="page-header">
+            <div class="page-title">
+                <h4>Xuất Barcode</h4>
+                <h6>Xuất Barcode sản phẩm</h6>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+
+                <!-- SEARCH PRODUCT -->
+                <div class="form-group">
+                    <label>Tên sản phẩm <span class="text-danger">*</span></label>
+                    <div class="input-groupicon">
+                        <input type="text"
+                               id="txtProductSearch"
+                               class="form-control"
+                               placeholder="Nhập tên sản phẩm..." />
+                        <div class="addonset">
+                            <img src="~/assets/img/icons/search.svg" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SELECTED PRODUCTS -->
+                <div class="table-responsive mt-3">
+                    <table class="table table-bordered" id="tblPrintBarcode">
+                        <thead>
+                            <tr>
+                                <th style="width:70px;">Ảnh</th>
+                                <th>Sản phẩm</th>
+                                <th style="width:180px;">Barcode</th>
+                                <th style="width:100px;">Đơn vị</th>
+                                <th style="width:110px;">Số lượng</th>
+                                <th style="width:60px;"></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+
+                <!-- OPTIONS -->
+                <div class="row mt-3">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Khổ giấy</label>
+                            <select id="ddlPaperSize" class="form-control select">
+                                <option value="36">36mm</option>
+                                <option value="25">25mm</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ACTION -->
+                <div class="mt-3">
+                    <button class="btn btn-cancel" id="btnClear">
+                        Xóa
+                    </button>
+                    <button class="btn btn-submit me-2" id="btnPrint">
+                        In
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- KHU VỰC IN -->
+<div id="print-area" class="d-none"></div>
+
+
+@section Scripts{
+    <script>
+        let selectedProducts = [];
+
+        $(function () {
+
+            // AUTOCOMPLETE BY PRODUCT NAME ONLY
+            $("#txtProductSearch").autocomplete({
+                minLength: 2,
+                source: function (request, response) {
+                    $.get('/Product/SearchProductByName', { keyword: request.term }, res => {
+                        response(res.data.map(p => ({
+                            label: p.Name,
+                            value: p.Name,
+                            product: p
+                        })));
+                    });
+                },
+                select: function (event, ui) {
+                    addProduct(ui.item.product);
+                    $(this).val('');
+                    return false;
+                }
+            });
+
+            $('#btnPrint').click(function () {
+                if (selectedProducts.length === 0) {
+                    Swal.fire('Warning', 'Chưa chọn sản phẩm', 'warning');
+                    return;
+                }
+
+                printBarcode(selectedProducts);
+            });
+
+            // CLEAR
+            $('#btnClear').click(function () {
+                selectedProducts = [];
+                renderTable();
+            });
+
+            // REMOVE
+            $(document).on('click', '.btn-remove', function () {
+                const id = $(this).data('id');
+                selectedProducts = selectedProducts.filter(x => x.ProductId !== id);
+                renderTable();
+            });
+
+            // CHANGE QTY
+            $(document).on('change', '.txt-qty', function () {
+                const id = $(this).data('id');
+                const qty = parseInt($(this).val()) || 1;
+                const item = selectedProducts.find(x => x.ProductId === id);
+                if (item) item.Quantity = qty;
+            });
+        });
+
+        function addProduct(p) {
+
+            if (!p.Barcode) {
+                Swal.fire('Warning', 'Product does not have barcode.', 'warning');
+                return;
+            }
+
+            if (selectedProducts.some(x => x.ProductId === p.ProductId))
+                return;
+
+            selectedProducts.push({
+                ProductId: p.ProductId,
+                Name: p.Name,
+                Barcode: p.Barcode,
+                Unit: p.Unit,
+                Description: p.Description,
+                Image: p.Image,
+                Quantity: 1
+            });
+
+            renderTable();
+        }
+
+        function renderTable() {
+            const tbody = $('#tblPrintBarcode tbody');
+            tbody.empty();
+
+            selectedProducts.forEach(p => {
+
+                // --- CẤU HÌNH ---
+                const MAX_DESC_LENGTH = 70; // Giới hạn mô tả chỉ 70 ký tự hiển thị
+
+                // --- 1. ẢNH (Image) ---
+                const img = p.Image
+                    ? `<div class="product-img-container me-3">
+               <img src="${p.Image}" alt="Product Image" class="product-image" />
+           </div>`
+                    : `<div class="product-img-container me-3 product-image-placeholder">
+             <i class="fas fa-box text-secondary"></i>
+           </div>`;
+                // Lưu ý: Cần thư viện Font Awesome (fas fa-box) cho icon này, hoặc thay bằng biểu tượng khác
+
+                // --- 2. MÔ TẢ (Description) ---
+                const shortDesc = p.Description && p.Description.length > MAX_DESC_LENGTH
+                    ? p.Description.substring(0, MAX_DESC_LENGTH) + '...'
+                    : p.Description;
+
+                const desc = p.Description
+                    ? `<div class="text-secondary small mt-1"
+                 title="${p.Description.replace(/"/g, '&quot;')}"
+                 data-bs-toggle="tooltip">
+               ${shortDesc}
+           </div>`
+                    : `<div class="text-muted small">Chưa có mô tả.</div>`;
+
+                // --- 3. ĐƠN VỊ (Unit) ---
+                const unit = p.Unit
+                    ? `<span class="badge bg-secondary rounded-pill text-uppercase">${p.Unit}</span>`
+                    : ''; // Thay thế '<span class="text-muted small">-</span>' bằng chuỗi rỗng để ô trống gọn gàng
+                tbody.append(`
+                    <tr>
+                        <td class="align-middle text-center">
+                            ${p.Image
+                        ? `<div class="product-img-container">
+                                       <img src="${p.Image}" class="product-image" />
+                                   </div>`
+                        : `<div class="product-img-container text-muted">No Image</div>`
+                    }
+                        </td>
+
+                        <td class="align-middle">
+                            <div class="fw-semibold">${p.Name}</div>
+                            ${desc}
+                        </td>
+
+                        <td class="align-middle">
+                            <div class="barcode-text">${p.Barcode}</div>
+                        </td>
+
+                        <td class="align-middle text-muted small">
+                            ${p.Unit ?? '-'}
+                        </td>
+
+                        <td class="align-middle">
+                            <input type="number"
+                                   min="1"
+                                   class="form-control txt-qty text-center"
+                                   data-id="${p.ProductId}"
+                                   value="${p.Quantity}" />
+                        </td>
+
+                        <td class="align-middle text-center">
+                            <a href="javascript:void(0)" class="btn-remove" data-id="${p.ProductId}">
+                                <img src="/assets/img/icons/delete.svg" />
+                            </a>
+                        </td>
+                    </tr>
+                    `);
+
+            });
+        }
+
+
+        function printBarcode(products) {
+
+    if (!products || products.length === 0) return;
+
+    const w = window.open("about:blank", "_blank");
+
+    let bodyHtml = '';
+
+    products.forEach(p => {
+        if (!p.Barcode || p.Quantity <= 0) return;
+
+        for (let i = 0; i < p.Quantity; i++) {
+            bodyHtml += `
+                <div class="label">
+                    <div class="name">${p.Name}</div>
+                    <img src="/Product/GenerateBarcode?code=${p.Barcode}" />
+                    <div class="code">${p.Barcode}</div>
+                </div>
+            `;
+        }
+    });
+
+    w.document.write(`
+        <html>
+        <head>
+            <title>Print Barcode</title>
+            <style>
+                @@media print {
+                    body {
+                        margin: 0;
+                        padding: 0;
+                    }
+                }
+
+                body {
+                    display: flex;
+                    flex-wrap: wrap;
+                    font-family: Arial, sans-serif;
+                }
+
+                .label {
+                    width: 36mm;
+                    height: 22mm;
+                    padding: 2mm;
+                    box-sizing: border-box;
+                    text-align: center;
+                    page-break-inside: avoid;
+                }
+
+                .label img {
+                    width: 100%;
+                    height: auto;
+                }
+
+                .name {
+                    font-size: 10px;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+
+                .code {
+                    font-size: 9px;
+                    margin-top: 2px;
+                }
+            </style>
+        </head>
+        <body>
+            ${bodyHtml}
+        </body>
+        </html>
+    `);
+
+    w.document.close();
+
+    w.onload = function () {
+        w.print();
+        w.close();
+    };
+}
+
+    </script>
+}
+
+@section Styles {
+    <style>
+        .product-img-container {
+            width: 56px;
+            height: 56px;
+            border-radius: 6px;
+            overflow: hidden;
+            background: #f8fafc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .product-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain; /* QUAN TRỌNG: không vỡ ảnh */
+        }
+
+        @@media print {
+            body * {
+                visibility: hidden;
+            }
+
+            #print-area, #print-area * {
+                visibility: visible;
+            }
+
+            #print-area {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+            }
+        }
+
+        .label-36 {
+            width: 36mm;
+            height: 22mm;
+            padding: 2mm;
+        }
+
+        .label-25 {
+            width: 25mm;
+            height: 15mm;
+            padding: 2mm;
+        }
+
+        .label {
+            page-break-inside: avoid;
+            text-align: center;
+            font-family: Arial;
+        }
+
+
+    </style>
+}

@@ -1,0 +1,294 @@
+﻿@{
+    ViewBag.Title = "Nhập Sản Phẩm";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+
+<div class="page-wrapper">
+    <div class="content">
+
+        <div class="page-header">
+            <div class="page-title">
+                <h4>Nhập Sản Phẩm</h4>
+                <h6>Thêm sản phẩm hàng loạt từ file Excel</h6>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+
+                <div class="requiredfield mb-3">
+                    <h4>Chỉ nhận dữ liệu từ file Excel</h4>
+                </div>
+
+                <div class="row">
+
+                    <div class="col-lg-3 col-sm-6 col-12">
+                        <div class="form-group">
+                            <a class="btn btn-submit w-100" id="btnDownloadSample">
+                                Tải file Excel mẫu
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label>Thêm file Excel</label>
+                            <div class="image-upload">
+                                <input type="file" id="importFile" accept=".xlsx" />
+                                <div class="image-uploads">
+                                    <img src="~/assets/img/icons/upload.svg" alt="upload" />
+                                    <h4>Kéo thả hoặc nhấn để chọn file Excel</h4>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div id="selectedFileInfo" class="alert alert-info d-none mt-2">
+                                    <i class="fas fa-file-excel me-1"></i>
+                                    File đã chọn:
+                                    <strong id="selectedFileName"></strong>
+                                    <span class="text-muted ms-2" id="selectedFileSize"></span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 col-sm-12">
+                        <div class="productdetails productdetailnew">
+                            <h5 class="text-muted mb-3">Các trường bắt buộc trong file</h5>
+                            <ul class="product-bar">
+
+                                <li>
+                                    <h4>Tên Sản Phẩm</h4>
+                                    <h6 class="manitorygreen">Bắt buộc</h6>
+                                </li>
+
+                                <li>
+                                    <h4>Danh Mục (Category)</h4>
+                                    <h6 class="manitorygreen">Bắt buộc</h6>
+                                </li>
+
+                                <li>
+                                    <h4>Nhà Cung Cấp (Supplier)</h4>
+                                    <h6 class="manitoryblue">Tùy chọn</h6>
+                                </li>
+
+                                <li>
+                                    <h4>Mã Vạch (Barcode)</h4>
+                                    <h6 class="manitorygreen">Bắt buộc</h6>
+                                </li>
+
+                                <li>
+                                    <h4>Giá Vốn (Cost Price)</h4>
+                                    <h6 class="manitorygreen">Bắt buộc</h6>
+                                </li>
+
+                                <li>
+                                    <h4>Giá Bán (Selling Price)</h4>
+                                    <h6 class="manitorygreen">Bắt buộc</h6>
+                                </li>
+
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 col-sm-12">
+                        <div class="productdetails productdetailnew">
+                            <h5 class="text-muted mb-3">Các trường tùy chọn</h5>
+                            <ul class="product-bar">
+
+                                <li>
+                                    <h4>Đơn Vị (Unit)</h4>
+                                    <h6 class="manitorygreen">Bắt buộc</h6>
+                                </li>
+
+                                <li>
+                                    <h4>Tồn Kho Tối Thiểu</h4>
+                                    <h6 class="manitoryblue">Tùy chọn</h6>
+                                </li>
+
+                                <li>
+                                    <h4>Tồn Kho Tối Đa</h4>
+                                    <h6 class="manitoryblue">Tùy chọn</h6>
+                                </li>
+
+                                <li>
+                                    <h4>Số Lượng Tồn Ban Đầu</h4>
+                                    <h6 class="manitoryblue">Tùy chọn</h6>
+                                </li>
+
+                                <li>
+                                    <h4>Mô Tả</h4>
+                                    <h6 class="manitoryblue">Tùy chọn</h6>
+                                </li>
+
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-12">
+                        <div class="form-group mb-0">
+                            <button class="btn btn-submit me-2" id="btnImport">
+                                Nhập Sản Phẩm
+                            </button>
+                            <button class="btn btn-cancel" id="btnCancel">
+                                Hủy Bỏ
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Hàm hiển thị Loading
+        function showLoading(title = 'Đang xử lý', text = 'Vui lòng chờ trong giây lát...') {
+            Swal.fire({
+                title: title,
+                text: text,
+                allowOutsideClick: false,
+                allowEscapeKey: false,    
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+        }
+
+        function downloadErrorFile(token) {
+            $.ajax({
+                url: '/Admin/ProductImport/DownloadError',
+                method: 'GET',
+                data: { token: token },
+                xhrFields: { responseType: 'blob' }
+            }).done(function (blob) {
+                var url = window.URL.createObjectURL(blob);
+                var a = document.createElement('a');
+                a.href = url;
+                a.download = 'ProductImportErrors.xlsx';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+            });
+        }
+
+
+        $('#btnImport').on('click', function () {
+            var f = $('#importFile')[0].files[0];
+            if (!f) {
+                Swal.fire('Cảnh báo', 'Vui lòng chọn file Excel', 'warning');
+                return;
+            }
+
+            var fd = new FormData();
+            fd.append('file', f);
+
+            $.ajax({
+                url: '/Admin/Product/Import',
+                method: 'POST',
+                data: fd,
+                processData: false,
+                contentType: false,
+                dataType: 'json',
+                beforeSend: function () {
+                    showLoading('Đang nhập dữ liệu', 'Vui lòng chờ...');
+                }
+            }).done(function (res) {
+                Swal.close();
+
+                if (res.success) {
+                    Swal.fire(
+                        'Thành công',
+                        `Đã nhập ${res.imported}/${res.total} sản phẩm`,
+                        'success'
+                    );
+                    return;
+                }
+
+                // FAIL → hỏi user có tải file lỗi không
+                Swal.fire({
+                    title: 'Import thất bại',
+                    text: 'Có lỗi trong file Excel. Bạn muốn tải file chi tiết lỗi?',
+                    icon: 'error',
+                    showCancelButton: true,
+                    confirmButtonText: 'Tải file lỗi'
+                }).then((r) => {
+                    if (r.isConfirmed) {
+                        downloadErrorFile(res.errorToken);
+                    }
+                });
+
+            }).fail(function () {
+                Swal.fire('Lỗi', 'File sai định dạng hoặc kết nối không ổn định!', 'error');
+            });
+        });
+
+        // Xử lý nút Download Sample
+        $('#btnDownloadSample').on('click', function () {
+            var $btn = $(this);
+
+            $.ajax({
+                url: '/Admin/Product/DownloadImportSample',
+                method: 'GET',
+                xhrFields: {
+                    responseType: 'blob'
+                },
+                beforeSend: function () {
+                    showLoading('Đang tạo file mẫu', 'Vui lòng chờ...');
+                }
+            }).done(function (blob, status, xhr) {
+                // Tắt loading bằng timer ngắn để mượt mà hơn hoặc để Swal tự tắt khi download xong
+                Swal.close();
+
+                var fileName = 'Product_Import_Template.xlsx';
+                var disposition = xhr.getResponseHeader('Content-Disposition');
+
+                if (disposition && disposition.indexOf('filename=') !== -1) {
+                    fileName = disposition.split('filename=')[1].replace(/"/g, '');
+                }
+
+                var url = window.URL.createObjectURL(blob);
+                var a = document.createElement('a');
+                a.href = url;
+                a.download = fileName;
+                document.body.appendChild(a);
+                a.click();
+
+                setTimeout(function () {
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+                }, 100);
+
+            }).fail(function () {
+                Swal.fire('Lỗi', 'Không thể tải file mẫu', 'error');
+            }).always(function () {
+                
+            });
+        });
+
+        // Xử lý hiển thị tên file khi chọn
+        $('#importFile').on('change', function () {
+            var f = this.files[0];
+            if (!f) {
+                $('#selectedFileInfo').addClass('d-none');
+                return;
+            }
+
+            $('#selectedFileName').text(f.name);
+            // Tính toán size ra MB hoặc KB
+            var sizeText = f.size > 1024 * 1024
+                ? (f.size / (1024 * 1024)).toFixed(2) + ' MB'
+                : (f.size / 1024).toFixed(2) + ' KB';
+
+            $('#selectedFileSize').text('(' + sizeText + ')');
+            $('#selectedFileInfo').removeClass('d-none');
+        });
+
+    </script>
+}

@@ -1,0 +1,779 @@
+﻿@{
+    ViewBag.Title = "Quản lý Công Nợ & Thanh Toán";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="page-wrapper">
+    <div class="content">
+        <div class="page-header">
+            <div class="page-title">
+                <h4>CÔNG NỢ NHÀ CUNG CẤP</h4>
+                <h6>Theo dõi công nợ và lịch sử thanh toán</h6>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <div class="table-top">
+                    <div class="search-set">
+                        <div class="search-path">
+                            <a class="btn btn-filter" id="filter_search">
+                                <img src="~/assets/img/icons/filter.svg" alt="img" />
+                                <span><img src="~/assets/img/icons/closes.svg" alt="img" /></span>
+                            </a>
+                        </div>
+                        <div class="search-input">
+                            <a class="btn btn-searchset"><img src="~/assets/img/icons/search-white.svg" alt="img" /></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" id="filter_inputs">
+                    <div class="card-body pb-0">
+                        <div class="row">
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <select id="ddlSupplier" class="select form-control">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <select id="ddlStatus" class="select form-control">
+                                        <option value="">-- Trạng thái nợ --</option>
+                                        <option value="Unpaid">Chưa thanh toán</option>
+                                        <option value="Partial">Thanh toán 1 phần</option>
+                                        <option value="Paid">Đã thanh toán</option>
+                                        <option value="Overpaid">Thanh toán dư</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <input type="date" id="txtFromDate" class="form-control" placeholder="Từ ngày" />
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <input type="date" id="txtToDate" class="form-control" placeholder="Đến ngày" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table id="tblDebts" class="table datanew">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Mã PO</th>
+                                <th>Nhà cung cấp</th>
+                                <th>Ngày chốt nợ</th>
+                                <th>Ngày đáo hạn</th>
+                                <th class="text-end">Tổng nợ</th>
+                                <th class="text-end">Đã trả</th>
+                                <th class="text-end">Còn lại</th>
+                                <th class="text-center">Trạng thái</th>
+                                <th class="text-center">Tác vụ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modalPayment" class="modal fade" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">
+                    <i class="fa fa-money-bill-wave me-2"></i>Thanh toán công nợ
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="Payment_DebtId" />
+
+                <div class="alert alert-light border-success mb-3">
+                    <strong>Đơn hàng:</strong> <span id="lblPOCode">---</span><br />
+                    <strong>Nhà cung cấp:</strong> <span id="lblSupplierName">---</span><br />
+                    <strong>Số tiền còn nợ:</strong> <span id="lblRemaining" class="text-danger fw-bold fs-5">0</span>
+                </div>
+
+                <div class="form-group">
+                    <label>Số tiền thanh toán <span class="text-danger">*</span></label>
+                    <div class="input-group">
+                        <input type="text" id="Payment_Amount" class="form-control currency-input fw-bold" placeholder="0" />
+                        <span class="input-group-text">VNĐ</span>
+                    </div>
+                    <small class="text-muted" id="hintFullPay">Click để trả hết toàn bộ</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Phương thức thanh toán</label>
+                    <select id="Payment_Method" class="form-select">
+                        <option value="Cash">Tiền mặt</option>
+                        <option value="BankTransfer">Chuyển khoản ngân hàng</option>
+                        <option value="EWallet">Ví điện tử</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Ảnh chứng từ (Biên lai)</label>
+                    <input type="file" id="Payment_Proof" class="form-control" accept="image/*" />
+                    <div class="mt-2 text-center" id="previewContainer" style="display:none;">
+                        <img id="imgPreview" src="" style="max-height: 150px; border-radius: 5px; border: 1px dashed #ccc;" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" id="btnSavePayment" class="btn btn-success">
+                    <i class="fa fa-check"></i> Xác nhận thanh toán
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modalImageViewer" class="modal fade" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content bg-transparent border-0 shadow-none">
+            <div class="modal-body text-center position-relative">
+                <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-3" data-bs-dismiss="modal"></button>
+                <img id="imgFullSize" src="" class="img-fluid rounded shadow-lg" style="max-height: 90vh;" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modalEditDebt" class="modal fade" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Cập nhật thông tin nợ</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="EditDebt_Id" />
+                <div class="form-group">
+                    <label>Ngày đáo hạn (Due Date)</label>
+                    <input type="date" id="EditDebt_DueDate" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label>Ghi chú</label>
+                    <textarea id="EditDebt_Note" class="form-control" rows="3"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnUpdateDebt" class="btn btn-primary">Lưu thay đổi</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    <script>
+        // --- BIẾN TOÀN CỤC ---
+        const moneyFormatter = new Intl.NumberFormat('vi-VN');
+        let tblDebts;
+        let CURRENT_USER = {
+            isSupplier: false
+        };
+
+        async function loadCurrentUser() {
+            const res = await fetch('/Admin/Login/GetCurrentUser');
+            const json = await res.json();
+
+            if (json.data) {
+                CURRENT_USER.isSupplier = json.data.SupplierId !== null;
+            }
+        }
+
+
+        // --- HÀM TIỆN ÍCH (GLOBAL) ---
+
+        // 1. Parse ngày tháng (Hỗ trợ cả /Date(...)/ và ISO)
+        function parseNetDate(dateStr) {
+            if (!dateStr) return null;
+            // Nếu là dạng /Date(123456)/
+            if (typeof dateStr === 'string' && dateStr.indexOf('/Date(') >= 0) {
+                const ts = parseInt(dateStr.replace(/[^0-9 + -]/g, ''), 10);
+                return moment(ts);
+            }
+            // Nếu là dạng ISO hoặc Date object
+            return moment(dateStr);
+        }
+
+        // 2. Mở Modal Payment (Fix lỗi không mở được)
+        window.openPaymentModal = function(debtId, poCode, supplierName, remaining) {
+            $('#Payment_DebtId').val(debtId);
+            $('#lblPOCode').text('#' + poCode);
+            $('#lblSupplierName').text(supplierName);
+            $('#lblRemaining').text(moneyFormatter.format(remaining));
+
+            // Reset Form
+            $('#Payment_Amount').val('');
+            $('#Payment_Note').val('');
+            $('#Payment_Method').val('Cash');
+            $('#Payment_Proof').val('');
+            $('#previewContainer').hide();
+
+            // Gợi ý trả hết
+            // Gợi ý trả hết toàn bộ số tiền còn nợ
+            $('#hintFullPay').on('click', function () {
+                // Giả sử biến 'remaining' là số thuần túy (ví dụ: 5000000)
+                let remaining = $('#lblRemaining').text().replace(/[^0-9]/g, '');
+
+                if (remaining) {
+                    // Gán vào input và tự kích hoạt sự kiện 'input' để nó tự format dấu chấm
+                    $('#Payment_Amount').val(remaining).trigger('input');
+                }
+            });
+
+            $('#modalPayment').modal('show');
+        }
+
+
+
+        // 3. Xem ảnh Full
+        window.viewFullImage = function(url) {
+            $('#imgFullSize').attr('src', url);
+            $('#modalImageViewer').modal('show');
+        }
+
+        // 4. Xóa Payment
+        window.deletePayment = function(id) {
+            Swal.fire({
+                title: 'Xóa thanh toán?',
+                text: "Dữ liệu công nợ sẽ được tính toán lại!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Xóa',
+                cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.post('/Admin/Supplier/DeleteSupplierPayment', { id: id }, function(res) {
+                         if (res.success) {
+                            Swal.fire('Đã xóa', '', 'success');
+                            tblDebts.ajax.reload(null, false); // Reload giữ trang
+                        } else {
+                            Swal.fire('Lỗi', res.message || 'Không thể xóa', 'error');
+                        }
+                    });
+                }
+            });
+        }
+
+        // --- MAIN LOGIC ---
+        $(document).ready(async function () {
+            await loadCurrentUser();
+
+            // Load Dropdown Supplier
+            await populateDropdown("#ddlSupplier", '@Url.Action("GetSuppliersForDropdown", "PurchaseOrder")', "-- Nhà cung cấp --");
+
+            // Load Current User (để set supplier nếu là NCC đăng nhập)
+            try {
+                const userRes = await $.get('/Admin/Login/GetCurrentUser');
+                if (userRes.success && userRes.data.SupplierId) {
+                    $("#ddlSupplier").val(userRes.data.SupplierId).trigger('change').prop("disabled", true);
+                }
+            } catch (e) { console.log('Không lấy được user info'); }
+
+            // Config DataTables Defaults
+            $.extend(true, $.fn.dataTable.defaults, {
+                dom: 't<"bottom_controls"lp>',
+
+                language: {
+                    search: "",
+                    searchPlaceholder: "Tìm kiếm...",
+                    info: "",
+                    infoEmpty: "",
+                    infoFiltered: "",
+                },
+            });
+
+            // --- INIT DATATABLE ---
+            if ($.fn.DataTable.isDataTable('#tblDebts')) {
+                $('#tblDebts').DataTable().clear().destroy();
+            }
+
+            tblDebts = $('#tblDebts').DataTable({
+                processing: true,
+                serverSide: false, // Lưu ý: Controller phải support server-side paging
+                ajax: {
+                    url: '/Admin/Supplier/GetAllDebt', // [CHECK LẠI URL NÀY CÓ ĐÚNG CONTROLLER KHÔNG]
+                    type: 'POST',
+                    data: function (d) {
+                        d.keyword = $('#txtSearch').val() ?? "";
+                        d.supplierId = $('#ddlSupplier').val() || 0;
+                        d.status = $('#ddlStatus').val();
+                        d.fromDate = $('#txtFromDate').val();
+                        d.toDate = $('#txtToDate').val();
+                    }
+                },
+                columns: [
+                    {
+                        className: 'dt-control',
+                        orderable: false,
+                        data: null,
+                        defaultContent: '',
+                        width: '30px'
+                    },
+                    {
+                        data: 'PurchaseOrderId',
+                        render: d =>
+                            `<a href="/Admin/PurchaseOrder/PurchaseOrderList/${d}"
+                            target="_blank"
+                            rel="noopener"
+                            class="fw-bold text-primary text-decoration-none">
+                            #${d}
+                         </a>`
+                    },
+                    { data: 'SupplierName', className: 'fw-bold' },
+                    {
+                        data: 'CreatedAt',
+                        render: d => d ? parseNetDate(d).format('DD/MM/YYYY') : ''
+                    },
+                    {
+                        data: 'DueDate',
+                        render: function (d, type, row) {
+                            if (!d) return '<span class="text-muted">—</span>';
+                            const date = parseNetDate(d);
+                            // Logic quá hạn: Ngày < Hiện tại VÀ chưa trả xong
+                            const isOverdue = date.isBefore(moment(), 'day') && row.Status !== 'Paid';
+                            const html = date.format('DD/MM/YYYY');
+                            return isOverdue ? `<span class="text-danger fw-bold" title="Quá hạn">${html} <i class="fa fa-exclamation"></i></span>` : html;
+                        }
+                    },
+                    {
+                        data: 'TotalAmount', className: 'text-end fw-bold',
+                        render: d => moneyFormatter.format(d)
+                    },
+                    {
+                        data: 'PaidAmount', className: 'text-end text-success',
+                        render: d => moneyFormatter.format(d)
+                    },
+                    {
+                        data: 'UnpaidAmount', className: 'text-end',
+                        render: d => (d > 0) ? `<span class="text-danger fw-bold">${moneyFormatter.format(d)}</span>` : '<span class="text-muted">0</span>'
+                    },
+                    {
+                        data: 'Status',
+                        className: 'text-center',
+                        render: function (d) {
+                            if (!d) return `<span class="badges bg-lightgray">Unknown</span>`;
+
+                            const status = d.toLowerCase();
+                            let badgeClass = '';
+                            let statusText = d; // Mặc định giữ nguyên text từ DB
+
+                            switch (status) {
+                                case 'paid':
+                                    badgeClass = 'bg-lightgreen';
+                                    statusText = 'Paided';
+                                    break;
+                                case 'partial':
+                                    badgeClass = 'bg-lightyellow';
+                                    statusText = 'Partial';
+                                    break;
+                                case 'unpaid':
+                                    badgeClass = 'bg-lightred';
+                                    statusText = 'Unpaid';
+                                    break;
+                                case 'overpaid':
+                                    badgeClass = 'bg-lightgreen'; // Trả dư thường tính là đã xong việc trả nợ
+                                    statusText = 'OverPaid';
+                                    break;
+                                default:
+                                    badgeClass = 'bg-lightgray';
+                                    break;
+                            }
+
+                            return `<span class="badges ${badgeClass}">${statusText}</span>`;
+                        }
+                    },
+                    {
+                        data: 'DebtId', className: 'text-center',
+                        render: function (id, type, row) {
+
+                            let disabled = CURRENT_USER.isSupplier === true
+                                ? 'opacity-50 pe-none'
+                                : '';
+
+                            let title = CURRENT_USER.isSupplier === true
+                                ? 'Nhà cung cấp không được phép thanh toán'
+                                : 'Thanh toán';
+
+                            let html = '';
+
+                            if (row.UnpaidAmount > 0) {
+                                html += `
+            <button class="btn btn-sm btn-outline-success me-1 ${disabled}"
+                    title="${title}"
+                    onclick="openPaymentModal(
+                        ${id},
+                        '${row.PurchaseOrderId}',
+                        '${row.SupplierName}',
+                        ${row.UnpaidAmount}
+                    )">
+                <i class="fa fa-money-bill"></i>
+            </button>`;
+                            }
+
+                            return html;
+                        }
+                    }
+                ],
+                order: [[3, 'desc']],
+                drawCallback: function () {
+                    $('.dataTables_filter input').attr('id', 'txtSearch').attr('placeholder', 'Tìm kiếm mã PO, NCC...');
+                },
+            });
+
+            // Reload table events
+            $('#ddlSupplier, #ddlStatus, #txtFromDate, #txtToDate').on('change', () => tblDebts.ajax.reload());
+
+            let typingTimer;              
+            
+            $(document).on('input', '#txtSearch', function () {
+                clearTimeout(typingTimer);
+                typingTimer = setTimeout(function () {
+                    tblDebts.ajax.reload();
+                }, 300);
+            });
+
+            // --- EVENT CLICK MỞ CHILD ROW ---
+            $('#tblDebts tbody').on('click', 'td.dt-control', function () {
+                const tr = $(this).closest('tr');
+                const row = tblDebts.row(tr);
+
+                if (row.child.isShown()) {
+                    row.child.hide();
+                    tr.removeClass('dt-hasChild');
+                } else {
+                    loadPaymentDetails(row);
+                }
+            });
+
+            $('#tblDebts tbody').on('click', 'tr', function (e) {
+                if ($(this).hasClass('child') || $(this).prev().hasClass('child')) return;
+
+                if ($(e.target).closest("button, a, input, [onclick]").length > 0) return;
+
+                const tr = $(this);
+                const row = tblDebts.row(tr);
+
+                if (row.child.isShown()) {
+                    row.child.hide();
+                    tr.removeClass('dt-hasChild');
+                } else {
+                    loadPaymentDetails(row);
+                }
+            });
+
+            $('#Payment_Amount').on('input', function (e) {
+                let value = $(this).val().replace(/[^0-9]/g, '');
+
+                if (value !== "") {
+                    value = parseInt(value).toLocaleString('vi-VN');
+                }
+
+                // 3. Gán lại vào input
+                $(this).val(value);
+            });
+
+            $('#btnSavePayment').on('click', function() {
+                const debtId = $('#Payment_DebtId').val();
+                const amount = parseFloat(
+                    $('#Payment_Amount').val().replace(/\./g, '')
+                ) || 0;
+                const method = $('#Payment_Method').val();
+                const note = $('#Payment_Note').val();
+                const file = $('#Payment_Proof')[0].files[0];
+
+                if (!amount || amount <= 0) {
+                    Swal.fire('Lỗi', 'Vui lòng nhập số tiền hợp lệ', 'error');
+                    return;
+                }
+
+                // Dùng FormData để upload file
+                var formData = new FormData();
+                formData.append("DebtId", debtId);
+                formData.append("Amount", amount);
+                formData.append("PaymentMethod", method);
+                if (file) formData.append("ProofImage", file);
+
+                $.ajax({
+                    url: '/Admin/Supplier/CreateSupplierPayment',
+                    type: 'POST',
+                    data: formData,
+                    contentType: false, // Bắt buộc cho upload file
+                    processData: false, // Bắt buộc cho upload file
+                    beforeSend: () => Swal.showLoading(),
+                    success: function(res) {
+                        if (res.success) {
+                            $('#modalPayment').modal('hide');
+                            Swal.fire('Thành công', 'Đã lưu thanh toán', 'success');
+                            tblDebts.ajax.reload(null, false);
+                        } else {
+                            Swal.fire('Thất bại', res.message, 'error');
+                        }
+                    },
+                    error: () => Swal.fire('Lỗi', 'Lỗi kết nối server', 'error')
+                });
+            });
+
+             // Preview ảnh khi chọn file
+            $('#Payment_Proof').change(function() {
+                const file = this.files[0];
+                if (file) {
+                    let reader = new FileReader();
+                    reader.onload = function(event) {
+                        $('#imgPreview').attr('src', event.target.result);
+                        $('#previewContainer').show();
+                    }
+                    reader.readAsDataURL(file);
+                } else {
+                     $('#previewContainer').hide();
+                }
+            });
+        });
+
+        // --- HÀM LOAD CHILD ROW ---
+        function loadPaymentDetails(row) {
+            // [CHECK URL]: Đảm bảo URL này đúng
+            $.get('/Admin/Supplier/GetPaymentByDebt', { debtId: row.data().DebtId }, function (res) {
+                if (res.data) {
+                    row.child(formatChildRow(res.data)).show();
+                    $(row.node()).addClass('dt-hasChild');
+                } else {
+                    row.child('<div class="text-danger p-2 text-center">Không tải được dữ liệu</div>').show();
+                }
+            });
+        }
+
+        function formatChildRow(payments) {
+            if (!payments || payments.length === 0) {
+                return `<div class="text-muted text-center p-3 bg-light fst-italic">Chưa có lịch sử thanh toán</div>`;
+            }
+
+            const rows = payments.map(p => {
+
+                const date = parseNetDate(p.PaymentDate);
+
+                const proofHtml = p.PaymentProof
+                    ? `<img src="${p.PaymentProof}"
+                class="payment-proof-thumb"
+                onclick="viewFullImage('${p.PaymentProof}')"
+                title="Xem ảnh lớn" />`
+                    : '<span class="text-muted small">Không có ảnh</span>';
+
+                const isSupplier = CURRENT_USER.isSupplier === true;
+
+                const deleteClass = isSupplier ? 'opacity-50 pe-none' : '';
+                const deleteTitle = isSupplier
+                    ? 'Nhà cung cấp không được phép xóa thanh toán'
+                    : 'Xóa thanh toán';
+
+                return `
+        <tr class="${isSupplier ? 'table-light' : ''}">
+            <td class="align-middle">
+                ${date ? date.format('DD/MM/YYYY HH:mm') : '—'}
+            </td>
+
+            <td class="align-middle">
+                ${p.PaymentMethod}
+            </td>
+
+            <td class="align-middle text-end fw-bold text-success">
+                ${moneyFormatter.format(p.Amount)}
+            </td>
+
+            <td class="align-middle text-center">
+                ${proofHtml}
+            </td>
+
+            <td class="align-middle text-center">
+                <a href="javascript:void(0)"
+                   class="text-danger ${deleteClass}"
+                   title="${deleteTitle}"
+                   onclick="deletePayment(${p.PaymentId})">
+                    <i class="fa fa-trash"></i>
+                </a>
+            </td>
+        </tr>
+    `;
+            }).join('');
+
+
+            return `
+                <div class="child-row-container">
+                    <h6 class="text-success mb-2"><i class="fa fa-history"></i> Lịch sử thanh toán</h6>
+                    <table class="table table-sm table-bordered bg-white mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Ngày TT</th>
+                                <th>Phương thức</th>
+                                <th class="text-end">Số tiền</th>
+                                <th class="text-center">Chứng từ</th>
+                                <th class="text-center">#</th>
+                            </tr>
+                        </thead>
+                        <tbody>${rows}</tbody>
+                    </table>
+                </div>`;
+        }
+
+        function populateDropdown(selector, url, defaultText) {
+            return $.ajax({ url: url, type: 'GET' }).then(res => {
+                if(res.success) {
+                    let html = `<option value="">${defaultText}</option>`;
+                    res.data.forEach(item => html += `<option value="${item.id}">${item.name}</option>`);
+                    $(selector).html(html);
+                }
+            });
+        }
+    </script>
+}
+
+@section Styles {
+    <style>
+        /* =========================================
+   1. NÚT MỞ RỘNG (+/-) CHUẨN XANH LÁ
+   ========================================= */
+        table.dataTable td.dt-control {
+            text-align: center;
+            cursor: pointer;
+            color: #198754; /* Màu xanh lá */
+            font-weight: bold;
+            font-size: 1.1rem;
+            vertical-align: middle;
+            transition: color 0.2s;
+        }
+
+            /* Trạng thái đóng: Dấu cộng */
+            table.dataTable td.dt-control::before {
+                content: "+";
+                display: inline-block;
+                background-color: #e8f5e9; /* Nền xanh nhạt */
+                width: 24px;
+                height: 24px;
+                line-height: 22px; /* Căn giữa dọc */
+                border-radius: 50%;
+                border: 2px solid #198754;
+                transition: all 0.2s ease;
+            }
+
+            /* Hover vào nút cộng */
+            table.dataTable td.dt-control:hover::before {
+                background-color: #198754;
+                color: white;
+                transform: scale(1.1);
+            }
+
+        /* Trạng thái mở: Dấu trừ */
+        table.dataTable tr.dt-hasChild td.dt-control::before {
+            content: "−"; /* Dấu trừ dài */
+            background-color: #198754;
+            color: white;
+            border-color: #198754;
+            transform: rotate(180deg); /* Xoay nhẹ hiệu ứng */
+        }
+
+        /* Container của bảng con */
+        .child-row-container {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-left: 5px solid #198754;
+            margin: 5px 0;
+            border-radius: 0 5px 5px 0;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        /* Ảnh thumbnail chứng từ */
+        .payment-proof-thumb {
+            width: 50px;
+            height: 35px;
+            object-fit: cover;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            cursor: zoom-in;
+            transition: all 0.2s ease;
+        }
+
+            .payment-proof-thumb:hover {
+                transform: scale(1.5);
+                border-color: #198754;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+                z-index: 10;
+            }
+
+        .currency-input {
+            color: #198754;
+            font-weight: 700;
+        }
+
+        /* Animation cho child row */
+.child-row-container {
+    /* Ép trình duyệt tối ưu phần cứng cho hiệu ứng */
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+
+    /* Animation mới: mượt và có độ nảy nhẹ */
+    animation: smoothExpand 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    transform-origin: top;
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-left: 5px solid #198754;
+    border-radius: 0 8px 8px 0;
+    box-shadow: inset 0 2px 10px rgba(0,0,0,0.03);
+}
+
+@@keyframes smoothExpand {
+    0% {
+        opacity: 0;
+        transform: scaleY(0.95) translateY(-10px);
+        filter: blur(2px); /* Hiệu ứng mờ nhẹ khi đang rơi xuống */
+    }
+    100% {
+        opacity: 1;
+        transform: scaleY(1) translateY(0);
+        filter: blur(0);
+    }
+}
+    /* Làm các dòng trong bảng con hiện ra lần lượt */
+.child-row-container tbody tr {
+    animation: fadeInRight 0.5s ease forwards;
+    opacity: 0;
+}
+
+/* Tạo độ trễ cho từng dòng (tối đa 5 dòng đầu) */
+.child-row-container tbody tr:nth-child(1) { animation-delay: 0.1s; }
+.child-row-container tbody tr:nth-child(2) { animation-delay: 0.15s; }
+.child-row-container tbody tr:nth-child(3) { animation-delay: 0.2s; }
+.child-row-container tbody tr:nth-child(4) { animation-delay: 0.25s; }
+.child-row-container tbody tr:nth-child(5) { animation-delay: 0.3s; }
+
+@@keyframes fadeInRight {
+    from {
+        opacity: 0;
+        transform: translateX(-15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+        .currency-input {
+            color: #198754 !important; /* Màu xanh lá đặc trưng của tiền/thanh toán */
+            letter-spacing: 1px;
+        }
+    </style>
+}

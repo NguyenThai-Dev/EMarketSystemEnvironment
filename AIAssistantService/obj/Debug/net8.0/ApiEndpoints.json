@@ -1,0 +1,18 @@
+[
+  {
+    "ContainingType": "AIAssistantService.Controllers.ChatController",
+    "Method": "Ask",
+    "RelativePath": "api/chat/ask",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "AIAssistantService.Controllers.ChatRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  }
+]

@@ -1,0 +1,1257 @@
+﻿@{
+    ViewBag.Title = "Quản lý Báo giá";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+
+    // Giả lập cấu hình hệ thống (hoặc lấy từ DB)
+    var vatRate = 10; // 10%
+    var pointRate = 1000; // 1 điểm = 1000đ
+}
+
+<div class="page-wrapper">
+    <div class="content">
+        <div class="page-header">
+            <div class="page-title">
+                <h4>QUẢN LÝ BÁO GIÁ</h4>
+                <h6>Tạo, theo dõi và chốt đơn hàng từ báo giá</h6>
+            </div>
+            <div class="page-btn">
+                <button class="btn btn-added" onclick="openCreateModal()">
+                    <img src="~/assets/img/icons/plus.svg" alt="img" class="me-1"> Tạo báo giá
+                </button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+
+                <div class="table-top">
+                    <div class="search-set">
+                        <div class="search-path">
+                            <a class="btn btn-filter" id="filter_search">
+                                <img src="~/assets/img/icons/filter.svg" alt="img" />
+                                <span><img src="~/assets/img/icons/closes.svg" alt="img" /></span>
+                            </a>
+                        </div>
+                        <div class="search-input">
+                            <a class="btn btn-searchset"><img src="~/assets/img/icons/search-white.svg" alt="img" /></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" id="filter_inputs">
+                    <div class="card-body pb-0">
+                        <div class="row">
+
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                    @Html.DropDownList(
+                                                  "branchId",
+                                                  (SelectList)ViewBag.Branches,
+                                                  "-- Chi nhánh --",
+                                                  new { @class = "select form-control", @id = "filterBranch" }
+                                              )
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <select id="filterStatus" class="select form-control">
+                                        <option value="">-- Trạng thái --</option>
+                                        <option value="Draft">Nháp</option>
+                                        <option value="Sent">Đã gửi</option>
+                                        <option value="Accepted">Khách chốt</option>
+                                        <option value="Converted">Đã tạo đơn</option>
+                                        <option value="Expired">Hết hạn</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <input type="date" id="fromDate" class="form-control">
+                                        <span class="input-group-text">đến</span>
+                                        <input type="date" id="toDate" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-2 col-sm-6 col-12">
+                                <div class="form-group d-flex">
+                                    <button class="btn btn-filters ms-auto me-2" onclick="reloadTable()" title="Tìm kiếm">
+                                        <img src="~/assets/img/icons/search-whites.svg" alt="img" />
+                                    </button>
+                                    <button class="btn btn-danger"
+                                            onclick="resetFilter()"
+                                            title="Làm mới bộ lọc"
+                                            style="background:#ff9f43;border:none;">
+                                        <i class="fa fa-undo text-white"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table datanew" id="tblQuotation" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Mã báo giá</th>
+                                <th>Khách hàng</th>
+                                <th>Chi nhánh</th>
+                                <th>Ngày tạo</th>
+                                <th>Hết hạn</th>
+                                <th>Tổng tiền</th>
+                                <th class="text-center">Trạng thái</th>
+                                <th class="text-center">Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalCreate" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white py-2">
+                <h5 class="modal-title text-white"><i class="fa fa-cart-plus me-2"></i>Tạo Báo Giá Mới</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body bg-light">
+                <div class="row h-100">
+                    <div class="col-lg-4 col-md-12 mb-3">
+                        <div class="card shadow-sm border-0 h-100">
+                            <div class="card-body">
+                                <h6 class="text-primary fw-bold mb-3 text-uppercase border-bottom pb-2">1. Thông tin Khách hàng</h6>
+
+                                <div class="form-group mb-3">
+                                    <label class="form-label small fw-bold">Chi nhánh xuất</label>
+                                    @Html.DropDownList("BranchId", (SelectList)ViewBag.Branches, new { @class = "form-select", @id = "newBranchId" })
+                                </div>
+
+                                <div class="form-group position-relative mb-3">
+                                    <label class="form-label small fw-bold">Tìm khách hàng <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-white"><i class="fa fa-user text-primary"></i></span>
+                                        <input type="text" id="txtCustomerSearch" class="form-control"
+                                               placeholder="Tên hoặc SĐT..." autocomplete="off">
+                                        <button class="btn btn-outline-secondary" onclick="resetCustomer()" type="button" title="Xóa"><i class="fa fa-times"></i></button>
+                                    </div>
+
+                                    <div id="customerSuggest" class="list-group position-absolute w-100 shadow-lg"
+                                         style="z-index:9999; top:100%; display:none; max-height:250px; overflow-y:auto;">
+                                    </div>
+                                </div>
+
+                                <div id="customerInfoBox" class="d-none bg-info bg-opacity-10 p-2 rounded border border-info mb-3">
+                                    <div class="d-flex align-items-center">
+                                        <div class="me-2">
+                                            <i class="fa fa-user-circle fa-2x text-info"></i>
+                                        </div>
+                                        <div class="flex-grow-1 line-height-sm">
+                                            <div class="fw-bold text-dark" id="lblCustName"></div>
+                                            <small class="text-muted" id="lblCustPhone"></small>
+                                        </div>
+                                        <div class="text-end">
+                                            <span class="badge bg-warning text-dark" id="lblCustRank">Member</span>
+                                            <div class="text-success fw-bold small mt-1"><span id="lblCustPoint">0</span> pts</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="mt-2 pt-2 border-top border-info border-opacity-25">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="chkUsePoint" onchange="toggleUsePoints()">
+                                            <label class="form-check-label small fw-bold text-dark" for="chkUsePoint">
+                                                Dùng điểm tích lũy
+                                            </label>
+                                        </div>
+                                        <div id="pointInputArea" class="mt-1 d-none">
+                                            <div class="input-group input-group-sm">
+                                                <input type="number" id="txtPointUsed" class="form-control" placeholder="Nhập điểm" min="0">
+                                                <span class="input-group-text">điểm</span>
+                                            </div>
+                                            <small class="text-muted fst-italic">Quy đổi: 1 điểm = <span id="lblPointRate">@pointRate</span>đ</small>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label class="form-label small fw-bold">Ngày hết hạn</label>
+                                    <input type="date" id="newExpiryDate" class="form-control" value="@DateTime.Now.AddDays(7).ToString("yyyy-MM-dd")">
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label small fw-bold">Ghi chú nội bộ</label>
+                                    <textarea id="newNote" class="form-control" rows="3" placeholder="Ghi chú về điều khoản, vận chuyển..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-8 col-md-12">
+                        <div class="card shadow-sm border-0 h-100">
+                            <div class="card-body d-flex flex-column p-0">
+                                <div class="p-3 border-bottom bg-white">
+                                    <h6 class="text-primary fw-bold mb-2 text-uppercase">2. Chọn hàng hóa</h6>
+                                    <div class="position-relative">
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-white border-end-0"><i class="fa fa-search text-primary"></i></span>
+                                            <input type="text" id="productSearch" class="form-control border-start-0 ps-0" placeholder="Tìm sản phẩm (F2)..." autocomplete="off">
+                                        </div>
+                                        <div id="productSuggest" class="list-group position-absolute w-100 shadow-lg" style="z-index: 9999; top: 100%; display:none; max-height: 400px; overflow-y: auto;"></div>
+                                    </div>
+                                </div>
+
+                                <div class="table-responsive flex-grow-1 bg-white">
+                                    <table class="table table-hover mb-0" id="tblQuoteItems">
+                                        <thead class="table-light sticky-top" style="z-index: 1;">
+                                            <tr>
+                                                <th class="ps-3">Sản phẩm</th>
+                                                <th class="text-center" width="100px">SL</th>
+                                                <th class="text-end" width="120px">Đơn giá</th>
+                                                <th class="text-end" width="120px">Khuyến mãi</th>
+                                                <th class="text-end" width="120px">Thành tiền</th>
+                                                <th width="40px"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="bg-light p-3 border-top">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label class="small fw-bold text-muted">Giảm giá thêm (Voucher/KM khác):</label>
+                                            <div class="input-group input-group-sm mb-2" style="max-width: 200px;">
+                                                <input type="number" id="txtManualDiscount" class="form-control text-end" value="0" oninput="calculateTotals()">
+                                                <span class="input-group-text">VNĐ</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="d-flex justify-content-between mb-1">
+                                                <span class="text-muted">Tổng tiền hàng:</span>
+                                                <span class="fw-bold" id="lblSubTotal">0</span>
+                                            </div>
+
+                                            <div class="d-flex justify-content-between mb-1 text-success d-none" id="rowPointDiscount">
+                                                <span><i class="fa fa-gift me-1"></i>Trừ điểm tích lũy:</span>
+                                                <span class="fw-bold" id="lblPointDiscount">-0</span>
+                                            </div>
+
+                                            <div class="d-flex justify-content-between mb-1 text-danger" id="rowManualDiscount">
+                                                <span>Giảm giá khác:</span>
+                                                <span class="fw-bold" id="lblManualDiscount">-0</span>
+                                            </div>
+
+                                            <div class="d-flex justify-content-between mb-2">
+                                                <span>VAT (@vatRate%):</span>
+                                                <span class="fw-bold" id="lblVatAmount">0</span>
+                                            </div>
+
+                                            <div class="d-flex justify-content-between border-top border-secondary pt-2">
+                                                <span class="h5 mb-0 fw-bold">TỔNG CỘNG:</span>
+                                                <span class="h4 mb-0 text-primary fw-bold" id="lblFinalTotal">0</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer bg-white">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-success fw-bold px-4" onclick="saveQuotation()">
+                    <i class="fa fa-save me-2"></i> LƯU BÁO GIÁ
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalDetail" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header bg-light">
+                <h5 class="modal-title text-primary">
+                    <i class="fa fa-file-invoice me-2"></i>Chi tiết báo giá: <span id="d_Code" class="fw-bold text-dark">...</span>
+                </h5>
+                <div class="ms-auto me-3" id="d_StatusBadge"></div> <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-4">
+                    <div class="col-md-4 border-end">
+                        <label class="text-muted small text-uppercase fw-bold">Khách hàng</label>
+                        <div class="fw-bold fs-6" id="d_CusName">...</div>
+                        <div id="d_CusPhone"><i class="fa fa-phone me-1 small"></i>...</div>
+                        <div class="small text-muted" id="d_CusAddress">...</div>
+                    </div>
+                    <div class="col-md-4 border-end">
+                        <label class="text-muted small text-uppercase fw-bold">Thông tin phiếu</label>
+                        <div>Ngày tạo: <span id="d_IssueDate" class="fw-bold">...</span></div>
+                        <div>Hết hạn: <span id="d_ExpiryDate" class="text-danger fw-bold">...</span></div>
+                        <div>Người tạo: <span id="d_Creator" class="text-secondary">...</span></div>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="text-muted small text-uppercase fw-bold">Chi nhánh & Liên kết</label>
+                        <div class="fw-bold" id="d_Branch">...</div>
+                        <div id="d_LinkOrder" class="mt-1 d-none">
+                            <i class="fa fa-link me-1 text-success"></i>Đơn hàng: <span class="badge bg-success" id="d_OrderId">...</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-responsive border rounded shadow-sm">
+                    <table class="table table-sm table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="py-2 ps-3">#</th>
+                                <th class="py-2">Sản phẩm</th>
+                                <th class="py-2 text-center">ĐVT</th>
+                                <th class="py-2 text-end">Số lượng</th>
+                                <th class="py-2 text-end">Đơn giá (Gồm VAT)</th>
+                                <th class="py-2 text-end">Chiết khấu/sp</th>
+                                <th class="py-2 text-end pe-3">Thành tiền</th>
+                            </tr>
+                        </thead>
+                        <tbody id="d_TableBody"></tbody>
+                        <tfoot class="bg-light">
+                            <tr>
+                                <td colspan="6" class="text-end border-0 pt-3">Tổng tiền hàng (Đã thuế):</td>
+                                <td class="text-end fw-bold pt-3 pe-3" id="d_TotalAmount">0</td>
+                            </tr>
+                            <tr>
+                                <td colspan="6" class="text-end border-0 text-danger">
+                                    <span id="d_DiscountReason" class="small fst-italic me-2 text-muted"></span>
+                                    Giảm giá báo giá:
+                                </td>
+                                <td class="text-end text-danger pe-3" id="d_Discount">0</td>
+                            </tr>
+                            <tr class="border-top">
+                                <td colspan="6" class="text-end fs-5 fw-bold text-primary py-3">THÀNH TIỀN:</td>
+                                <td class="text-end fs-4 fw-bold text-primary py-3 pe-3" id="d_FinalAmount">0</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <div class="alert alert-warning mt-3 mb-0 border-start border-4" id="d_NoteBox" style="display:none;">
+                    <strong><i class="fa fa-info-circle me-1"></i> Ghi chú:</strong> <span id="d_Note"></span>
+                </div>
+            </div>
+
+            <div class="modal-footer bg-light">
+                <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Đóng</button>
+                <div id="actionButtons">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        // ==========================================
+        // 1. CẤU HÌNH & KHỞI TẠO STATE
+        // ==========================================
+        const CONFIG = {
+            VAT_RATE: 8,        
+            POINT_RATE: 100,     
+            API: {
+                SEARCH_PRODUCT: '/Admin/Product/SearchProductByName', // Thay URL thật của bạn
+                SEARCH_CUSTOMER: '/Admin/Customer/GetAllCustomerFiltered', // Thay URL thật của bạn
+                SAVE_QUOTE: '/Admin/Quotation/SaveQuotation',
+                GET_LIST: '/Admin/Quotation/GetQuotationList',
+                GET_DETAIL: '/Admin/Quotation/GetQuotationDetail',
+                CONVERT_ORDER: '/Admin/Quotation/ConvertToOrder',
+                GET_VAT_RATE: '/Admin/Order/GetEMarketVAT',
+                GET_POINT_RATE: '/Admin/Order/GetPointExchangeRate'
+            }
+        };
+
+        // State quản lý dữ liệu "Mini POS"
+        var state = {
+            items: [],          // Danh sách hàng trong giỏ
+            customer: null,     // Khách hàng đang chọn
+            discount: 0,        // Giảm giá thủ công (VNĐ)
+            pointsUsed: 0,      // Số điểm khách dùng
+            currentQuoteId: 0   // ID báo giá đang xem chi tiết (để chốt đơn)
+        };
+
+        var tblQuotation; // Biến giữ DataTable
+
+        // ==========================================
+        // 2. DOCUMENT READY & EVENT BINDING
+        // ==========================================
+        $(document).ready(function () {
+
+            // --- A. Khởi tạo DataTable (Danh sách báo giá) ---
+            initDataTable();
+            updateSystemValue();
+            // --- B. Sự kiện Lọc danh sách ---
+            $('#filterBranch, #filterStatus, #fromDate, #toDate').on('change', () => tblQuotation.ajax.reload());
+            $('#keyword').on('input', debounce(() => tblQuotation.ajax.reload(), 500));
+
+            // --- C. Sự kiện trong Modal Tạo Báo Giá (Mini POS) ---
+
+            // 1. Tìm sản phẩm (Debounce 300ms)
+            $('#productSearch').on('input', debounce(searchProducts, 300));
+
+            // 2. Tìm khách hàng (Debounce 300ms)
+            $('#txtCustomerSearch').on('input', debounce(searchCustomers, 300));
+
+            // 3. Nhập giảm giá thủ công
+            $('#txtManualDiscount').on('input', function () {
+                // Chỉ cho nhập số dương
+                let val = parseFloat($(this).val()) || 0;
+                if (val < 0) $(this).val(0);
+                calculateTotals();
+            });
+
+            // 4. Nhập điểm tích lũy
+            $('#txtPointUsed').on('input', function () {
+                state.pointsUsed = parseInt($(this).val()) || 0;
+                validatePoints();
+                calculateTotals();
+            });
+
+            // 5. Sự kiện phím tắt (F2 để tìm hàng)
+            $(document).on('keydown', function (e) {
+                if (e.key === 'F2' && $('#modalCreate').hasClass('show')) {
+                    e.preventDefault();
+                    $('#productSearch').focus();
+                }
+            });
+        });
+
+        function updateSystemValue() {
+            $.when(
+                $.get(CONFIG.API.GET_VAT_RATE),
+                $.get(CONFIG.API.GET_POINT_RATE)
+            ).done(function (vatResponse, pointResponse) {
+                if (vatResponse.success) {
+                    CONFIG.VAT_RATE = vatResponse.data;
+                }
+
+                if (pointResponse.success) {
+                    CONFIG.POINT_RATE = pointResponse.data;
+                }
+            }).fail(function () {
+                console.error("Lỗi khi lấy thông số hệ thống, sử dụng giá trị mặc định.");
+            });
+        }
+
+        // ==========================================
+        // 3. LOGIC TÍNH TOÁN (CORE ENGINE)
+        // ==========================================
+        function calculateTotals() {
+            // subTotal = Tổng của (Số lượng * Đơn giá - Số lượng * Giảm giá món)
+            let subTotal = state.items.reduce((sum, item) => {
+                let rowTotal = (item.qty * item.price) - (item.qty * item.discount);
+                return sum + rowTotal;
+            }, 0);
+
+            // Giảm giá từ điểm tích lũy
+            let pointDiscount = state.pointsUsed * CONFIG.POINT_RATE;
+
+            // Giảm giá thủ công trên tổng bill
+            let manualDiscount = parseFloat($('#txtManualDiscount').val()) || 0;
+            state.discount = manualDiscount;
+
+            let extraDiscount = pointDiscount + manualDiscount;
+            if (extraDiscount > subTotal) extraDiscount = subTotal;
+
+            let amountBeforeTax = subTotal - extraDiscount;
+            let vatAmount = amountBeforeTax * (CONFIG.VAT_RATE / 100);
+            let finalTotal = amountBeforeTax + vatAmount;
+
+            // Cập nhật UI
+            $('#lblSubTotal').text(formatCurrency(subTotal));
+            $('#lblManualDiscount').text('-' + formatCurrency(manualDiscount));
+            $('#lblVatAmount').text(formatCurrency(vatAmount));
+            $('#lblFinalTotal').text(formatCurrency(finalTotal));
+            $('#lblTotalQty').text(state.items.reduce((sum, i) => sum + parseInt(i.qty), 0));
+        }
+
+        // ==========================================
+        // 4. QUẢN LÝ SẢN PHẨM (CART)
+        // ==========================================
+        function searchProducts() {
+            let keyword = $('#productSearch').val();
+            if (keyword.length < 2) { $('#productSuggest').hide(); return; }
+            let branchId = $('#newBranchId').val();
+            // Gọi API tìm sản phẩm
+            $.post(CONFIG.API.SEARCH_PRODUCT, { keyWord: keyword, branchId: branchId }, function (res) {
+                let products = res.data || res || []; // Tùy cấu trúc trả về của API
+                let html = '';
+
+                if (products.length > 0) {
+                    products.forEach(p => {
+                        let price = p.Price || p.UnitPrice || 0;
+                        // Map dữ liệu để chuẩn hóa
+                        let obj = {
+                            id: p.ProductId || p.product_id,
+                            name: p.Name || p.name,
+                            price: price,
+                            image: p.Image,
+                            stock: p.Quantity || 0,
+                            discount: p.DiscountAmount || 0
+                        };
+
+                        html += `
+                                    <a href="javascript:void(0);" class="list-group-item list-group-item-action"
+                                       onclick='selectProduct(${JSON.stringify(obj)})'>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <strong>${obj.name}</strong><br>
+                                                <small class="text-muted">Mã: ${p.Barcode || '---'} | Tồn: ${obj.stock}</small>
+                                            </div>
+                                            <span class="text-primary fw-bold">${formatCurrency(price)}</span>
+                                        </div>
+                                    </a>`;
+                    });
+                    $('#productSuggest').html(html).show();
+                } else {
+                    $('#productSuggest').hide();
+                }
+            });
+        }
+
+        function selectProduct(product) {
+            // Kiểm tra xem hàng đã có trong giỏ chưa
+            let exist = state.items.find(x => x.id === product.id);
+            if (exist) {
+                exist.qty++;
+            } else {
+                state.items.push({
+                    id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    qty: 1,
+                    image: product.image,
+                    discount: product.discount
+                });
+            }
+
+            // Reset ô tìm kiếm
+            $('#productSearch').val('').focus();
+            $('#productSuggest').hide();
+
+            // Render lại lưới và tính tiền
+            renderQuoteGrid();
+        }
+
+        function renderQuoteGrid() {
+            let html = '';
+            if (state.items.length === 0) {
+                html = '<tr><td colspan="6" class="text-center text-muted py-5"><i class="fa fa-shopping-cart fa-2x mb-3 text-secondary opacity-50"></i><br>Chưa có sản phẩm nào</td></tr>';
+            } else {
+                state.items.forEach((item, idx) => {
+                    // TÍNH TOÁN: (Đơn giá - Giảm giá mỗi món) * Số lượng
+                    let totalDiscountOfRow = item.discount * item.qty;
+                    let lineTotal = (item.qty * item.price) - totalDiscountOfRow;
+
+                    html += `
+            <tr>
+                <td class="align-middle ps-3">
+                    <div class="fw-bold text-dark text-truncate" style="max-width: 200px;" title="${item.name}">${item.name}</div>
+                    <small class="text-muted">Đơn giá gốc: ${formatCurrency(item.price)}</small>
+                </td>
+                <td class="align-middle text-center">
+                    <input type="number" class="form-control form-control-sm text-center d-inline-block"
+                           style="width: 65px"
+                           value="${item.qty}" min="1"
+                           onchange="updateItemQty(${idx}, this.value)">
+                </td>
+                <td class="align-middle text-end">${formatCurrency(item.price)}</td>
+                <td class="align-middle text-center">
+                    <div class="text-danger fw-bold">
+                        ${item.discount > 0 ? '-' + formatCurrency(totalDiscountOfRow) : '0 ₫'}
+                    </div>
+                    <small class="text-muted fst-italic">(Mức giảm: ${formatCurrency(item.discount)}/sp)</small>
+                </td>
+
+                <td class="align-middle text-end fw-bold text-primary">${formatCurrency(lineTotal)}</td>
+                <td class="align-middle text-center">
+                    <button class="btn btn-link text-danger p-0" onclick="removeItem(${idx})" title="Xóa">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                </td>
+            </tr>`;
+                });
+            }
+            $('#tblQuoteItems tbody').html(html);
+            calculateTotals();
+        }
+
+        function updateItemDiscount(index, val) {
+            let discountVal = parseFloat(val) || 0;
+            let item = state.items[index];
+
+            // Ràng buộc: Giảm giá không vượt quá tổng tiền món đó
+            let maxDiscount = item.qty * item.price;
+            if (discountVal > maxDiscount) {
+                discountVal = maxDiscount;
+            }
+            if (discountVal < 0) discountVal = 0;
+
+            state.items[index].discount = discountVal;
+            renderQuoteGrid(); // Render lại để cập nhật lineTotal và tổng hóa đơn
+        }
+
+        function updateItemQty(index, val) {
+            let qty = parseInt(val) || 1;
+            if (qty < 1) qty = 1;
+            state.items[index].qty = qty;
+            renderQuoteGrid();
+        }
+
+        function removeItem(index) {
+            state.items.splice(index, 1);
+            renderQuoteGrid();
+        }
+
+        // ==========================================
+        // 5. QUẢN LÝ KHÁCH HÀNG & ĐIỂM
+        // ==========================================
+        function searchCustomers() {
+            let keyword = $('#txtCustomerSearch').val();
+            if (keyword.length < 2) { $('#customerSuggest').hide(); return; }
+
+            $.get(CONFIG.API.SEARCH_CUSTOMER, { keyword: keyword }, function (res) {
+                let customers = res.data || res || [];
+                let html = '';
+                if (customers.length > 0) {
+                    customers.forEach(c => {
+
+                        const cus = {
+                            id: c.CustomerId,
+                            name: c.FullName,
+                            phone: c.Phone,
+                            email: c.Email,
+                            type: c.CustomerType,
+                            point: c.PointBalance,
+                            avatar: c.UserImg,
+                            createdAt: c.CreatedAt
+                        };
+
+                        html += `
+            <a href="javascript:void(0);"
+               class="list-group-item list-group-item-action py-2"
+               onclick='selectCustomer(${JSON.stringify(cus)})'>
+
+                <div class="d-flex align-items-start">
+
+                    <!-- Avatar -->
+                    <img src="${cus.avatar || '/assets/img/avatar-default.png'}"
+                         class="rounded-circle me-2"
+                         style="width:38px;height:38px;object-fit:cover">
+
+                    <!-- Info -->
+                    <div class="flex-grow-1">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="fw-bold text-dark">
+                                ${cus.name}
+                                ${cus.type ? `<span class="badge bg-warning text-dark ms-1">${cus.type}</span>` : ''}
+                            </div>
+                            <small class="text-muted">${cus.point || 0} điểm</small>
+                        </div>
+
+                        <div class="small text-muted">
+                            <i class="fa fa-phone"></i> ${cus.phone || '---'}
+                            ${cus.email ? ` | <i class="fa fa-envelope"></i> ${cus.email}` : ''}
+                        </div>
+                    </div>
+                </div>
+            </a>`;
+                    });
+
+                    $('#customerSuggest').html(html).show();
+                } else {
+                    $('#customerSuggest').hide();
+                }
+            });
+        }
+
+        function selectCustomer(cus) {
+            state.customer = cus;
+
+            // Update UI
+            $('#txtCustomerSearch').val(cus.name);
+            $('#customerSuggest').hide();
+
+            // Hiển thị Box thông tin khách
+            $('#customerInfoBox').removeClass('d-none');
+            $('#lblCustName').text(cus.name);
+            $('#lblCustPhone').text(cus.phone || 'Không có SĐT');
+            $('#lblCustPoint').text(cus.point);
+            $('#lblCustRank').text(cus.type || 'Guest');
+
+            // Reset ô nhập điểm
+            $('#chkUsePoint').prop('checked', false);
+            toggleUsePoints();
+        }
+
+        function resetCustomer() {
+            state.customer = null;
+            $('#txtCustomerSearch').val('').focus();
+            $('#customerInfoBox').addClass('d-none');
+
+            // Reset điểm
+            state.pointsUsed = 0;
+            $('#chkUsePoint').prop('checked', false);
+            toggleUsePoints();
+
+            calculateTotals();
+        }
+
+        function toggleUsePoints() {
+            let isChecked = $('#chkUsePoint').is(':checked');
+            if (isChecked) {
+                $('#pointInputArea').removeClass('d-none');
+                $('#txtPointUsed').focus();
+            } else {
+                $('#pointInputArea').addClass('d-none');
+                state.pointsUsed = 0;
+                $('#txtPointUsed').val('');
+                calculateTotals();
+            }
+        }
+
+        function validatePoints() {
+            if (!state.customer) return;
+            let maxPoints = state.customer.point || 0;
+
+            // Không được nhập quá số điểm đang có
+            if (state.pointsUsed > maxPoints) {
+                state.pointsUsed = maxPoints;
+                $('#txtPointUsed').val(maxPoints);
+                // Có thể dùng toastr để thông báo
+                // toastr.warning('Không thể dùng quá số điểm hiện có');
+            }
+        }
+
+        // ==========================================
+        // 6. CHỨC NĂNG LƯU BÁO GIÁ
+        // ==========================================
+        function openCreateModal() {
+            // Reset toàn bộ form về mặc định
+            state.items = [];
+            state.customer = null;
+            state.discount = 0;
+            state.pointsUsed = 0;
+            state.currentQuoteId = 0;
+
+            $('#txtCustomerSearch').val('');
+            $('#customerInfoBox').addClass('d-none');
+            $('#txtManualDiscount').val(0);
+            $('#newNote').val('');
+            $('#modalCreate .modal-title').html('<i class="fa fa-cart-plus me-2"></i>Tạo Báo Giá Mới');
+
+            renderQuoteGrid();
+            $('#modalCreate').modal('show');
+        }
+
+        function saveQuotation() {
+            // --- 1. VALIDATION ---
+            if (state.items.length === 0) {
+                Swal.fire('Giỏ hàng trống', 'Vui lòng chọn sản phẩm', 'warning');
+                return;
+            }
+
+            let custName = state.customer ? state.customer.name : $('#txtCustomerSearch').val();
+            if (!custName) {
+                Swal.fire('Thiếu khách hàng', 'Vui lòng nhập tên khách hàng', 'warning');
+                return;
+            }
+
+            // --- 2. TÍNH TOÁN TÀI CHÍNH ---
+            // Tiền hàng (Đã gồm giảm giá dòng & VAT)
+            let totalWithVat = state.items.reduce((sum, item) => {
+                let rowNet = (item.qty * item.price) - (item.qty * (item.discount || 0));
+                let rowVat = rowNet * (CONFIG.VAT_RATE / 100);
+                return sum + rowNet + rowVat;
+            }, 0);
+
+            // Giảm giá
+            let pointDiscountValue = (state.pointsUsed || 0) * CONFIG.POINT_RATE;
+            let manualInputDiscount = parseFloat($('#txtManualDiscount').val()) || 0;
+            let finalDiscountAmount = pointDiscountValue + manualInputDiscount;
+
+            if (finalDiscountAmount > totalWithVat) finalDiscountAmount = totalWithVat;
+
+            // --- 3. ĐÓNG GÓI DTO (Khớp hoàn toàn với C# Properties) ---
+            let dto = {
+                QuotationId: state.currentQuoteId,
+                BranchId: parseInt($('#newBranchId').val()) || 0,
+                CustomerId: state.customer ? state.customer.id : null,
+                CustomerName: custName,
+                CustomerPhone: state.customer ? state.customer.phone : '',
+                Note: $('#newNote').val() || '',
+
+                // Định dạng ngày chuẩn ISO để Newtonsoft.Json đọc dễ dàng
+                IssueDate: new Date().toISOString(),
+                ExpiryDate: new Date($('#newExpiryDate').val()).toISOString(),
+
+                TotalAmount: totalWithVat,
+                DiscountAmount: finalDiscountAmount,
+                ManualDiscount: state.pointsUsed > 0 ? pointDiscountValue : 0,
+                DiscountReason: state.pointsUsed > 0
+                    ? `Sử dụng ${state.pointsUsed} điểm giảm giá`
+                    : "Giảm giá trực tiếp",
+
+                Status: "Draft",
+
+                // Mảng Details
+                Details: state.items.map(x => {
+                    let rNet = (x.qty * x.price) - (x.qty * (x.discount || 0));
+                    let rTax = rNet * (CONFIG.VAT_RATE / 100);
+                    return {
+                        ProductId: x.id,
+                        ProductName: x.name,
+                        Quantity: parseInt(x.qty),
+                        UnitPrice: parseFloat(x.price),
+                        Discount: parseFloat(x.discount || 0),
+                        TotalPrice: rNet + rTax,
+                        Note: ""
+                    };
+                })
+            };
+
+            // --- 4. GỬI AJAX ---
+            const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+            let url = state.currentQuoteId === 0 ? '/Admin/Quotation/SaveQuotation' : '/Admin/Quotation/UpdateQuotation';
+            Swal.fire({ title: 'Đang lưu báo giá...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                // CẤU HÌNH QUAN TRỌNG:
+                contentType: 'application/json',
+                headers: {
+                    'RequestVerificationToken': token 
+                },
+                data: JSON.stringify(dto),
+                success: function (res) {
+                    if (res.success) {
+                        $('#modalCreate').modal('hide');
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Thành công',
+                            text: state.currentQuoteId === 0 ? 'Tạo mới thành công!' : 'Cập nhật thành công!',
+                            timer: 1500,
+                            showConfirmButton: false
+                        });
+                        if (typeof tblQuotation !== 'undefined') tblQuotation.ajax.reload();
+                    } else {
+                        Swal.fire('Lỗi', res.message, 'error');
+                    }
+                },
+                error: function (xhr) {
+                    // Nếu lỗi 500, in toàn bộ nội dung lỗi ra để xem nó báo thiếu trường gì
+                    console.error("Chi tiết lỗi Server:", xhr.responseText);
+                    Swal.fire('Lỗi 500', 'Server không tiếp nhận dữ liệu. Kiểm tra Console (F12).', 'error');
+                }
+            });
+        }
+        // ==========================================
+        // 7. CÁC HÀM QUẢN LÝ LIST & DETAIL (BÊN NGOÀI MODAL)
+        // ==========================================
+
+        function initDataTable() {
+            if ($.fn.DataTable.isDataTable('#tblQuotation')) {
+                $('#tblQuotation').DataTable().clear().destroy();
+            }
+
+            $.extend(true, $.fn.dataTable.defaults, {
+                dom: 't<"bottom_controls"lp>',
+                language: {
+                    search: "",
+                    searchPlaceholder: "Tìm kiếm...",
+                    info: "",
+                    infoEmpty: "",
+                    infoFiltered: ""
+                }
+            });
+
+            tblQuotation = $('#tblQuotation').DataTable({
+                processing: true,
+                serverSide: false, // Hoặc true tùy backend
+                searching: false,
+                ajax: {
+                    url: CONFIG.API.GET_LIST,
+                    type: 'POST',
+                    data: function (d) {
+                        return {
+                            keyword: $('#keyword').val(), // Nếu có ô search bên ngoài
+                            branchId: $('#filterBranch').val(),
+                            status: $('#filterStatus').val(),
+                            fromDate: $('#fromDate').val(),
+                            toDate: $('#toDate').val()
+                        };
+                    },
+                    dataSrc: 'data' // Trường chứa mảng data từ backend trả về
+                },
+                columns: [
+                    { data: 'QuotationCode', render: (d) => `<span class="fw-bold text-primary cursor-pointer">${d}</span>` },
+                    { data: 'CustomerName', render: (d, t, r) => `<div>${d}</div><small class="text-muted">${r.CustomerPhone || ''}</small>` },
+                    { data: 'BranchName' },
+                    { data: 'IssueDate', render: d => formatDate(d) },
+                    {
+                        data: 'ExpiryDate',
+                        render: function (d, t, r) {
+                            let dateStr = formatDate(d);
+                            // Logic check hết hạn đơn giản
+                            // Bạn có thể parse Date để so sánh chính xác hơn
+                            return dateStr;
+                        }
+                    },
+                    { data: 'FinalAmount', className: 'text-end fw-bold', render: d => formatCurrency(d) },
+                    {
+                        data: 'Status',
+                        className: 'text-center',
+                        render: function (d) {
+                            if (d === 'Draft') return '<span class="badge bg-secondary">Nháp</span>';
+                            if (d === 'Sent') return '<span class="badge bg-info">Đã gửi</span>';
+                            if (d === 'Converted') return '<span class="badge bg-success">Đã chốt đơn</span>';
+                            return `<span class="badge bg-light text-dark border">${d}</span>`;
+                        }
+                    },
+                    {
+                        data: 'QuotationId',
+                        className: 'text-center',
+                        render: function (id) {
+                            return `<a href="javascript:void(0)" onclick="loadDetail(${id})" class="text-primary fs-5" title="Xem chi tiết"><i class="fa fa-eye"></i></a>`;
+                        }
+                    }
+                ],
+                order: [[3, 'desc']], // Sắp xếp theo ngày tạo mới nhất
+                language: {
+                    emptyTable: "Không có dữ liệu báo giá",
+                    processing: "Đang tải..."
+                }
+            });
+        }
+
+        function loadDetail(id) {
+            currentId = id;
+            $('#d_TableBody').html('<tr><td colspan="7" class="text-center py-5"><div class="spinner-border text-primary"></div></td></tr>');
+            $('#modalDetail').modal('show');
+
+            $.get('/Admin/Quotation/GetQuotationDetail', { id: id }, function (res) {
+                if (res.success) {
+                    var d = res.data;
+                    state.currentQuoteId = id;
+
+                    // 1. Thông tin cơ bản
+                    $('#d_Code').text(d.QuotationCode);
+                    $('#d_CusName').text(d.CustomerName || 'Khách lẻ');
+                    $('#d_CusPhone').text(d.CustomerPhone || '---');
+                    $('#d_CusAddress').text(d.CustomerAddress || '---');
+                    $('#d_IssueDate').text(formatDate(d.IssueDate));
+                    $('#d_ExpiryDate').text(formatDate(d.ExpiryDate));
+                    $('#d_Creator').text(d.CreatorName);
+                    $('#d_Branch').text(d.BranchName);
+
+                    // 2. Xử lý Trạng thái & Badge
+                    let statusBadge = '';
+                    let actionBtnHtml = '';
+
+                    switch (d.Status) {
+                        case 'Draft':
+                            statusBadge = '<span class="badge bg-secondary fs-6">Bản nháp</span>';
+                            actionBtnHtml = `
+            <button class="btn btn-warning me-2" onclick="editQuotation(${d.QuotationId})"><i class="fas fa-edit me-1"></i> Sửa</button>
+            <button class="btn btn-danger me-2" onclick="deleteQuotation(${d.QuotationId})"><i class="fas fa-trash me-1"></i> Xóa</button>
+            <button class="btn btn-primary" onclick="changeStatus(${d.QuotationId}, 'Sent')"><i class="fas fa-paper-plane me-1"></i> Gửi</button>
+        `;
+                            break;
+                        case 'Sent':
+                            statusBadge = '<span class="badge bg-info fs-6 text-white">Đã gửi</span>';
+                            actionBtnHtml = `
+            <button class="btn btn-warning me-2" onclick="editQuotation(${d.QuotationId})"><i class="fas fa-edit me-1"></i> Sửa</button>
+            <button class="btn btn-outline-danger me-2" onclick="cancelQuotation(${d.QuotationId})"><i class="fas fa-ban me-1"></i> Hủy</button>
+            <button class="btn btn-success" onclick="processConvert()"><i class="fas fa-check-circle me-1"></i> Chốt đơn</button>
+        `;
+                            break;
+                        case 'Accepted':
+                            statusBadge = '<span class="badge bg-primary fs-6">Khách đã chốt</span>';
+                            actionBtnHtml = `
+            <button class="btn btn-outline-danger me-2" onclick="cancelQuotation(${d.QuotationId})"><i class="fas fa-ban me-1"></i> Hủy phiếu</button>
+            <button class="btn btn-success" onclick="processConvert()"><i class="fas fa-check-circle me-1"></i> Chốt đơn hàng</button>
+        `;
+                            break;
+                        case 'Converted':
+                            statusBadge = '<span class="badge bg-success fs-6">Đã tạo đơn hàng</span>';
+                            $('#d_LinkOrder').removeClass('d-none');
+                            $('#d_OrderId').text('#' + d.ConvertedOrderId);
+                            // Đã chốt đơn thì không làm gì được nữa
+                            break;
+                        case 'Cancelled':
+                            statusBadge = '<span class="badge bg-danger fs-6">Đã hủy</span>';
+                            break;
+                        case 'Expired':
+                            statusBadge = '<span class="badge bg-warning text-dark fs-6">Hết hạn</span>';
+                            // Hết hạn có thể cho phép gia hạn hoặc hủy
+                            actionBtnHtml = `<button class="btn btn-outline-danger" onclick="cancelQuotation(${d.QuotationId})"><i class="fas fa-ban me-1"></i> Hủy phiếu</button>`;
+                            break;
+                    }
+                    $('#d_StatusBadge').html(statusBadge);
+                    $('#actionButtons').html(actionBtnHtml);
+
+                    // 3. Ghi chú & Giảm giá
+                    if (d.Note) { $('#d_Note').text(d.Note); $('#d_NoteBox').show(); } else { $('#d_NoteBox').hide(); }
+                    $('#d_DiscountReason').text(d.DiscountReason ? "(" + d.DiscountReason + ")" : "");
+
+                    // 4. Render Table
+                    let html = '';
+                    if (d.Details && d.Details.length > 0) {
+                        d.Details.forEach((item, idx) => {
+                            html += `
+                        <tr>
+                            <td class="ps-3">${idx + 1}</td>
+                            <td><div class="fw-bold text-dark">${item.ProductName}</div></td>
+                            <td class="text-center">${item.Unit || 'Món'}</td>
+                            <td class="text-end fw-bold">${item.Quantity}</td>
+                            <td class="text-end">${formatCurrency(item.UnitPrice)}</td>
+                            <td class="text-end text-danger">-${formatCurrency(item.Discount)}</td>
+                            <td class="text-end fw-bold text-primary pe-3">${formatCurrency(item.TotalPrice)}</td>
+                        </tr>`;
+                        });
+                    }
+                    $('#d_TableBody').html(html);
+
+                    // 5. Footer Money
+                    $('#d_TotalAmount').text(formatCurrency(d.TotalAmount));
+                    $('#d_Discount').text("-" + formatCurrency(d.DiscountAmount));
+                    $('#d_FinalAmount').text(formatCurrency(d.FinalAmount));
+
+                } else {
+                    Swal.fire('Lỗi', res.message, 'error');
+                    $('#modalDetail').modal('hide');
+                }
+            });
+        }
+
+        function processConvert() {
+            Swal.fire({
+                title: 'Chốt đơn hàng?',
+                text: "Đơn hàng sẽ được tạo và trừ tồn kho.",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Đồng ý',
+                cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $('#modalDetail').modal('hide');
+                    Swal.fire({ title: 'Đang xử lý...', didOpen: () => Swal.showLoading() });
+
+                    $.post(CONFIG.API.CONVERT_ORDER, { id: state.currentQuoteId }, function (res) {
+                        if (res.success) {
+                            Swal.fire('Thành công', res.message, 'success');
+                            tblQuotation.ajax.reload();
+                        } else {
+                            Swal.fire('Thất bại', res.message, 'error');
+                        }
+                    });
+                }
+            });
+        }
+
+        function editQuotation(id) {
+            // 1. Đóng Modal Detail trước
+            $('#modalDetail').modal('hide');
+
+            Swal.fire({ title: 'Đang tải dữ liệu...', didOpen: () => Swal.showLoading() });
+
+            // 2. Lấy dữ liệu chi tiết (Reuse API cũ)
+            $.get(CONFIG.API.GET_DETAIL, { id: id }, function (res) {
+                Swal.close();
+
+                if (res.success) {
+                    let d = res.data;
+
+                    // 3. Reset & Gán State cho Modal Create
+                    state.items = []; // Reset giỏ hàng
+                    state.currentQuoteId = d.QuotationId; // Lưu ID đang sửa (QUAN TRỌNG)
+
+                    // Gán thông tin Header
+                    $('#newBranchId').val(d.BranchId);
+                    $('#newNote').val(d.Note);
+                    $('#newExpiryDate').val(formatDateISO(d.ExpiryDate)); // Cần hàm helper format yyyy-MM-dd
+
+                    // Gán thông tin Khách hàng
+                    state.customer = {
+                        id: d.CustomerId,
+                        name: d.CustomerName,
+                        phone: d.CustomerPhone
+                        // Lưu ý: API GetDetail nên trả về thêm PointBalance của khách nếu muốn hiển thị điểm chuẩn
+                    };
+
+                    // Update UI Khách hàng
+                    $('#txtCustomerSearch').val(d.CustomerName);
+                    $('#customerSuggest').hide();
+                    $('#customerInfoBox').removeClass('d-none');
+                    $('#lblCustName').text(d.CustomerName);
+                    $('#lblCustPhone').text(d.CustomerPhone);
+                    $('#lblCustRank').text('---'); // API Detail chưa có rank, có thể để tạm
+                    $('#lblCustPoint').text('?');  // API Detail chưa có point
+
+                    // Gán thông tin Giảm giá & Điểm
+                    // Giả định: ManualDiscount trong DB chính là tiền quy đổi từ điểm (nếu có dùng điểm)
+                    // Nếu logic DB của bạn: manual_discount lưu cả tiền giảm tay + tiền điểm -> Cần tách ra nếu muốn hiển thị đúng.
+                    // Ở đây ta làm đơn giản: Nếu DiscountReason có chứa chữ "điểm", ta cố gắng parse số điểm ra.
+
+                    state.pointsUsed = 0;
+                    state.discount = 0; // Giảm giá tay
+
+                    // Logic phục hồi điểm (Basic)
+                    // Nếu bạn đã lưu cột PointsUsed trong DB thì lấy thẳng ra gán vào state.pointsUsed
+                    // Nếu chưa, tạm thời coi ManualDiscount là giảm giá tay hoàn toàn.
+
+                    // Gán giá trị giảm giá tay vào ô input
+                    // (Nếu ManualDiscount trong DB bao gồm cả điểm, bạn cần trừ tiền điểm ra trước khi gán vào ô này)
+                    $('#txtManualDiscount').val(d.ManualDiscount);
+
+                    // Gán danh sách sản phẩm
+                    if (d.Details && d.Details.length > 0) {
+                        state.items = d.Details.map(x => ({
+                            id: x.ProductId,
+                            name: x.ProductName,
+                            price: x.UnitPrice,
+                            qty: x.Quantity,
+                            discount: x.Discount, // Giảm giá từng dòng
+                            image: '' // API Detail có thể thiếu ảnh, chấp nhận null
+                        }));
+                    }
+
+                    // 4. Mở Modal Create & Render lại
+                    renderQuoteGrid(); // Hàm này sẽ tự gọi calculateTotals()
+
+                    // Đổi tiêu đề Modal cho hợp ngữ cảnh
+                    $('#modalCreate .modal-title').html('<i class="fa fa-edit me-2"></i>Cập nhật Báo Giá #' + d.QuotationCode);
+                    $('#modalCreate').modal('show');
+
+                } else {
+                    Swal.fire('Lỗi', 'Không lấy được dữ liệu báo giá.', 'error');
+                }
+            });
+        }
+
+        // Helper để format ngày cho input type="date"
+        function formatDateISO(jsonDate) {
+            if (!jsonDate) return '';
+            let date = new Date(jsonDate.match(/\d+/) ? parseInt(jsonDate.match(/\d+/)[0]) : jsonDate);
+            // Trả về yyyy-MM-dd
+            return date.toISOString().split('T')[0];
+        }
+
+        // ==========================================
+        // 8. TIỆN ÍCH (UTILS)
+        // ==========================================
+
+        function formatCurrency(val) {
+            return (val || 0).toLocaleString('vi-VN') + ' ₫';
+        }
+
+        function formatDate(jsonDate) {
+            if (!jsonDate) return '';
+            // Xử lý dạng /Date(123456)/ của .NET cũ hoặc ISO string
+            let date;
+            if (typeof jsonDate === 'string' && jsonDate.includes('/Date(')) {
+                date = new Date(parseInt(jsonDate.match(/\d+/)[0]));
+            } else {
+                date = new Date(jsonDate);
+            }
+            return date.toLocaleDateString('vi-VN');
+        }
+
+        function debounce(func, wait) {
+            let timeout;
+            return function (...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), wait);
+            };
+        }
+        function cancelQuotation(id) {
+            Swal.fire({
+                title: 'Hủy báo giá này?',
+                text: "Trạng thái sẽ chuyển sang 'Đã hủy' và không thể khôi phục.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                confirmButtonText: 'Đồng ý hủy',
+                cancelButtonText: 'Không'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    changeStatus(id, 'Cancelled');
+                }
+            });
+        }
+
+        function deleteQuotation(id) {
+            Swal.fire({
+                title: 'Xóa vĩnh viễn?',
+                text: "Bản nháp này sẽ bị xóa khỏi hệ thống.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                confirmButtonText: 'Xóa ngay',
+                cancelButtonText: 'Không'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Gọi API Delete riêng (hoặc dùng changeStatus nếu soft delete)
+                    $.post('/Admin/Quotation/DeleteQuotation', { id: id }, function (res) {
+                        if (res.success) {
+                            $('#modalDetail').modal('hide');
+                            Swal.fire('Đã xóa!', res.message, 'success');
+                            tblQuotation.ajax.reload();
+                        } else {
+                            Swal.fire('Lỗi', res.message, 'error');
+                        }
+                    });
+                }
+            });
+        }
+
+        function changeStatus(id, status) {
+            $.post('/Admin/Quotation/ChangeStatus', { id: id, status: status }, function (res) {
+                if (res.success) {
+                    Swal.fire('Thành công', 'Trạng thái đã được cập nhật', 'success');
+                    $('#modalDetail').modal('hide');
+                    tblQuotation.ajax.reload();
+                } else {
+                    Swal.fire('Lỗi', res.message, 'error');
+                }
+            });
+        }
+    </script>
+}
+@section Styles{
+    <style>
+        /* BADGES */
+        .badge-standard {
+            background: #e5e7eb;
+            color: #374151;
+        }
+
+        .badge-member {
+            background: #0dcaf0;
+        }
+
+        .badge-vip {
+            background: #fbbf24;
+            color: #000;
+        }
+    </style>
+}

@@ -1,0 +1,600 @@
+﻿@{
+    ViewBag.Title = "Quản lý Công Nợ & Nhà Cung Cấp";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="page-wrapper">
+    <div class="content">
+
+        <div class="page-header">
+            <div class="page-title">
+                <h4>Dashboard Công Nợ</h4>
+                <h6>Theo dõi nghĩa vụ thanh toán & Dòng tiền</h6>
+            </div>
+
+            <div class="col-auto">
+                <div class="d-flex align-items-center bg-white px-3 py-2 rounded-pill shadow-sm border">
+
+                    <!-- Branch -->
+                    <div id="branchFilterWrapper" class="d-flex align-items-center pe-3 me-3 border-end">
+                        <span class="d-flex align-items-center justify-content-center rounded-circle bg-light me-2"
+                              style="width:28px;height:28px;">
+                            <i class="fas fa-store text-muted small"></i>
+                        </span>
+
+                        <select id="branchSelect"
+                                class="form-select form-select-sm border-0 shadow-none fw-bold text-dark"
+                                style="min-width:180px; background-color:transparent;">
+                            <option value="">Tất cả chi nhánh</option>
+                        </select>
+                    </div>
+
+                    <!-- Supplier -->
+                    <div class="d-flex align-items-center">
+                        <span class="d-flex align-items-center justify-content-center rounded-circle bg-light me-2"
+                              style="width:28px;height:28px;">
+                            <i class="fas fa-truck text-muted small"></i>
+                        </span>
+
+                        <select id="supplierSelect"
+                                class="form-select form-select-sm border-0 shadow-none fw-bold text-dark"
+                                style="min-width:200px; background-color:transparent;">
+                            <option value="">Tất cả nhà cung cấp</option>
+                        </select>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row g-3">
+
+            <!-- TỔNG PHẢI TRẢ -->
+            <div class="col-lg-3 col-sm-6 col-12 d-flex">
+                <div class="card flex-fill finance-card card-debt">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div class="finance-info">
+                                <h6 class="text-white-50">Tổng phải trả</h6>
+                                <h3 id="kpiOutstanding" class="text-white fw-bold mb-0 count-up">0 ₫</h3>
+                            </div>
+                            <div class="finance-icon bg-white-10">
+                                <i class="fas fa-hand-holding-usd"></i>
+                            </div>
+                        </div>
+
+                        <div class="progress mt-3 bg-white-10" style="height:4px;">
+                            <div id="kpiOutstandingProgress"
+                                 class="progress-bar bg-white"
+                                 style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NỢ QUÁ HẠN -->
+            <div class="col-lg-3 col-sm-6 col-12 d-flex">
+                <div class="card flex-fill finance-card card-expense">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div class="finance-info">
+                                <h6 class="text-white-50">Nợ quá hạn</h6>
+                                <h3 id="kpiOverdue" class="text-white fw-bold mb-0 count-up">0 ₫</h3>
+                            </div>
+                            <div class="finance-icon bg-white-10">
+                                <i class="fas fa-exclamation-circle"></i>
+                            </div>
+                        </div>
+
+                        <div class="mt-3">
+                            <span class="badge bg-white text-danger rounded-pill px-3">
+                                Ưu tiên xử lý
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SẮP ĐẾN HẠN -->
+            <div class="col-lg-3 col-sm-6 col-12 d-flex">
+                <div class="card flex-fill finance-card card-revenue">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div class="finance-info">
+                                <h6 class="text-white-50">Sắp đến hạn (7 ngày)</h6>
+                                <h3 id="kpiUpcoming" class="text-white fw-bold mb-0 count-up">0 ₫</h3>
+                            </div>
+                            <div class="finance-icon bg-white-10">
+                                <i class="fas fa-calendar-alt"></i>
+                            </div>
+                        </div>
+
+                        <div class="mt-3 small text-white-50">
+                            <i class="fas fa-clock me-1"></i> Theo dõi sát dòng tiền
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ĐÃ TRẢ -->
+            <div class="col-lg-3 col-sm-6 col-12 d-flex">
+                <div class="card flex-fill finance-card card-profit">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div class="finance-info">
+                                <h6 class="text-white-50">Đã trả (tháng này)</h6>
+                                <h3 id="kpiPaid" class="text-white fw-bold mb-0 count-up">0 ₫</h3>
+                            </div>
+                            <div class="finance-icon bg-white-10">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                        </div>
+
+                        <div class="mt-3">
+                            <span class="badge bg-white text-success rounded-pill px-3">
+                                Hoàn tất
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="row">
+            <div class="col-lg-6 d-flex">
+                <div class="card flex-fill">
+                    <div class="card-header pb-0 border-0 d-flex justify-content-between">
+                        <h5 class="card-title">Phân tích Tuổi nợ (Aging)</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="agingChart" style="min-height: 300px;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6 d-flex">
+                <div class="card flex-fill">
+                    <div class="card-header pb-0 border-0">
+                        <h5 class="card-title text-danger">Khoản nợ cần xử lý gấp</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0" id="tblUrgent">
+                                <thead>
+                                    <tr>
+                                        <th>Nhà cung cấp</th>
+                                        <th>Mã đơn</th>
+                                        <th>Hạn thanh toán</th>
+                                        <th class="text-end">Số tiền nợ</th>
+                                        <th class="text-end">Trạng thái</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-3" id="actionButtons">
+            <div class="col-12 text-end">
+                <a  href="@Url.Action("SupplierDebtAndPayment", "Supplier", new { area = "Admin" })" class="btn btn-outline-secondary">
+                    <i class="fas fa-print me-1"></i> Đối chiếu công nợ
+                </a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script>
+        let userBranchId = 0, userSupplierId = 0;
+        let agingChartInstance;
+
+        $(document).ready(async function () {
+
+            try {
+                await getCurrentUser();
+
+                await initFilters();
+
+                loadDebtDashboard();
+
+                $('#branchSelect, #supplierSelect').on('change', function () {
+                    loadDebtDashboard();
+                });
+
+            } catch (err) {
+                console.error("Lỗi khởi tạo trang:", err);
+            }
+        });
+
+        async function getCurrentUser() {
+            try {
+                const res = await $.get('/Admin/Login/GetCurrentUser');
+                if (res.success) {
+                    userBranchId = res.data.BranchId || 0;
+                    userSupplierId = res.data.SupplierId || 0;
+                }
+            } catch (e) {
+                console.error("Không lấy được thông tin user", e);
+            }
+        }
+
+        async function initFilters() {
+            await Promise.all([loadBranches(), loadSuppliers()]);
+        }
+
+        async function loadBranches() {
+            try {
+                const res = await $.get('/Admin/Admin/LoadDropdowns', { branchId: 0 });
+                const $select = $('#branchSelect').empty();
+                $select.append('<option value="">-- Tất cả Chi Nhánh --</option>');
+
+                if (res.branches && res.branches.length > 0) {
+                    res.branches.forEach(b => {
+                        $select.append(`<option value="${b.BranchId}">${b.Name}</option>`);
+                    });
+                }
+
+                if (userBranchId > 0 && userSupplierId === 0) {
+                    $select.val(userBranchId);
+                }
+            } catch (e) { console.error(e); }
+        }
+
+        async function loadSuppliers() {
+            try {
+                const res = await $.get('/Admin/Admin/LoadSuppliers', {});
+                const $select = $('#supplierSelect').empty();
+                $select.append('<option value="">-- Tất cả Nhà cung cấp --</option>');
+
+                if (res.suppliers && res.suppliers.length > 0) {
+                    res.suppliers.forEach(s => {
+                        $select.append(`<option value="${s.SupplierId}">${s.Name}</option>`);
+                    });
+                }
+
+                if (userSupplierId > 0) {
+                    $select.val(userSupplierId).trigger('change'); 
+                    $select.prop('disabled', true); 
+                    $select.addClass('bg-light');
+
+                    $('#actionButtons').hide();
+                    $('#branchFilterWrapper').attr('style', 'display: none !important');
+                }
+            } catch (e) { console.error(e); }
+        }
+
+        async function loadDebtDashboard() {
+            const branchId = $('#branchSelect').val();
+            const supplierId = $('#supplierSelect').val();
+
+            if (userSupplierId > 0 && !supplierId) {
+                console.warn("Chờ định danh nhà cung cấp...");
+                return;
+            }
+
+            try {
+                const res = await $.get('/Admin/Admin/GetPayablesOverviewDashboardData', {
+                    branchId: branchId,
+                    supplierId: supplierId
+                });
+
+                if (res.success) {
+                    renderKPI(res.data.Kpi);
+                    renderAgingChart(res.data.AgingChart);
+                    renderUrgentTable(res.data.UrgentDebts);
+                }
+            } catch (err) { console.error(err); }
+        }
+
+        function renderKPI(kpi) {
+            animateValue("kpiOutstanding", kpi.TotalOutstanding);
+            animateValue("kpiOverdue", kpi.TotalOverdue);
+            animateValue("kpiUpcoming", kpi.TotalUpcoming);
+            animateValue("kpiPaid", kpi.TotalPaidInPeriod);
+        }
+
+        function animateValue(id, val) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.innerText = formatCurrency(val);
+        }
+
+        function renderAgingChart(data) {
+            const labels = data.map(x => x.Label);
+            const values = data.map(x => x.Value);
+            const colors = ['#28c76f', '#ffbc34', '#ff9f43', '#ea5455'];
+
+            const options = {
+                series: [{ name: 'Giá trị nợ', data: values }],
+                chart: { type: 'bar', height: 300, toolbar: { show: false } },
+                colors: colors,
+                plotOptions: {
+                    bar: { borderRadius: 4, horizontal: true, distributed: true, barHeight: '70%' }
+                },
+                dataLabels: {
+                    enabled: true,
+                    formatter: function (val) { return formatCurrencyShort(val); },
+                    style: { colors: ['#fff'] }
+                },
+                xaxis: {
+                    categories: labels,
+                    labels: {
+                        style: { fontSize: '12px' },
+                        formatter: function (val) { return formatCurrencyShort(val); }
+                    }
+                },
+                legend: { show: false },
+                tooltip: {
+                    y: { formatter: function (val) { return formatCurrency(val); } }
+                }
+            };
+
+            if (agingChartInstance) agingChartInstance.destroy();
+            agingChartInstance = new ApexCharts(document.querySelector("#agingChart"), options);
+            agingChartInstance.render();
+        }
+
+        function renderUrgentTable(list) {
+            const $tbody = $('#tblUrgent tbody');
+            $tbody.empty();
+            if (!list || list.length === 0) {
+                $tbody.append('<tr><td colspan="5" class="text-center text-muted py-4">Không có khoản nợ gấp</td></tr>');
+                return;
+            }
+
+            list.forEach(item => {
+                const statusHtml = renderDebtStatusByDays(item.OverdueDays);
+                $tbody.append(`
+                        <tr class="align-middle">
+                            <td class="ps-4">
+                                <div class="fw-bold text-dark">${item.SupplierName}</div>
+                                <div class="text-muted small">NCC ID: #VND-${item.PoId}</div>
+                            </td>
+                            <td>
+                                <a href="#" class="text-primary fw-medium text-decoration-none">#PO-${item.PoId}</a>
+                            </td>
+                            <td>
+                                <div class="fw-medium">${formatDateTime(item.DueDate)}</div>
+                            </td>
+                            <td class="text-end fw-bold text-dark">
+                                ${formatCurrency(item.UnpaidAmount)}
+                            </td>
+                            <td class="text-end pe-4">
+                                ${statusHtml}
+                            </td>
+                        </tr>
+                    `);
+            });
+        }
+
+        // --- HELPERS ---
+        function formatCurrency(val) {
+            return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(val);
+        }
+
+        function formatCurrencyShort(val) {
+            if (val >= 1000000000) return (val / 1000000000).toFixed(1) + ' tỷ';
+            if (val >= 1000000) return (val / 1000000).toFixed(0) + ' Tr';
+            return val.toLocaleString();
+        }
+
+        function formatDateTime(jsonDateString) {
+            if (!jsonDateString) return '—';
+
+            let date;
+            if (typeof jsonDateString === 'string' && jsonDateString.includes('/Date(')) {
+                const match = jsonDateString.match(/\/Date\((\d+)\)\//);
+                if (match) date = new Date(parseInt(match[1], 10));
+            } else {
+                date = new Date(jsonDateString);
+            }
+
+            if (!date || isNaN(date.getTime())) return '—';
+
+            return date.toLocaleString('vi-VN', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            });
+        }
+
+
+        function renderDebtStatusByDays(days) {
+            let config = { class: "", icon: "", text: "" };
+            if (days <= 0) {
+                config = { class: "status-safe", icon: "fas fa-check-circle", text: days === 0 ? "Hôm nay" : `Còn ${Math.abs(days)} ngày` };
+            } else if (days <= 30) {
+                config = { class: "status-warning", icon: "fas fa-clock", text: `Quá hạn ${days} ngày` };
+            } else if (days <= 60) {
+                config = { class: "status-critical", icon: "fas fa-exclamation-circle", text: `Trễ ${days} ngày` };
+            } else {
+                config = { class: "status-danger", icon: "fas fa-ban", text: "Nợ xấu" };
+            }
+            return `<div class="ent-status-tag ${config.class}"><i class="${config.icon}"></i><span>${config.text}</span></div>`;
+        }
+    </script>
+}
+
+@section Styles {
+    <style>
+        .filter-bar {
+            background: #fff;
+            border-radius: 8px;
+            padding: 6px 10px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 1px 2px rgba(0,0,0,.04);
+        }
+
+        .filter-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 0 10px;
+        }
+
+            .filter-item i {
+                font-size: 14px;
+                color: #6b7280;
+            }
+
+            .filter-item select.select {
+                border: none;
+                padding-left: 0;
+                min-width: 180px;
+                font-size: 14px;
+                background: transparent;
+            }
+
+                .filter-item select.select:focus {
+                    box-shadow: none;
+                }
+        /* Nâng cấp Card KPI */
+        .finance-card {
+            border: none;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .finance-card:hover {
+                transform: translateY(-8px);
+                box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+            }
+
+        /* Các bộ màu Gradient sang trọng */
+        .card-revenue {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        /* Tím xanh */
+        .card-expense {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5253 100%);
+        }
+        /* Đỏ san hô */
+        .card-profit {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+        }
+        /* Xanh lục bảo */
+        .card-debt {
+            background: linear-gradient(135deg, #f6ad55 0%, #ed8936 100%);
+        }
+        /* Cam hoàng hôn */
+
+        .finance-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: white;
+        }
+
+        .bg-white-10 {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .finance-info h6 {
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        /* Tinh chỉnh Header & Breadcrumb */
+        .breadcrumb-item + .breadcrumb-item::before {
+            content: "•";
+            color: #adb5bd;
+        }
+
+        .page-title h3 {
+            margin-bottom: 2px;
+        }
+
+        /* Làm sạch Select2 của DreamPOS để khớp với header mới */
+        .select2-container--default .select2-selection--single {
+            border: none !important;
+            background-color: transparent !important;
+        }
+
+        /* Hiệu ứng bóng mờ cho Card Chart */
+        .card.flex-fill {
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            border: 1px solid rgba(0,0,0,0.05);
+            border-radius: 15px;
+        }
+    </style>
+
+    <style>
+        /* Tag trạng thái kiểu doanh nghiệp */
+        .ent-status-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 12px;
+            border-radius: 4px; /* Bo góc nhẹ, vuông vắn tạo cảm giác tin cậy */
+            font-size: 11.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            border: 1px solid transparent;
+            min-width: 140px;
+            justify-content: flex-start;
+        }
+
+            .ent-status-tag i {
+                font-size: 12px;
+            }
+
+        /* Bảng màu Corporate */
+        .status-safe {
+            background-color: #f6ffed;
+            color: #389e0d;
+            border-color: #b7eb8f;
+        }
+
+        .status-warning {
+            background-color: #fffbe6;
+            color: #d48806;
+            border-color: #ffe58f;
+        }
+
+        .status-critical {
+            background-color: #fff1f0;
+            color: #cf1322;
+            border-color: #ffa39e;
+        }
+
+        .status-danger {
+            background-color: #2b2b2b;
+            color: #ffffff;
+            border-color: #000000;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* Tinh chỉnh hàng của bảng */
+        #tblTransactions tr {
+            transition: all 0.2s;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+            #tblTransactions tr:hover {
+                background-color: #fbfbfb !important;
+            }
+
+        .text-xs {
+            font-size: 10px;
+        }
+    </style>
+}

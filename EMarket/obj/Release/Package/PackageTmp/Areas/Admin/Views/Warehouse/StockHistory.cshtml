@@ -1,0 +1,923 @@
+﻿@using EMarket.Modules.UserModule.Services.Interfaces
+@{
+    ViewBag.Title = "Lịch sử kho";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+
+    // 1. Lấy UserContext & Check Admin
+    var UserContext = System.Web.Mvc.DependencyResolver.Current.GetService<IUserContext>();
+    bool IsAdmin = UserContext != null && UserContext.IsAdmin;
+    int CurrentBranchId = UserContext != null ? UserContext.BranchId ?? 0 : 0;
+}
+
+<div class="page-wrapper">
+    <div class="content">
+        <div class="page-header">
+            <div class="page-title">
+                <h4>LỊCH SỬ KHO HÀNG</h4>
+                <h6>Theo dõi & Điều chỉnh tồn kho</h6>
+            </div>
+            <div class="page-btn">
+                <a href="javascript:void(0);" class="btn btn-added" onclick="openStockModal()">
+                    <img src="~/assets/img/icons/plus.svg" alt="img" class="me-1"> Tạo giao dịch kho
+                </a>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <div class="table-top">
+                    <div class="search-set">
+                        <div class="search-path">
+                            <a class="btn btn-filter" id="filter_search">
+                                <img src="~/assets/img/icons/filter.svg" alt="img" />
+                                <span><img src="~/assets/img/icons/closes.svg" alt="img" /></span>
+                            </a>
+                        </div>
+                        <div class="search-input">
+                            <a class="btn btn-searchset"><img src="~/assets/img/icons/search-white.svg" alt="img" /></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" id="filter_inputs">
+                    <div class="card-body pb-0">
+                        <div class="row">
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <select id="ddlWarehouse" class="select form-control">
+                                        <option value="">-- Tất cả kho --</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <select id="ddlType" class="select form-control">
+                                        <option value="">-- Loại giao dịch --</option>
+                                        <option value="Import">Nhập hàng (Import)</option>
+                                        <option value="Return">Khách trả (Return)</option>
+                                        <option value="Sale">Xuất bán (Sale)</option>
+                                        <option value="Adjustment">Kiểm kê (Adjustment)</option>
+                                        <option value="Internal">Điều chuyển (Internal)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <input type="date" id="fromDate" class="form-control" placeholder="Từ ngày">
+                                        <span class="input-group-text">đến</span>
+                                        <input type="date" id="toDate" class="form-control" placeholder="Đến ngày">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-2 col-sm-6 col-12">
+                                <div class="form-group d-flex">
+                                    <a class="btn btn-filters ms-auto me-2" id="btnSearch" title="Tìm kiếm">
+                                        <img src="~/assets/img/icons/search-whites.svg" alt="img" />
+                                    </a>
+                                    <a class="btn btn-warning" id="btnReset" title="Làm mới" style="background: #ff9f43; border: none; color:white;">
+                                        <i class="fa fa-undo"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table id="tblStock" class="table datanew">
+                        <thead>
+                            <tr>
+                                <th>Sản phẩm</th>
+                                <th>Kho</th>
+                                <th>Loại GD</th>
+                                <th class="text-center">Số lượng</th>
+                                <th>Tham chiếu</th>
+                                <th>Người thực hiện</th>
+                                <th class="text-end">Thời gian</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalStock" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-light">
+                <h5 class="modal-title fw-bold text-primary" id="stockModalTitle">
+                    <i class="fas fa-boxes me-2"></i>Giao dịch kho hàng
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form id="frmStock">
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-12">
+                            <div class="btn-group w-100" role="group">
+                                <input type="radio" class="btn-check" name="moveType" id="typeAdj" value="ADJUSTMENT" checked onchange="toggleReasonType()">
+                                <label class="btn btn-outline-primary" for="typeAdj">
+                                    <i class="fas fa-sync-alt me-1"></i> Kiểm kê / Điều chỉnh
+                                </label>
+
+                                <input type="radio" class="btn-check" name="moveType" id="typeIssue" value="ISSUE" onchange="toggleReasonType()">
+                                <label class="btn btn-outline-danger" for="typeIssue">
+                                    <i class="fas fa-sign-out-alt me-1"></i> Xuất dùng / Hủy hàng
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card bg-light border-0 mb-3">
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Chi nhánh</label>
+                                    <select id="adjBranch" class="form-select">
+                                        <option value="">-- Chọn chi nhánh --</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Kho hàng <span class="text-danger">*</span></label>
+                                    <select id="adjWarehouse" class="form-select" disabled>
+                                        <option value="">-- Vui lòng chọn chi nhánh --</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label class="form-label fw-bold">Sản phẩm <span class="text-danger">*</span></label>
+                            <div class="position-relative">
+                                <input type="text" id="txtProductSearch" class="form-control"
+                                       placeholder="Gõ tên, mã vạch để tìm kiếm..." autocomplete="off">
+
+                                <input type="hidden" id="adjProduct" value="">
+
+                                <div id="productSearchResult" class="list-group position-absolute w-100 shadow-lg"
+                                     style="display:none; z-index: 1055; max-height: 350px; overflow-y: auto; top: 100%;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label text-muted">Tồn kho hiện tại</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-white border-end-0"><i class="fas fa-cube text-secondary"></i></span>
+                                <input type="text" id="currentStock" class="form-control bg-white border-start-0 fw-bold text-dark" disabled value="—">
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Số lượng thay đổi <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <span class="input-group-text fw-bold text-white bg-primary" id="qtySign">+</span>
+                                <input type="number" id="adjQty" class="form-control fw-bold fs-5 text-end" placeholder="0" min="1">
+                                <span class="input-group-text" id="unitDisplay">ĐVT</span>
+                            </div>
+                            <small class="text-muted fst-italic" id="qtyHint">Nhập số dương để tăng, số âm để giảm.</small>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label">Ghi chú / Lý do</label>
+                            <textarea id="adjReason" class="form-control" rows="2" placeholder="Nhập lý do điều chỉnh..."></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer bg-light">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Hủy bỏ</button>
+                <button type="button" class="btn btn-primary px-4" onclick="submitStockTransaction()">
+                    <i class="fa fa-check me-1"></i> Xác nhận
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="~/assets/js/signalr-handler.js"></script>
+    <script>
+        let tblStock;
+
+        /* =========================================================
+           HELPERS
+        ========================================================= */
+        function formatDateTime(d) {
+            if (!d) return '';
+
+            // Parse /Date(1700000000000)/
+            var match = d.match(/\d+/);
+            if (!match) return d;
+
+            var date = new Date(parseInt(match[0]));
+
+            return date.toLocaleString('vi-VN', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            });
+        }
+
+        async function loadSessionInfo() {
+            try {
+                window.CURRENT_BRANCH_ID = @Html.Raw(Json.Encode(CurrentBranchId));
+                window.IS_ADMIN = @Html.Raw(Json.Encode(IsAdmin));
+                return true;
+            } catch (err) {
+                console.error("Không lấy được session:", err);
+            }
+            return false;
+        }
+
+        /* =========================================================
+           INIT
+        ========================================================= */
+        $(document).ready(function () {
+            // Set Default Date Range (7 days)
+            const today = new Date().toISOString().split('T')[0];
+            const lastWeek = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+
+            $('#toDate').val(today);
+            $('#fromDate').val(lastWeek);
+
+            // Load Warehouse Dropdown
+            populateWarehouse();
+
+            // Init Table
+            initStockTable();
+
+            // Events
+            $('#btnReset').click(resetFilters);
+            $('#ddlWarehouse, #ddlType, #fromDate, #toDate').change(() => tblStock.ajax.reload());
+
+            // Debounce Search
+            let timer;
+            $(document).on('input', '#txtSearch', function () {
+                clearTimeout(timer);
+                timer = setTimeout(() => tblStock.ajax.reload(), 300);
+            });
+        });
+
+        function populateWarehouse() {
+            $.get('/Warehouse/GetAllWarehouses', function (res) {
+                if (res.success) {
+                    let html = '<option value="">-- Tất cả kho --</option>';
+                    res.warehouses.forEach(w => {
+                        html += `<option value="${w.WarehouseId}">${w.Name}</option>`;
+                    });
+                    $('#ddlWarehouse').html(html);
+                }
+            });
+        }
+
+        function resetFilters() {
+            $('#ddlWarehouse, #ddlType').val('').trigger('change');
+            $('#txtSearch').val('');
+            const today = new Date().toISOString().split('T')[0];
+            const lastWeek = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+            $('#toDate').val(today);
+            $('#fromDate').val(lastWeek);
+            tblStock.ajax.reload();
+        }
+
+        function getOrderIdFromUrl() {
+            const parts = window.location.pathname.split('/');
+            const last = parts[parts.length - 1];
+            return /^\d+$/.test(last) ? last : null;
+        }
+
+        const focusOrderId = getOrderIdFromUrl();
+
+
+        /* =========================================================
+           DATATABLE CONFIG
+        ========================================================= */
+        function initStockTable() {
+            if ($.fn.DataTable.isDataTable('#tblStock')) {
+                $('#tblStock').DataTable().clear().destroy();
+            }
+
+            $.extend(true, $.fn.dataTable.defaults, {
+                dom: 't<"bottom_controls"lp>',
+                language: {
+                    search: "",
+                    searchPlaceholder: "Search...",
+                    info: "",
+                    infoEmpty: "",
+                    infoFiltered: "",
+                },
+            });
+
+            tblStock = $('#tblStock').DataTable({
+                processing: true,
+                serverSide: true,
+                searching: false,
+                order: [[6, 'desc']], // Sort theo cột Thời gian giảm dần
+                ajax: {
+                    url: '/Warehouse/GetStockMovements', // API của bạn
+                    type: 'POST',
+                    data: function (d) {
+                        return {
+                            draw: d.draw,
+                            start: d.start,
+                            length: d.length,
+                            WarehouseId: $('#ddlWarehouse').val(),
+                            Type: $('#ddlType').val(),
+                            FromDate: $('#fromDate').val(),
+                            ToDate: $('#toDate').val(),
+                            Keyword: $('#txtSearch').val() // Input search mặc định của DT
+                        };
+                    }
+                },
+                columns: [
+                    // 1. Sản phẩm (Ảnh + Tên + SKU + Barcode + Lot)
+                    {
+                        data: 'ProductName',
+                        render: function (data, type, row) {
+                            const img = row.ProductImage || '/assets/img/logo-black.png';
+
+                            // Xử lý hiển thị Barcode
+                            const barcodeHtml = row.Barcode
+                                ? `<span class="text-muted ms-1"><i class="fa fa-barcode"></i> ${row.Barcode}</span>`
+                                : '';
+
+                            // Xử lý hiển thị Lot ID (QUAN TRỌNG)
+                            // Nếu có lotId thì hiển thị badge màu tím hoặc xám để phân biệt
+                            const lotHtml = row.lotId
+                                ? `<span class="badge bg-light text-dark border border-secondary ms-1" title="Lô hàng">
+                                     <i class="fas fa-layer-group me-1 text-secondary"></i>Lot: ${row.lotId}
+                                   </span>`
+                                : '';
+
+                            return `
+                                <div class="productimgname">
+                                    <a href="javascript:void(0);" class="product-img">
+                                        <img src="${img}" alt="product">
+                                    </a>
+                                    <div class="d-flex flex-column justify-content-center">
+                                        <a href="javascript:void(0);" class="fw-bold text-dark">${data}</a>
+
+                                        <div class="small text-muted mt-1">
+                                            <span>SKU: ${row.ProductId}</span>
+                                            ${barcodeHtml}
+                                        </div>
+
+                                        <div class="mt-1">
+                                            ${lotHtml}
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                    },
+                    // 2. Kho
+                    { data: 'WarehouseName', defaultContent: 'Kho chung' },
+
+                    // 3. Loại giao dịch (Badge đẹp)
+                    {
+                        data: 'MovementType',
+                        render: function (data, type, row) {
+                            // Config mapping badge
+                            const config = {
+                                'SALE': { class: 'badge-out', icon: 'fa-arrow-up', label: 'Xuất bán' },
+                                'EXPORT': { class: 'badge-out', icon: 'fa-arrow-up', label: 'Xuất kho' },
+                                'RETURN': { class: 'badge-in', icon: 'fa-arrow-down', label: 'Trả hàng' },
+                                'IMPORT': { class: 'badge-in', icon: 'fa-arrow-down', label: 'Nhập kho' },
+                                'ADJUSTMENT': { class: 'badge-adjustment', icon: 'fa-sync-alt', label: 'Kiểm kê' },
+                                'INTERNAL': { class: 'badge-internal', icon: 'fa-exchange-alt', label: 'Chuyển kho' },
+                                'ISSUE': { class: 'badge-out', icon: 'fa-sign-out-alt', label: 'Xuất dùng' } // Thêm ISSUE
+                            };
+
+                            const key = (data || '').toUpperCase();
+                            const ui = config[key] || { class: 'bg-secondary', icon: 'fa-question', label: data };
+
+                            // Render Badge
+                            let html = `<span class="badge ${ui.class} border border-opacity-10 mb-1" style="min-width: 95px;">
+                                                <i class="fas ${ui.icon} me-1"></i>${ui.label}
+                                            </span>`;
+
+                            // [NEW] Render Lý do nếu có (Chữ nhỏ màu xám bên dưới)
+                            if (row.Reason) {
+                                html += `<div class="small text-muted fst-italic mt-1" style="max-width: 200px; white-space: normal;">
+                                                <i class="fa fa-quote-left me-1" style="font-size: 0.8em;"></i>${row.Reason}
+                                             </div>`;
+                            }
+
+                            return html;
+                        }
+                    },
+
+                    // 4. Số lượng (Logic Âm/Dương)
+                    {
+                        data: 'Quantity',
+                        className: 'text-center',
+                        render: function (qty) {
+                            let colorClass = 'text-dark';
+                            let sign = '';
+
+                            if (qty > 0) {
+                                colorClass = 'text-success fw-bold';
+                                sign = '+';
+                            } else if (qty < 0) {
+                                colorClass = 'text-danger fw-bold';
+                                // qty âm đã có dấu trừ sẵn, hoặc bạn format lại
+                            }
+
+                            return `<span class="${colorClass}" style="font-size: 1.1em;">
+                                                                ${qty > 0 ? '+' + qty : qty}
+                                                            </span>`;
+                        }
+                    },
+                    // 5. Tham chiếu (Order ID + Movement ID)
+                    {
+                        data: 'OrderId',
+                        render: function (id, type, row) {
+                            let html = '';
+
+                            if (id) {
+                                html += `<div><span class="text-muted">Đơn:</span> <a href="/Admin/Order/OrderList/${id}" class="text-primary fw-bold">#${id}</a></div>`;
+                            }
+
+                            html += `<div class="small text-muted mt-1" title="Mã giao dịch kho">Ref: <span class="font-monospace text-dark">#GD-${row.MovementId}</span></div>`;
+
+                            return html;
+                        }
+                    },
+
+                    // 6. Người dùng
+                    {
+                        data: 'UserName',
+                        render: function (data) {
+                            return `<div class="d-flex align-items-center">
+                                                                <span class="avatar avatar-xs me-2 bg-soft-primary text-primary rounded-circle">
+                                                                    ${data ? data.charAt(0).toUpperCase() : 'S'}
+                                                                </span>
+                                                                <span>${data || 'System'}</span>
+                                                            </div>`;
+                        }
+                    },
+
+                    // 7. Thời gian
+                    {
+                        data: 'MovementDate',
+                        className: 'text-end',
+                        render: d => `<span class="text-muted font-monospace">${formatDateTime(d)}</span>`
+                    }
+                ],
+                initComplete: function () {
+                    const api = this.api();
+
+                    const $input = $('#tblStock_filter input');
+                    $input
+                        .attr('id', 'txtSearch')
+                        .attr('placeholder', 'Tìm kiếm...');
+
+                    if (focusOrderId) {
+                        $input.val(focusOrderId);
+
+                        // Trigger đúng flow debounce của bạn
+                        $input.trigger('input');
+                    }
+                }
+            });
+        }
+
+        $(document).ready(async function () {
+            // 1. Khởi tạo các sự kiện Modal (đã có sẵn trong code của bro)
+            initStockModalEvents();
+            const sessionLoaded = await loadSessionInfo();
+
+            if (sessionLoaded) {
+                SignalRManager.init();
+            }
+        });
+
+        function initStockModalEvents() {
+            // 1. Load Branch khi mở trang (hoặc khi mở modal lần đầu)
+            // Giả sử API trả về: [{ BranchId: 1, Name: "Chi nhánh HCM" }, ...]
+            $.get('/Branch/GetAllBranch', function (res) {
+                if (res.success) {
+                    let html = '<option value="">-- Chọn chi nhánh --</option>';
+                    res.data.forEach(b => {
+                        html += `<option value="${b.BranchId}">${b.Name}</option>`;
+                    });
+                    $('#adjBranch').html(html);
+                }
+            });
+
+            // 2. Cascade: Chọn Branch -> Load Warehouse
+            $('#adjBranch').change(function () {
+                const branchId = $(this).val();
+                const $wh = $('#adjWarehouse');
+
+                $wh.html('<option value="">Đang tải...</option>').prop('disabled', true);
+
+                if (!branchId) {
+                    $wh.html('<option value="">-- Vui lòng chọn chi nhánh --</option>');
+                    return;
+                }
+
+                $.get('/Warehouse/GetFilteredWarehouse', { branchId: branchId }, function (res) {
+                    let html = '<option value="">-- Chọn kho --</option>';
+                    if (res.success && res.data.length > 0) {
+                        res.data.forEach(w => {
+                            html += `<option value="${w.WarehouseId}">${w.Name}</option>`;
+                        });
+                        $wh.prop('disabled', false);
+                    } else {
+                        html = '<option value="">Không có kho nào</option>';
+                    }
+                    $wh.html(html);
+                });
+            });
+        }
+        function loadCurrentStock(productId) {
+            const warehouseId = $('#adjWarehouse').val();
+            if (!warehouseId) return;
+
+            $('#currentStock').val('Đang kiểm tra...');
+
+            $.get('/Warehouse/GetStockQuantity', { productId, warehouseId })
+                .done(function (qty) {
+                    $('#currentStock').val((qty || 0).toLocaleString('vi-VN'));
+                });
+        }
+        /* =========================================================
+PRODUCT SEARCH MODULE
+========================================================= */
+        const ProductSearch = (function () {
+
+            let searchTimeout = null;
+
+            const state = {
+                keyword: '',
+                branchId: null,
+                warehouseId: null
+            };
+
+            function debounceFetch() {
+                clearTimeout(searchTimeout);
+
+                if (!state.keyword) {
+                    $('#productSearchResult').hide();
+                    return;
+                }
+
+                searchTimeout = setTimeout(fetchProducts, 300);
+            }
+
+            function fetchProducts() {
+                $('#productSearchResult')
+                    .html('<div class="p-2 text-muted">Đang tìm...</div>')
+                    .show();
+
+                $.ajax({
+                    url: '/Admin/Product/GetAllProduct',
+                    type: 'POST',
+                    data: {
+                        keyWord: state.keyword,
+                        branchId: state.branchId || '',
+                        warehouseId: state.warehouseId || ''
+                    },
+                    success: function (res) {
+                        renderSearchResults(res.products);
+                    },
+                    error: function () {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Không thể tìm kiếm',
+                            text: 'Có lỗi xảy ra trong quá trình xử lý.',
+                            timer: 2500,
+                            showConfirmButton: false
+                        });
+                    }
+                });
+            }
+
+            return {
+                updateKeyword(keyword) {
+                    state.keyword = keyword;
+                    debounceFetch();
+                },
+                updateBranch(branchId) {
+                    state.branchId = branchId;
+                    debounceFetch();
+                },
+                updateWarehouse(warehouseId) {
+                    state.warehouseId = warehouseId;
+                    debounceFetch();
+                },
+                clear() {
+                    state.keyword = '';
+                    $('#productSearchResult').hide();
+                }
+            };
+
+        })();
+
+        /* =========================================================
+           DOM READY – EVENT WIRING
+        ========================================================= */
+        $(document).ready(function () {
+
+            // ===== PRODUCT SEARCH INPUT =====
+            $('#txtProductSearch').on('input', function () {
+                const keyword = $(this).val().trim();
+                $('#adjProduct').val('');
+                ProductSearch.updateKeyword(keyword);
+            });
+
+            // ===== FILTERS =====
+            $('#adjBranch').on('change', function () {
+                ProductSearch.updateBranch($(this).val());
+            });
+
+            $('#adjWarehouse').on('change', function () {
+                ProductSearch.updateWarehouse($(this).val());
+            });
+
+            // ===== CLICK OUTSIDE CLOSE =====
+            $(document).on('click', function (e) {
+                if (!$(e.target).closest('.position-relative').length) {
+                    $('#productSearchResult').hide();
+                }
+            });
+
+            // ===== SELECT PRODUCT =====
+            $(document).on('click', '.search-item', function () {
+                const id = $(this).data('id');
+                const name = $(this).data('name');
+                const unit = $(this).data('unit');
+
+                $('#txtProductSearch').val(name);
+                $('#adjProduct').val(id);
+                $('#unitDisplay').text(unit || 'ĐVT');
+
+                loadCurrentStock(id);
+                $('#productSearchResult').hide();
+            });
+
+        });
+
+        /* =========================================================
+           RENDER SEARCH RESULT
+        ========================================================= */
+        function renderSearchResults(data) {
+            const $container = $('#productSearchResult');
+            $container.empty();
+
+            if (!data || data.length === 0) {
+                $container
+                    .html('<div class="list-group-item text-muted text-center py-3">Không tìm thấy sản phẩm</div>')
+                    .show();
+                return;
+            }
+
+            const html = data.map(item => {
+                const img = item.Image || '/assets/img/product/no-image.png';
+                const price = (item.Price || 0).toLocaleString('vi-VN');
+                const stock = (item.Quantity || 0).toLocaleString('vi-VN');
+                const barcode = item.Barcode
+                    ? `<span class="badge bg-light text-dark border ms-1">${item.Barcode}</span>`
+                    : '';
+
+                return `
+                            <div class="list-group-item list-group-item-action search-item p-2"
+                                 data-id="${item.ProductId}"
+                                 data-name="${item.Name}"
+                                 data-unit="${item.Unit}">
+                                <div class="d-flex align-items-center">
+                                    <img src="${img}" class="search-thumb me-3">
+                                    <div class="flex-grow-1">
+                                        <div class="d-flex justify-content-between mb-1">
+                                            <h6 class="mb-0 fw-bold text-truncate" style="max-width:300px">${item.Name}</h6>
+                                            <span class="text-primary fw-bold">${price} ₫</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between small">
+                                            <div class="text-muted">SKU: ${item.ProductId} ${barcode}</div>
+                                            <div class="text-info fw-bold">Tồn: ${stock} ${item.Unit || ''}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>`;
+            }).join('');
+
+            $container.html(html).show();
+        }
+
+        /* =========================================================
+           STOCK MODAL
+        ========================================================= */
+        function openStockModal() {
+            $('#frmStock')[0].reset();
+
+            ProductSearch.clear();
+
+            $('#txtProductSearch').val('');
+            $('#adjProduct').val('');
+            $('#productSearchResult').hide();
+
+            $('#currentStock').val('—');
+            $('input[name="moveType"][value="ADJUSTMENT"]').prop('checked', true);
+            toggleReasonType();
+
+            $('#modalStock').modal('show');
+        }
+
+        /* =========================================================
+           MOVE TYPE TOGGLE
+        ========================================================= */
+        function toggleReasonType() {
+            const type = $('input[name="moveType"]:checked').val();
+            const $sign = $('#qtySign');
+            const $hint = $('#qtyHint');
+
+            if (type === 'ISSUE') {
+                $sign.text('-').removeClass('bg-primary').addClass('bg-danger');
+                $hint.text('Chế độ XUẤT: Nhập số lượng cần lấy ra (Hệ thống tự trừ).');
+            } else {
+                $sign.text('+/-').removeClass('bg-danger').addClass('bg-primary');
+                $hint.text('Chế độ ĐIỀU CHỈNH: Nhập số dương (+) để tăng, số âm (-) để giảm.');
+            }
+        }
+
+        /* =========================================================
+           SUBMIT STOCK TRANSACTION
+        ========================================================= */
+        function submitStockTransaction() {
+
+            const type = $('input[name="moveType"]:checked').val();
+            const warehouseId = $('#adjWarehouse').val();
+            const productId = $('#adjProduct').val();
+            let qty = parseInt($('#adjQty').val()) || 0;
+
+            if (!warehouseId) {
+                Swal.fire('Thiếu thông tin', 'Vui lòng chọn Kho hàng.', 'warning');
+                return;
+            }
+            if (!productId) {
+                Swal.fire('Thiếu thông tin', 'Vui lòng chọn Sản phẩm.', 'warning');
+                return;
+            }
+            if (qty === 0) {
+                Swal.fire('Lỗi số lượng', 'Vui lòng nhập số lượng khác 0.', 'warning');
+                return;
+            }
+
+            if (type === 'ISSUE') {
+                qty = -Math.abs(qty);
+            }
+
+            const payload = {
+                MovementType: type,
+                WarehouseId: warehouseId,
+                ProductId: productId,
+                QuantityChange: qty,
+                Reason: $('#adjReason').val()
+            };
+
+            $.post('/Admin/Warehouse/AdjustStock', payload)
+                .done(res => {
+                    if (res.success) {
+                        $('#modalStock').modal('hide');
+                        Swal.fire('Thành công', 'Đã lưu giao dịch kho!', 'success');
+                        setTimeout(() => {
+                            if (window.tblStock && $.fn.DataTable.isDataTable('#tblStock')) {
+                                tblStock.ajax.reload(null, false);
+                            }
+                        }, 300);
+                    } else {
+                        Swal.fire('Lỗi', res.message, 'error');
+                    }
+                });
+        }
+    </script>
+}
+
+@section Styles {
+    <style>
+        /* Product Image Small */
+        .productimgname .product-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-right: 10px;
+            border: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f8f9fa; /* nền trung tính */
+        }
+
+            .productimgname .product-img img {
+                max-width: 100%;
+                max-height: 100%;
+                object-fit: contain;
+            }
+
+
+        .productimgname {
+            display: flex;
+            align-items: center;
+        }
+
+        /* Avatar User */
+        .avatar-xs {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .bg-soft-primary {
+            background-color: rgba(13, 110, 253, 0.1);
+        }
+
+        /* === STOCK BADGES === */
+        .badge {
+            padding: 6px 10px;
+            font-weight: 500;
+            border-radius: 4px;
+        }
+
+        /* Nhập / Trả hàng: Xanh lá */
+        .badge-in {
+            background-color: #d1e7dd;
+            color: #0f5132;
+            border: 1px solid #badbcc;
+        }
+
+        /* Xuất / Bán: Đỏ nhạt */
+        .badge-out {
+            background-color: #f8d7da;
+            color: #842029;
+            border: 1px solid #f5c2c7;
+        }
+
+        /* Kiểm kê: Vàng cam */
+        .badge-adjustment {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+        }
+
+        /* Nội bộ: Xanh dương */
+        .badge-internal {
+            background-color: #cff4fc;
+            color: #055160;
+            border: 1px solid #b6effb;
+        }
+
+        /* Font Monospace cho cột thời gian */
+        .font-monospace {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+        }
+
+        /* Style cho từng dòng kết quả */
+        .search-item {
+            cursor: pointer;
+            transition: all 0.1s;
+            border-left: 3px solid transparent;
+        }
+
+            .search-item:hover {
+                background-color: #f8f9fa;
+                border-left: 3px solid #ff9f43; /* Màu cam chủ đạo */
+            }
+
+        /* Ảnh sản phẩm thumbnail */
+        .search-thumb {
+            width: 45px;
+            height: 45px;
+            object-fit: cover;
+            border-radius: 4px;
+            border: 1px solid #eee;
+        }
+
+        .highlight-new-row {
+            background-color: #fff9c4 !important; /* Màu vàng nhạt */
+            transition: background-color 3s ease;
+        }
+    </style>
+}

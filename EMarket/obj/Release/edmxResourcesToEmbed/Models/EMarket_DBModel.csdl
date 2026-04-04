@@ -1,0 +1,1883 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="EMarket_DBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Branch">
+    <Key>
+      <PropertyRef Name="branch_id" />
+    </Key>
+    <Property Name="branch_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="name" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="address" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="address_url" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="latitude" Type="Decimal" Precision="9" Scale="6" />
+    <Property Name="longitude" Type="Decimal" Precision="9" Scale="6" />
+    <Property Name="created_at" Type="DateTime" Precision="3" />
+    <Property Name="updated_at" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="Orders" Relationship="Self.FK__Orders__branch_i__68487DD7" FromRole="Branches" ToRole="Orders" />
+    <NavigationProperty Name="ReportDetails" Relationship="Self.FK__ReportDet__branc__7F2BE32F" FromRole="Branches" ToRole="ReportDetails" />
+    <NavigationProperty Name="UserRoles" Relationship="Self.FK__UserRoles__branc__5070F446" FromRole="Branches" ToRole="UserRoles" />
+    <NavigationProperty Name="Warehouses" Relationship="Self.FK__Warehouse__branc__3B75D760" FromRole="Branches" ToRole="Warehouses" />
+    <NavigationProperty Name="Expenses" Relationship="EMarket_DBModel.FK__Expenses__branch__536D5C82" FromRole="Branch" ToRole="Expens" />
+    <NavigationProperty Name="Quotations" Relationship="EMarket_DBModel.FK__Quotation__branc__5C02A283" FromRole="Branch" ToRole="Quotation" />
+  </EntityType>
+  <EntityType Name="CustomerAddress">
+    <Key>
+      <PropertyRef Name="address_id" />
+    </Key>
+    <Property Name="address_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="customer_id" Type="Int32" Nullable="false" />
+    <Property Name="full_address" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="address_url" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="is_default" Type="Boolean" />
+    <Property Name="created_at" Type="DateTime" Precision="3" />
+    <Property Name="updated_at" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="Customer" Relationship="Self.FK__CustomerA__custo__440B1D61" FromRole="CustomerAddresses" ToRole="Customers" />
+    <NavigationProperty Name="Orders" Relationship="Self.FK__Orders__delivery__693CA210" FromRole="CustomerAddresses" ToRole="Orders" />
+  </EntityType>
+  <EntityType Name="Customer">
+    <Key>
+      <PropertyRef Name="customer_id" />
+    </Key>
+    <Property Name="customer_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="full_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="phone" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="customer_type" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="user_img" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="created_at" Type="DateTime" Precision="3" />
+    <Property Name="updated_at" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="CustomerAddresses" Relationship="Self.FK__CustomerA__custo__440B1D61" FromRole="Customers" ToRole="CustomerAddresses" />
+    <NavigationProperty Name="LoyaltyPrograms" Relationship="Self.FK__LoyaltyPr__custo__76969D2E" FromRole="Customers" ToRole="LoyaltyPrograms" />
+    <NavigationProperty Name="Orders" Relationship="Self.FK__Orders__customer__66603565" FromRole="Customers" ToRole="Orders" />
+    <Property Name="points_balance" Type="Int32" Nullable="false" />
+    <Property Name="points_earned_total" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Quotations" Relationship="EMarket_DBModel.FK__Quotation__custo__5CF6C6BC" FromRole="Customer" ToRole="Quotation" />
+  </EntityType>
+  <EntityType Name="LoyaltyProgram">
+    <Key>
+      <PropertyRef Name="loyalty_id" />
+    </Key>
+    <Property Name="loyalty_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="customer_id" Type="Int32" Nullable="false" />
+    <Property Name="order_id" Type="Int32" />
+    <Property Name="points_earned" Type="Int32" />
+    <Property Name="points_redeemed" Type="Int32" />
+    <Property Name="created_at" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="Customer" Relationship="Self.FK__LoyaltyPr__custo__76969D2E" FromRole="LoyaltyPrograms" ToRole="Customers" />
+    <NavigationProperty Name="Order" Relationship="Self.FK__LoyaltyPr__order__778AC167" FromRole="LoyaltyPrograms" ToRole="Orders" />
+  </EntityType>
+  <EntityType Name="OrderDetail">
+    <Key>
+      <PropertyRef Name="order_detail_id" />
+    </Key>
+    <Property Name="order_detail_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="order_id" Type="Int32" Nullable="false" />
+    <Property Name="product_id" Type="Int32" Nullable="false" />
+    <Property Name="quantity" Type="Int32" Nullable="false" />
+    <Property Name="unit_price" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="discount" Type="Decimal" Precision="18" Scale="2" />
+    <NavigationProperty Name="Order" Relationship="Self.FK__OrderDeta__order__6C190EBB" FromRole="OrderDetails" ToRole="Orders" />
+    <NavigationProperty Name="Product" Relationship="Self.FK__OrderDeta__produ__6D0D32F4" FromRole="OrderDetails" ToRole="Products" />
+    <Property Name="quantity_returned" Type="Int32" />
+  </EntityType>
+  <EntityType Name="Order">
+    <Key>
+      <PropertyRef Name="order_id" />
+    </Key>
+    <Property Name="order_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="customer_id" Type="Int32" Nullable="false" />
+    <Property Name="user_id" Type="Int32" />
+    <Property Name="branch_id" Type="Int32" />
+    <Property Name="order_date" Type="DateTime" Precision="3" />
+    <Property Name="status" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="total_amount" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="delivery_address_id" Type="Int32" />
+    <NavigationProperty Name="Branch" Relationship="Self.FK__Orders__branch_i__68487DD7" FromRole="Orders" ToRole="Branches" />
+    <NavigationProperty Name="CustomerAddress" Relationship="Self.FK__Orders__delivery__693CA210" FromRole="Orders" ToRole="CustomerAddresses" />
+    <NavigationProperty Name="Customer" Relationship="Self.FK__Orders__customer__66603565" FromRole="Orders" ToRole="Customers" />
+    <NavigationProperty Name="LoyaltyPrograms" Relationship="Self.FK__LoyaltyPr__order__778AC167" FromRole="Orders" ToRole="LoyaltyPrograms" />
+    <NavigationProperty Name="OrderDetails" Relationship="Self.FK__OrderDeta__order__6C190EBB" FromRole="Orders" ToRole="OrderDetails" />
+    <NavigationProperty Name="User" Relationship="Self.FK__Orders__user_id__6754599E" FromRole="Orders" ToRole="Users" />
+    <NavigationProperty Name="Payments" Relationship="Self.FK__Payments__order___70DDC3D8" FromRole="Orders" ToRole="Payments" />
+    <NavigationProperty Name="StockMovements" Relationship="Self.FK__StockMove__order__05D8E0BE" FromRole="Orders" ToRole="StockMovements" />
+    <Property Name="manual_discount" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="discount_reason" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="parent_order_id" Type="Int32" />
+    <NavigationProperty Name="Orders1" Relationship="EMarket_DBModel.FK_Orders_Parent" FromRole="Order" ToRole="Order1" />
+    <NavigationProperty Name="Order1" Relationship="EMarket_DBModel.FK_Orders_Parent" FromRole="Order1" ToRole="Order" />
+    <NavigationProperty Name="Quotations" Relationship="EMarket_DBModel.FK__Quotation__conve__5DEAEAF5" FromRole="Order" ToRole="Quotation" />
+  </EntityType>
+  <EntityType Name="Payment">
+    <Key>
+      <PropertyRef Name="payment_id" />
+    </Key>
+    <Property Name="payment_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="order_id" Type="Int32" Nullable="false" />
+    <Property Name="payment_method" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="amount" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="status" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="payment_date" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="Order" Relationship="Self.FK__Payments__order___70DDC3D8" FromRole="Payments" ToRole="Orders" />
+  </EntityType>
+  <EntityType Name="Permission">
+    <Key>
+      <PropertyRef Name="permission_id" />
+    </Key>
+    <Property Name="permission_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="module" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="RolePermissions" Relationship="Self.FK__RolePermi__permi__5441852A" FromRole="Permissions" ToRole="RolePermissions" />
+  </EntityType>
+  <EntityType Name="ProductCategory">
+    <Key>
+      <PropertyRef Name="category_id" />
+    </Key>
+    <Property Name="category_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="name" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Products" Relationship="Self.FK__Products__catego__5BE2A6F2" FromRole="ProductCategories" ToRole="Products" />
+    <NavigationProperty Name="PurchaseOrderDetails" Relationship="Self.FK__PurchaseO__categ__123EB7A3" FromRole="ProductCategories" ToRole="PurchaseOrderDetails" />
+    <NavigationProperty Name="Promotions" Relationship="EMarket_DBModel.FK_Promotion_Category" FromRole="ProductCategory" ToRole="Promotion" />
+  </EntityType>
+  <EntityType Name="ProductImage">
+    <Key>
+      <PropertyRef Name="image_id" />
+    </Key>
+    <Property Name="image_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="product_id" Type="Int32" Nullable="false" />
+    <Property Name="image_url" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="sort_order" Type="Int32" />
+    <Property Name="created_at" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="Product" Relationship="Self.FK__ProductIm__produ__51300E55" FromRole="ProductImages" ToRole="Products" />
+  </EntityType>
+  <EntityType Name="ProductLot">
+    <Key>
+      <PropertyRef Name="lot_id" />
+    </Key>
+    <Property Name="lot_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="product_id" Type="Int32" Nullable="false" />
+    <Property Name="expiry_date" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="cost_price" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="manufacturing_date" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="Product" Relationship="Self.FK__ProductLo__produ__625A9A57" FromRole="ProductLots" ToRole="Products" />
+    <NavigationProperty Name="PurchaseOrderDetails" Relationship="EMarket_DBModel.FK__PurchaseO__lot_i__0697FACD" FromRole="ProductLot" ToRole="PurchaseOrderDetail" />
+    <Property Name="batch_code" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Inventories" Relationship="EMarket_DBModel.FK_Inventory_ProductLots" FromRole="ProductLot" ToRole="Inventory" />
+  </EntityType>
+  <EntityType Name="Product">
+    <Key>
+      <PropertyRef Name="product_id" />
+    </Key>
+    <Property Name="product_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="category_id" Type="Int32" />
+    <Property Name="supplier_id" Type="Int32" />
+    <Property Name="barcode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="price" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="unit" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="description" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="min_stock" Type="Int32" />
+    <Property Name="max_stock" Type="Int32" />
+    <Property Name="image" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="created_at" Type="DateTime" Precision="3" />
+    <Property Name="updated_at" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="OrderDetails" Relationship="Self.FK__OrderDeta__produ__6D0D32F4" FromRole="Products" ToRole="OrderDetails" />
+    <NavigationProperty Name="ProductCategory" Relationship="Self.FK__Products__catego__5BE2A6F2" FromRole="Products" ToRole="ProductCategories" />
+    <NavigationProperty Name="ProductImages" Relationship="Self.FK__ProductIm__produ__51300E55" FromRole="Products" ToRole="ProductImages" />
+    <NavigationProperty Name="ProductLots" Relationship="Self.FK__ProductLo__produ__625A9A57" FromRole="Products" ToRole="ProductLots" />
+    <NavigationProperty Name="Supplier" Relationship="Self.FK__Products__suppli__5CD6CB2B" FromRole="Products" ToRole="Suppliers" />
+    <NavigationProperty Name="PurchaseOrderDetails" Relationship="Self.FK__PurchaseO__produ__114A936A" FromRole="Products" ToRole="PurchaseOrderDetails" />
+    <NavigationProperty Name="ReportDetails" Relationship="Self.FK__ReportDet__produ__7E37BEF6" FromRole="Products" ToRole="ReportDetails" />
+    <NavigationProperty Name="StockMovements" Relationship="Self.FK__StockMove__produ__02FC7413" FromRole="Products" ToRole="StockMovements" />
+    <NavigationProperty Name="QuotationDetails" Relationship="EMarket_DBModel.FK__Quotation__produ__62AFA012" FromRole="Product" ToRole="QuotationDetail" />
+  </EntityType>
+  <EntityType Name="Promotion">
+    <Key>
+      <PropertyRef Name="promotion_id" />
+    </Key>
+    <Property Name="promotion_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="start_date" Type="DateTime" Precision="3" Nullable="false" />
+    <Property Name="end_date" Type="DateTime" Precision="3" Nullable="false" />
+    <Property Name="discount_type" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="discount_value" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="category_id" Type="Int32" />
+    <Property Name="customer_type" Type="String" MaxLength="40" FixedLength="false" Unicode="true" />
+    <Property Name="priority" Type="Int32" />
+    <Property Name="is_active" Type="Boolean" />
+    <NavigationProperty Name="ProductCategory" Relationship="EMarket_DBModel.FK_Promotion_Category" FromRole="Promotion" ToRole="ProductCategory" />
+  </EntityType>
+  <EntityType Name="PurchaseOrderDetail">
+    <Key>
+      <PropertyRef Name="purchase_order_detail_id" />
+    </Key>
+    <Property Name="purchase_order_detail_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="purchase_order_id" Type="Int32" Nullable="false" />
+    <Property Name="product_id" Type="Int32" Nullable="false" />
+    <Property Name="category_id" Type="Int32" Nullable="false" />
+    <Property Name="quantity" Type="Int32" Nullable="false" />
+    <Property Name="unit_price" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="total_price" Type="Decimal" Precision="29" Scale="2" annotation:StoreGeneratedPattern="None" />
+    <NavigationProperty Name="ProductCategory" Relationship="Self.FK__PurchaseO__categ__123EB7A3" FromRole="PurchaseOrderDetails" ToRole="ProductCategories" />
+    <NavigationProperty Name="Product" Relationship="Self.FK__PurchaseO__produ__114A936A" FromRole="PurchaseOrderDetails" ToRole="Products" />
+    <NavigationProperty Name="PurchaseOrder" Relationship="Self.FK__PurchaseO__purch__10566F31" FromRole="PurchaseOrderDetails" ToRole="PurchaseOrders" />
+    <Property Name="lot_id" Type="Int32" />
+    <NavigationProperty Name="ProductLot" Relationship="EMarket_DBModel.FK__PurchaseO__lot_i__0697FACD" FromRole="PurchaseOrderDetail" ToRole="ProductLot" />
+  </EntityType>
+  <EntityType Name="PurchaseOrder">
+    <Key>
+      <PropertyRef Name="purchase_order_id" />
+    </Key>
+    <Property Name="purchase_order_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="supplier_id" Type="Int32" Nullable="false" />
+    <Property Name="warehouse_id" Type="Int32" Nullable="false" />
+    <Property Name="user_id" Type="Int32" Nullable="false" />
+    <Property Name="order_date" Type="DateTime" Precision="3" />
+    <Property Name="status" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="total_amount" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="payment_status" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="notes" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="PurchaseOrderDetails" Relationship="Self.FK__PurchaseO__purch__10566F31" FromRole="PurchaseOrders" ToRole="PurchaseOrderDetails" />
+    <NavigationProperty Name="Supplier" Relationship="Self.FK__PurchaseO__suppl__0B91BA14" FromRole="PurchaseOrders" ToRole="Suppliers" />
+    <NavigationProperty Name="User" Relationship="Self.FK__PurchaseO__user___0D7A0286" FromRole="PurchaseOrders" ToRole="Users" />
+    <NavigationProperty Name="Warehouse" Relationship="Self.FK__PurchaseO__wareh__0C85DE4D" FromRole="PurchaseOrders" ToRole="Warehouses" />
+    <NavigationProperty Name="SupplierDebts" Relationship="Self.FK__SupplierD__purch__17F790F9" FromRole="PurchaseOrders" ToRole="SupplierDebts" />
+    <NavigationProperty Name="StockMovements" Relationship="EMarket_DBModel.FK_StockMovements_PurchaseOrders" FromRole="PurchaseOrder" ToRole="StockMovement" />
+  </EntityType>
+  <EntityType Name="ReportDetail">
+    <Key>
+      <PropertyRef Name="report_detail_id" />
+    </Key>
+    <Property Name="report_detail_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="report_id" Type="Int32" />
+    <Property Name="product_id" Type="Int32" />
+    <Property Name="branch_id" Type="Int32" />
+    <Property Name="quantity" Type="Int32" />
+    <Property Name="total_amount" Type="Decimal" Precision="18" Scale="2" />
+    <NavigationProperty Name="Branch" Relationship="Self.FK__ReportDet__branc__7F2BE32F" FromRole="ReportDetails" ToRole="Branches" />
+    <NavigationProperty Name="Product" Relationship="Self.FK__ReportDet__produ__7E37BEF6" FromRole="ReportDetails" ToRole="Products" />
+    <NavigationProperty Name="Report" Relationship="Self.FK__ReportDet__repor__7D439ABD" FromRole="ReportDetails" ToRole="Reports" />
+  </EntityType>
+  <EntityType Name="Report">
+    <Key>
+      <PropertyRef Name="report_id" />
+    </Key>
+    <Property Name="report_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="report_type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="generated_date" Type="DateTime" Precision="3" />
+    <Property Name="description" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="ReportDetails" Relationship="Self.FK__ReportDet__repor__7D439ABD" FromRole="Reports" ToRole="ReportDetails" />
+  </EntityType>
+  <EntityType Name="RolePermission">
+    <Key>
+      <PropertyRef Name="role_permission_id" />
+    </Key>
+    <Property Name="role_permission_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="role_id" Type="Int32" Nullable="false" />
+    <Property Name="permission_id" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Permission" Relationship="Self.FK__RolePermi__permi__5441852A" FromRole="RolePermissions" ToRole="Permissions" />
+    <NavigationProperty Name="Role" Relationship="Self.FK__RolePermi__role___534D60F1" FromRole="RolePermissions" ToRole="Roles" />
+  </EntityType>
+  <EntityType Name="Role">
+    <Key>
+      <PropertyRef Name="role_id" />
+    </Key>
+    <Property Name="role_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="RolePermissions" Relationship="Self.FK__RolePermi__role___534D60F1" FromRole="Roles" ToRole="RolePermissions" />
+    <NavigationProperty Name="UserRoles" Relationship="Self.FK__UserRoles__role___4F7CD00D" FromRole="Roles" ToRole="UserRoles" />
+  </EntityType>
+  <EntityType Name="StockMovement">
+    <Key>
+      <PropertyRef Name="movement_id" />
+    </Key>
+    <Property Name="movement_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="product_id" Type="Int32" />
+    <Property Name="warehouse_id" Type="Int32" />
+    <Property Name="movement_type" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="quantity" Type="Int32" />
+    <Property Name="movement_date" Type="DateTime" Precision="3" />
+    <Property Name="user_id" Type="Int32" />
+    <Property Name="order_id" Type="Int32" />
+    <NavigationProperty Name="Order" Relationship="Self.FK__StockMove__order__05D8E0BE" FromRole="StockMovements" ToRole="Orders" />
+    <NavigationProperty Name="Product" Relationship="Self.FK__StockMove__produ__02FC7413" FromRole="StockMovements" ToRole="Products" />
+    <NavigationProperty Name="User" Relationship="Self.FK__StockMove__user___04E4BC85" FromRole="StockMovements" ToRole="Users" />
+    <NavigationProperty Name="Warehouse" Relationship="Self.FK__StockMove__wareh__03F0984C" FromRole="StockMovements" ToRole="Warehouses" />
+    <Property Name="lot_id" Type="Int32" />
+    <Property Name="reason" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="purchase_order_id" Type="Int32" />
+    <NavigationProperty Name="PurchaseOrder" Relationship="EMarket_DBModel.FK_StockMovements_PurchaseOrders" FromRole="StockMovement" ToRole="PurchaseOrder" />
+  </EntityType>
+  <EntityType Name="SupplierDebt">
+    <Key>
+      <PropertyRef Name="debt_id" />
+    </Key>
+    <Property Name="debt_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="purchase_order_id" Type="Int32" Nullable="false" />
+    <Property Name="supplier_id" Type="Int32" Nullable="false" />
+    <Property Name="total_amount" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="paid_amount" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="unpaid_amount" Type="Decimal" Precision="19" Scale="2" annotation:StoreGeneratedPattern="None" />
+    <Property Name="due_date" Type="DateTime" Precision="3" />
+    <Property Name="status" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="updated_at" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="PurchaseOrder" Relationship="Self.FK__SupplierD__purch__17F790F9" FromRole="SupplierDebts" ToRole="PurchaseOrders" />
+    <NavigationProperty Name="Supplier" Relationship="Self.FK__SupplierD__suppl__18EBB532" FromRole="SupplierDebts" ToRole="Suppliers" />
+    <NavigationProperty Name="SupplierPayments" Relationship="Self.FK__SupplierP__debt___1CBC4616" FromRole="SupplierDebts" ToRole="SupplierPayments" />
+  </EntityType>
+  <EntityType Name="SupplierPayment">
+    <Key>
+      <PropertyRef Name="payment_id" />
+    </Key>
+    <Property Name="payment_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="debt_id" Type="Int32" Nullable="false" />
+    <Property Name="amount" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="payment_method" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="payment_date" Type="DateTime" Precision="3" />
+    <Property Name="payment_proof" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="SupplierDebt" Relationship="Self.FK__SupplierP__debt___1CBC4616" FromRole="SupplierPayments" ToRole="SupplierDebts" />
+    <Property Name="user_id" Type="Int32" />
+    <NavigationProperty Name="User" Relationship="EMarket_DBModel.FK_SupplierPayments_Users" FromRole="SupplierPayment" ToRole="User" />
+  </EntityType>
+  <EntityType Name="Supplier">
+    <Key>
+      <PropertyRef Name="supplier_id" />
+    </Key>
+    <Property Name="supplier_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="name" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="phone" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="address" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="address_url" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="contact_person" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Products" Relationship="Self.FK__Products__suppli__5CD6CB2B" FromRole="Suppliers" ToRole="Products" />
+    <NavigationProperty Name="PurchaseOrders" Relationship="Self.FK__PurchaseO__suppl__0B91BA14" FromRole="Suppliers" ToRole="PurchaseOrders" />
+    <NavigationProperty Name="SupplierDebts" Relationship="Self.FK__SupplierD__suppl__18EBB532" FromRole="Suppliers" ToRole="SupplierDebts" />
+    <NavigationProperty Name="Users" Relationship="EMarket_DBModel.FK__Users__supplier___2CBDA3B5" FromRole="Supplier" ToRole="User" />
+  </EntityType>
+  <EntityType Name="UserRole">
+    <Key>
+      <PropertyRef Name="user_role_id" />
+    </Key>
+    <Property Name="user_role_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="user_id" Type="Int32" Nullable="false" />
+    <Property Name="role_id" Type="Int32" Nullable="false" />
+    <Property Name="branch_id" Type="Int32" />
+    <NavigationProperty Name="Branch" Relationship="Self.FK__UserRoles__branc__5070F446" FromRole="UserRoles" ToRole="Branches" />
+    <NavigationProperty Name="Role" Relationship="Self.FK__UserRoles__role___4F7CD00D" FromRole="UserRoles" ToRole="Roles" />
+    <NavigationProperty Name="User" Relationship="Self.FK__UserRoles__user___4E88ABD4" FromRole="UserRoles" ToRole="Users" />
+    <Property Name="status" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="user_id" />
+    </Key>
+    <Property Name="user_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="username" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="password_hash" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="full_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="phone" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="user_img" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="user_type" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="created_at" Type="DateTime" Precision="3" />
+    <Property Name="updated_at" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="Orders" Relationship="Self.FK__Orders__user_id__6754599E" FromRole="Users" ToRole="Orders" />
+    <NavigationProperty Name="PurchaseOrders" Relationship="Self.FK__PurchaseO__user___0D7A0286" FromRole="Users" ToRole="PurchaseOrders" />
+    <NavigationProperty Name="StockMovements" Relationship="Self.FK__StockMove__user___04E4BC85" FromRole="Users" ToRole="StockMovements" />
+    <NavigationProperty Name="UserRoles" Relationship="Self.FK__UserRoles__user___4E88ABD4" FromRole="Users" ToRole="UserRoles" />
+    <Property Name="supplier_id" Type="Int32" />
+    <NavigationProperty Name="Supplier" Relationship="EMarket_DBModel.FK__Users__supplier___2CBDA3B5" FromRole="User" ToRole="Supplier" />
+    <Property Name="status" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="SupplierPayments" Relationship="EMarket_DBModel.FK_SupplierPayments_Users" FromRole="User" ToRole="SupplierPayment" />
+    <NavigationProperty Name="Expenses" Relationship="EMarket_DBModel.FK__Expenses__user_i__63A3C44B" FromRole="User" ToRole="Expens" />
+    <NavigationProperty Name="AuditLogs" Relationship="EMarket_DBModel.FK_AuditLogs_Users" FromRole="User" ToRole="AuditLog" />
+  </EntityType>
+  <EntityType Name="Warehouse">
+    <Key>
+      <PropertyRef Name="warehouse_id" />
+    </Key>
+    <Property Name="warehouse_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="branch_id" Type="Int32" Nullable="false" />
+    <Property Name="name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="address" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="address_url" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="latitude" Type="Decimal" Precision="9" Scale="6" />
+    <Property Name="longitude" Type="Decimal" Precision="9" Scale="6" />
+    <Property Name="created_at" Type="DateTime" Precision="3" />
+    <Property Name="updated_at" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="Branch" Relationship="Self.FK__Warehouse__branc__3B75D760" FromRole="Warehouses" ToRole="Branches" />
+    <NavigationProperty Name="PurchaseOrders" Relationship="Self.FK__PurchaseO__wareh__0C85DE4D" FromRole="Warehouses" ToRole="PurchaseOrders" />
+    <NavigationProperty Name="StockMovements" Relationship="Self.FK__StockMove__wareh__03F0984C" FromRole="Warehouses" ToRole="StockMovements" />
+    <NavigationProperty Name="Inventories" Relationship="EMarket_DBModel.FK__Inventory__wareh__628FA481" FromRole="Warehouse" ToRole="Inventory" />
+  </EntityType>
+  <Association Name="FK__Orders__branch_i__68487DD7">
+    <End Role="Branches" Type="Self.Branch" Multiplicity="0..1" />
+    <End Role="Orders" Type="Self.Order" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Branches">
+        <PropertyRef Name="branch_id" />
+      </Principal>
+      <Dependent Role="Orders">
+        <PropertyRef Name="branch_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__ReportDet__branc__7F2BE32F">
+    <End Role="Branches" Type="Self.Branch" Multiplicity="0..1" />
+    <End Role="ReportDetails" Type="Self.ReportDetail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Branches">
+        <PropertyRef Name="branch_id" />
+      </Principal>
+      <Dependent Role="ReportDetails">
+        <PropertyRef Name="branch_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__UserRoles__branc__5070F446">
+    <End Role="Branches" Type="Self.Branch" Multiplicity="0..1" />
+    <End Role="UserRoles" Type="Self.UserRole" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Branches">
+        <PropertyRef Name="branch_id" />
+      </Principal>
+      <Dependent Role="UserRoles">
+        <PropertyRef Name="branch_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Warehouse__branc__3B75D760">
+    <End Role="Branches" Type="Self.Branch" Multiplicity="1" />
+    <End Role="Warehouses" Type="Self.Warehouse" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Branches">
+        <PropertyRef Name="branch_id" />
+      </Principal>
+      <Dependent Role="Warehouses">
+        <PropertyRef Name="branch_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__CustomerA__custo__440B1D61">
+    <End Role="Customers" Type="Self.Customer" Multiplicity="1" />
+    <End Role="CustomerAddresses" Type="Self.CustomerAddress" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Customers">
+        <PropertyRef Name="customer_id" />
+      </Principal>
+      <Dependent Role="CustomerAddresses">
+        <PropertyRef Name="customer_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Orders__delivery__693CA210">
+    <End Role="CustomerAddresses" Type="Self.CustomerAddress" Multiplicity="0..1" />
+    <End Role="Orders" Type="Self.Order" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CustomerAddresses">
+        <PropertyRef Name="address_id" />
+      </Principal>
+      <Dependent Role="Orders">
+        <PropertyRef Name="delivery_address_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__LoyaltyPr__custo__76969D2E">
+    <End Role="Customers" Type="Self.Customer" Multiplicity="1" />
+    <End Role="LoyaltyPrograms" Type="Self.LoyaltyProgram" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Customers">
+        <PropertyRef Name="customer_id" />
+      </Principal>
+      <Dependent Role="LoyaltyPrograms">
+        <PropertyRef Name="customer_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Orders__customer__66603565">
+    <End Role="Customers" Type="Self.Customer" Multiplicity="1" />
+    <End Role="Orders" Type="Self.Order" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Customers">
+        <PropertyRef Name="customer_id" />
+      </Principal>
+      <Dependent Role="Orders">
+        <PropertyRef Name="customer_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__LoyaltyPr__order__778AC167">
+    <End Role="Orders" Type="Self.Order" Multiplicity="0..1" />
+    <End Role="LoyaltyPrograms" Type="Self.LoyaltyProgram" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Orders">
+        <PropertyRef Name="order_id" />
+      </Principal>
+      <Dependent Role="LoyaltyPrograms">
+        <PropertyRef Name="order_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__OrderDeta__order__6C190EBB">
+    <End Role="Orders" Type="Self.Order" Multiplicity="1" />
+    <End Role="OrderDetails" Type="Self.OrderDetail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Orders">
+        <PropertyRef Name="order_id" />
+      </Principal>
+      <Dependent Role="OrderDetails">
+        <PropertyRef Name="order_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__OrderDeta__produ__6D0D32F4">
+    <End Role="Products" Type="Self.Product" Multiplicity="1" />
+    <End Role="OrderDetails" Type="Self.OrderDetail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Products">
+        <PropertyRef Name="product_id" />
+      </Principal>
+      <Dependent Role="OrderDetails">
+        <PropertyRef Name="product_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Orders__user_id__6754599E">
+    <End Role="Users" Type="Self.User" Multiplicity="0..1" />
+    <End Role="Orders" Type="Self.Order" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="user_id" />
+      </Principal>
+      <Dependent Role="Orders">
+        <PropertyRef Name="user_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Payments__order___70DDC3D8">
+    <End Role="Orders" Type="Self.Order" Multiplicity="1" />
+    <End Role="Payments" Type="Self.Payment" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Orders">
+        <PropertyRef Name="order_id" />
+      </Principal>
+      <Dependent Role="Payments">
+        <PropertyRef Name="order_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__StockMove__order__05D8E0BE">
+    <End Role="Orders" Type="Self.Order" Multiplicity="0..1" />
+    <End Role="StockMovements" Type="Self.StockMovement" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Orders">
+        <PropertyRef Name="order_id" />
+      </Principal>
+      <Dependent Role="StockMovements">
+        <PropertyRef Name="order_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__RolePermi__permi__5441852A">
+    <End Role="Permissions" Type="Self.Permission" Multiplicity="1" />
+    <End Role="RolePermissions" Type="Self.RolePermission" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Permissions">
+        <PropertyRef Name="permission_id" />
+      </Principal>
+      <Dependent Role="RolePermissions">
+        <PropertyRef Name="permission_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Products__catego__5BE2A6F2">
+    <End Role="ProductCategories" Type="Self.ProductCategory" Multiplicity="0..1" />
+    <End Role="Products" Type="Self.Product" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ProductCategories">
+        <PropertyRef Name="category_id" />
+      </Principal>
+      <Dependent Role="Products">
+        <PropertyRef Name="category_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__PurchaseO__categ__123EB7A3">
+    <End Role="ProductCategories" Type="Self.ProductCategory" Multiplicity="1" />
+    <End Role="PurchaseOrderDetails" Type="Self.PurchaseOrderDetail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ProductCategories">
+        <PropertyRef Name="category_id" />
+      </Principal>
+      <Dependent Role="PurchaseOrderDetails">
+        <PropertyRef Name="category_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__ProductIm__produ__51300E55">
+    <End Role="Products" Type="Self.Product" Multiplicity="1" />
+    <End Role="ProductImages" Type="Self.ProductImage" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Products">
+        <PropertyRef Name="product_id" />
+      </Principal>
+      <Dependent Role="ProductImages">
+        <PropertyRef Name="product_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__ProductLo__produ__625A9A57">
+    <End Role="Products" Type="Self.Product" Multiplicity="1" />
+    <End Role="ProductLots" Type="Self.ProductLot" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Products">
+        <PropertyRef Name="product_id" />
+      </Principal>
+      <Dependent Role="ProductLots">
+        <PropertyRef Name="product_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Products__suppli__5CD6CB2B">
+    <End Role="Suppliers" Type="Self.Supplier" Multiplicity="0..1" />
+    <End Role="Products" Type="Self.Product" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Suppliers">
+        <PropertyRef Name="supplier_id" />
+      </Principal>
+      <Dependent Role="Products">
+        <PropertyRef Name="supplier_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__PurchaseO__produ__114A936A">
+    <End Role="Products" Type="Self.Product" Multiplicity="1" />
+    <End Role="PurchaseOrderDetails" Type="Self.PurchaseOrderDetail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Products">
+        <PropertyRef Name="product_id" />
+      </Principal>
+      <Dependent Role="PurchaseOrderDetails">
+        <PropertyRef Name="product_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__ReportDet__produ__7E37BEF6">
+    <End Role="Products" Type="Self.Product" Multiplicity="0..1" />
+    <End Role="ReportDetails" Type="Self.ReportDetail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Products">
+        <PropertyRef Name="product_id" />
+      </Principal>
+      <Dependent Role="ReportDetails">
+        <PropertyRef Name="product_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__StockMove__produ__02FC7413">
+    <End Role="Products" Type="Self.Product" Multiplicity="0..1" />
+    <End Role="StockMovements" Type="Self.StockMovement" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Products">
+        <PropertyRef Name="product_id" />
+      </Principal>
+      <Dependent Role="StockMovements">
+        <PropertyRef Name="product_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__PurchaseO__purch__10566F31">
+    <End Role="PurchaseOrders" Type="Self.PurchaseOrder" Multiplicity="1" />
+    <End Role="PurchaseOrderDetails" Type="Self.PurchaseOrderDetail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PurchaseOrders">
+        <PropertyRef Name="purchase_order_id" />
+      </Principal>
+      <Dependent Role="PurchaseOrderDetails">
+        <PropertyRef Name="purchase_order_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__PurchaseO__suppl__0B91BA14">
+    <End Role="Suppliers" Type="Self.Supplier" Multiplicity="1" />
+    <End Role="PurchaseOrders" Type="Self.PurchaseOrder" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Suppliers">
+        <PropertyRef Name="supplier_id" />
+      </Principal>
+      <Dependent Role="PurchaseOrders">
+        <PropertyRef Name="supplier_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__PurchaseO__user___0D7A0286">
+    <End Role="Users" Type="Self.User" Multiplicity="1" />
+    <End Role="PurchaseOrders" Type="Self.PurchaseOrder" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="user_id" />
+      </Principal>
+      <Dependent Role="PurchaseOrders">
+        <PropertyRef Name="user_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__PurchaseO__wareh__0C85DE4D">
+    <End Role="Warehouses" Type="Self.Warehouse" Multiplicity="1" />
+    <End Role="PurchaseOrders" Type="Self.PurchaseOrder" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Warehouses">
+        <PropertyRef Name="warehouse_id" />
+      </Principal>
+      <Dependent Role="PurchaseOrders">
+        <PropertyRef Name="warehouse_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__SupplierD__purch__17F790F9">
+    <End Role="PurchaseOrders" Type="Self.PurchaseOrder" Multiplicity="1" />
+    <End Role="SupplierDebts" Type="Self.SupplierDebt" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PurchaseOrders">
+        <PropertyRef Name="purchase_order_id" />
+      </Principal>
+      <Dependent Role="SupplierDebts">
+        <PropertyRef Name="purchase_order_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__ReportDet__repor__7D439ABD">
+    <End Role="Reports" Type="Self.Report" Multiplicity="0..1" />
+    <End Role="ReportDetails" Type="Self.ReportDetail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Reports">
+        <PropertyRef Name="report_id" />
+      </Principal>
+      <Dependent Role="ReportDetails">
+        <PropertyRef Name="report_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__RolePermi__role___534D60F1">
+    <End Role="Roles" Type="Self.Role" Multiplicity="1" />
+    <End Role="RolePermissions" Type="Self.RolePermission" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Roles">
+        <PropertyRef Name="role_id" />
+      </Principal>
+      <Dependent Role="RolePermissions">
+        <PropertyRef Name="role_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__UserRoles__role___4F7CD00D">
+    <End Role="Roles" Type="Self.Role" Multiplicity="1" />
+    <End Role="UserRoles" Type="Self.UserRole" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Roles">
+        <PropertyRef Name="role_id" />
+      </Principal>
+      <Dependent Role="UserRoles">
+        <PropertyRef Name="role_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__StockMove__user___04E4BC85">
+    <End Role="Users" Type="Self.User" Multiplicity="0..1" />
+    <End Role="StockMovements" Type="Self.StockMovement" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="user_id" />
+      </Principal>
+      <Dependent Role="StockMovements">
+        <PropertyRef Name="user_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__StockMove__wareh__03F0984C">
+    <End Role="Warehouses" Type="Self.Warehouse" Multiplicity="0..1" />
+    <End Role="StockMovements" Type="Self.StockMovement" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Warehouses">
+        <PropertyRef Name="warehouse_id" />
+      </Principal>
+      <Dependent Role="StockMovements">
+        <PropertyRef Name="warehouse_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__SupplierD__suppl__18EBB532">
+    <End Role="Suppliers" Type="Self.Supplier" Multiplicity="1" />
+    <End Role="SupplierDebts" Type="Self.SupplierDebt" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Suppliers">
+        <PropertyRef Name="supplier_id" />
+      </Principal>
+      <Dependent Role="SupplierDebts">
+        <PropertyRef Name="supplier_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__SupplierP__debt___1CBC4616">
+    <End Role="SupplierDebts" Type="Self.SupplierDebt" Multiplicity="1" />
+    <End Role="SupplierPayments" Type="Self.SupplierPayment" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="SupplierDebts">
+        <PropertyRef Name="debt_id" />
+      </Principal>
+      <Dependent Role="SupplierPayments">
+        <PropertyRef Name="debt_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__UserRoles__user___4E88ABD4">
+    <End Role="Users" Type="Self.User" Multiplicity="1" />
+    <End Role="UserRoles" Type="Self.UserRole" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="user_id" />
+      </Principal>
+      <Dependent Role="UserRoles">
+        <PropertyRef Name="user_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="EMarket_DBEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Branches" EntityType="Self.Branch" />
+    <EntitySet Name="CustomerAddresses" EntityType="Self.CustomerAddress" />
+    <EntitySet Name="Customers" EntityType="Self.Customer" />
+    <EntitySet Name="LoyaltyPrograms" EntityType="Self.LoyaltyProgram" />
+    <EntitySet Name="OrderDetails" EntityType="Self.OrderDetail" />
+    <EntitySet Name="Orders" EntityType="Self.Order" />
+    <EntitySet Name="Payments" EntityType="Self.Payment" />
+    <EntitySet Name="Permissions" EntityType="Self.Permission" />
+    <EntitySet Name="ProductCategories" EntityType="Self.ProductCategory" />
+    <EntitySet Name="ProductImages" EntityType="Self.ProductImage" />
+    <EntitySet Name="ProductLots" EntityType="Self.ProductLot" />
+    <EntitySet Name="Products" EntityType="Self.Product" />
+    <EntitySet Name="Promotions" EntityType="Self.Promotion" />
+    <EntitySet Name="PurchaseOrderDetails" EntityType="Self.PurchaseOrderDetail" />
+    <EntitySet Name="PurchaseOrders" EntityType="Self.PurchaseOrder" />
+    <EntitySet Name="ReportDetails" EntityType="Self.ReportDetail" />
+    <EntitySet Name="Reports" EntityType="Self.Report" />
+    <EntitySet Name="RolePermissions" EntityType="Self.RolePermission" />
+    <EntitySet Name="Roles" EntityType="Self.Role" />
+    <EntitySet Name="StockMovements" EntityType="Self.StockMovement" />
+    <EntitySet Name="SupplierDebts" EntityType="Self.SupplierDebt" />
+    <EntitySet Name="SupplierPayments" EntityType="Self.SupplierPayment" />
+    <EntitySet Name="Suppliers" EntityType="Self.Supplier" />
+    <EntitySet Name="UserRoles" EntityType="Self.UserRole" />
+    <EntitySet Name="Users" EntityType="Self.User" />
+    <EntitySet Name="Warehouses" EntityType="Self.Warehouse" />
+    <AssociationSet Name="FK__Orders__branch_i__68487DD7" Association="Self.FK__Orders__branch_i__68487DD7">
+      <End Role="Branches" EntitySet="Branches" />
+      <End Role="Orders" EntitySet="Orders" />
+    </AssociationSet>
+    <AssociationSet Name="FK__ReportDet__branc__7F2BE32F" Association="Self.FK__ReportDet__branc__7F2BE32F">
+      <End Role="Branches" EntitySet="Branches" />
+      <End Role="ReportDetails" EntitySet="ReportDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK__UserRoles__branc__5070F446" Association="Self.FK__UserRoles__branc__5070F446">
+      <End Role="Branches" EntitySet="Branches" />
+      <End Role="UserRoles" EntitySet="UserRoles" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Warehouse__branc__3B75D760" Association="Self.FK__Warehouse__branc__3B75D760">
+      <End Role="Branches" EntitySet="Branches" />
+      <End Role="Warehouses" EntitySet="Warehouses" />
+    </AssociationSet>
+    <AssociationSet Name="FK__CustomerA__custo__440B1D61" Association="Self.FK__CustomerA__custo__440B1D61">
+      <End Role="Customers" EntitySet="Customers" />
+      <End Role="CustomerAddresses" EntitySet="CustomerAddresses" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Orders__delivery__693CA210" Association="Self.FK__Orders__delivery__693CA210">
+      <End Role="CustomerAddresses" EntitySet="CustomerAddresses" />
+      <End Role="Orders" EntitySet="Orders" />
+    </AssociationSet>
+    <AssociationSet Name="FK__LoyaltyPr__custo__76969D2E" Association="Self.FK__LoyaltyPr__custo__76969D2E">
+      <End Role="Customers" EntitySet="Customers" />
+      <End Role="LoyaltyPrograms" EntitySet="LoyaltyPrograms" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Orders__customer__66603565" Association="Self.FK__Orders__customer__66603565">
+      <End Role="Customers" EntitySet="Customers" />
+      <End Role="Orders" EntitySet="Orders" />
+    </AssociationSet>
+    <AssociationSet Name="FK__LoyaltyPr__order__778AC167" Association="Self.FK__LoyaltyPr__order__778AC167">
+      <End Role="Orders" EntitySet="Orders" />
+      <End Role="LoyaltyPrograms" EntitySet="LoyaltyPrograms" />
+    </AssociationSet>
+    <AssociationSet Name="FK__OrderDeta__order__6C190EBB" Association="Self.FK__OrderDeta__order__6C190EBB">
+      <End Role="Orders" EntitySet="Orders" />
+      <End Role="OrderDetails" EntitySet="OrderDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK__OrderDeta__produ__6D0D32F4" Association="Self.FK__OrderDeta__produ__6D0D32F4">
+      <End Role="Products" EntitySet="Products" />
+      <End Role="OrderDetails" EntitySet="OrderDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Orders__user_id__6754599E" Association="Self.FK__Orders__user_id__6754599E">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="Orders" EntitySet="Orders" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Payments__order___70DDC3D8" Association="Self.FK__Payments__order___70DDC3D8">
+      <End Role="Orders" EntitySet="Orders" />
+      <End Role="Payments" EntitySet="Payments" />
+    </AssociationSet>
+    <AssociationSet Name="FK__StockMove__order__05D8E0BE" Association="Self.FK__StockMove__order__05D8E0BE">
+      <End Role="Orders" EntitySet="Orders" />
+      <End Role="StockMovements" EntitySet="StockMovements" />
+    </AssociationSet>
+    <AssociationSet Name="FK__RolePermi__permi__5441852A" Association="Self.FK__RolePermi__permi__5441852A">
+      <End Role="Permissions" EntitySet="Permissions" />
+      <End Role="RolePermissions" EntitySet="RolePermissions" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Products__catego__5BE2A6F2" Association="Self.FK__Products__catego__5BE2A6F2">
+      <End Role="ProductCategories" EntitySet="ProductCategories" />
+      <End Role="Products" EntitySet="Products" />
+    </AssociationSet>
+    <AssociationSet Name="FK__PurchaseO__categ__123EB7A3" Association="Self.FK__PurchaseO__categ__123EB7A3">
+      <End Role="ProductCategories" EntitySet="ProductCategories" />
+      <End Role="PurchaseOrderDetails" EntitySet="PurchaseOrderDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK__ProductIm__produ__51300E55" Association="Self.FK__ProductIm__produ__51300E55">
+      <End Role="Products" EntitySet="Products" />
+      <End Role="ProductImages" EntitySet="ProductImages" />
+    </AssociationSet>
+    <AssociationSet Name="FK__ProductLo__produ__625A9A57" Association="Self.FK__ProductLo__produ__625A9A57">
+      <End Role="Products" EntitySet="Products" />
+      <End Role="ProductLots" EntitySet="ProductLots" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Products__suppli__5CD6CB2B" Association="Self.FK__Products__suppli__5CD6CB2B">
+      <End Role="Suppliers" EntitySet="Suppliers" />
+      <End Role="Products" EntitySet="Products" />
+    </AssociationSet>
+    <AssociationSet Name="FK__PurchaseO__produ__114A936A" Association="Self.FK__PurchaseO__produ__114A936A">
+      <End Role="Products" EntitySet="Products" />
+      <End Role="PurchaseOrderDetails" EntitySet="PurchaseOrderDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK__ReportDet__produ__7E37BEF6" Association="Self.FK__ReportDet__produ__7E37BEF6">
+      <End Role="Products" EntitySet="Products" />
+      <End Role="ReportDetails" EntitySet="ReportDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK__StockMove__produ__02FC7413" Association="Self.FK__StockMove__produ__02FC7413">
+      <End Role="Products" EntitySet="Products" />
+      <End Role="StockMovements" EntitySet="StockMovements" />
+    </AssociationSet>
+    <AssociationSet Name="FK__PurchaseO__purch__10566F31" Association="Self.FK__PurchaseO__purch__10566F31">
+      <End Role="PurchaseOrders" EntitySet="PurchaseOrders" />
+      <End Role="PurchaseOrderDetails" EntitySet="PurchaseOrderDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK__PurchaseO__suppl__0B91BA14" Association="Self.FK__PurchaseO__suppl__0B91BA14">
+      <End Role="Suppliers" EntitySet="Suppliers" />
+      <End Role="PurchaseOrders" EntitySet="PurchaseOrders" />
+    </AssociationSet>
+    <AssociationSet Name="FK__PurchaseO__user___0D7A0286" Association="Self.FK__PurchaseO__user___0D7A0286">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="PurchaseOrders" EntitySet="PurchaseOrders" />
+    </AssociationSet>
+    <AssociationSet Name="FK__PurchaseO__wareh__0C85DE4D" Association="Self.FK__PurchaseO__wareh__0C85DE4D">
+      <End Role="Warehouses" EntitySet="Warehouses" />
+      <End Role="PurchaseOrders" EntitySet="PurchaseOrders" />
+    </AssociationSet>
+    <AssociationSet Name="FK__SupplierD__purch__17F790F9" Association="Self.FK__SupplierD__purch__17F790F9">
+      <End Role="PurchaseOrders" EntitySet="PurchaseOrders" />
+      <End Role="SupplierDebts" EntitySet="SupplierDebts" />
+    </AssociationSet>
+    <AssociationSet Name="FK__ReportDet__repor__7D439ABD" Association="Self.FK__ReportDet__repor__7D439ABD">
+      <End Role="Reports" EntitySet="Reports" />
+      <End Role="ReportDetails" EntitySet="ReportDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK__RolePermi__role___534D60F1" Association="Self.FK__RolePermi__role___534D60F1">
+      <End Role="Roles" EntitySet="Roles" />
+      <End Role="RolePermissions" EntitySet="RolePermissions" />
+    </AssociationSet>
+    <AssociationSet Name="FK__UserRoles__role___4F7CD00D" Association="Self.FK__UserRoles__role___4F7CD00D">
+      <End Role="Roles" EntitySet="Roles" />
+      <End Role="UserRoles" EntitySet="UserRoles" />
+    </AssociationSet>
+    <AssociationSet Name="FK__StockMove__user___04E4BC85" Association="Self.FK__StockMove__user___04E4BC85">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="StockMovements" EntitySet="StockMovements" />
+    </AssociationSet>
+    <AssociationSet Name="FK__StockMove__wareh__03F0984C" Association="Self.FK__StockMove__wareh__03F0984C">
+      <End Role="Warehouses" EntitySet="Warehouses" />
+      <End Role="StockMovements" EntitySet="StockMovements" />
+    </AssociationSet>
+    <AssociationSet Name="FK__SupplierD__suppl__18EBB532" Association="Self.FK__SupplierD__suppl__18EBB532">
+      <End Role="Suppliers" EntitySet="Suppliers" />
+      <End Role="SupplierDebts" EntitySet="SupplierDebts" />
+    </AssociationSet>
+    <AssociationSet Name="FK__SupplierP__debt___1CBC4616" Association="Self.FK__SupplierP__debt___1CBC4616">
+      <End Role="SupplierDebts" EntitySet="SupplierDebts" />
+      <End Role="SupplierPayments" EntitySet="SupplierPayments" />
+    </AssociationSet>
+    <AssociationSet Name="FK__UserRoles__user___4E88ABD4" Association="Self.FK__UserRoles__user___4E88ABD4">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="UserRoles" EntitySet="UserRoles" />
+    </AssociationSet>
+    <AssociationSet Name="FK__PurchaseO__lot_i__0697FACD" Association="EMarket_DBModel.FK__PurchaseO__lot_i__0697FACD">
+      <End Role="ProductLot" EntitySet="ProductLots" />
+      <End Role="PurchaseOrderDetail" EntitySet="PurchaseOrderDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Users__supplier___2CBDA3B5" Association="EMarket_DBModel.FK__Users__supplier___2CBDA3B5">
+      <End Role="Supplier" EntitySet="Suppliers" />
+      <End Role="User" EntitySet="Users" />
+    </AssociationSet>
+    <AssociationSet Name="FK_SupplierPayments_Users" Association="EMarket_DBModel.FK_SupplierPayments_Users">
+      <End Role="User" EntitySet="Users" />
+      <End Role="SupplierPayment" EntitySet="SupplierPayments" />
+    </AssociationSet>
+    <EntitySet Name="SystemConfigs" EntityType="EMarket_DBModel.SystemConfig" />
+    <EntitySet Name="AggregatedCounters" EntityType="EMarket_DBModel.AggregatedCounter" />
+    <EntitySet Name="Counters" EntityType="EMarket_DBModel.Counter" />
+    <EntitySet Name="Hashes" EntityType="EMarket_DBModel.Hash" />
+    <EntitySet Name="Jobs" EntityType="EMarket_DBModel.Job" />
+    <EntitySet Name="JobParameters" EntityType="EMarket_DBModel.JobParameter" />
+    <EntitySet Name="JobQueues" EntityType="EMarket_DBModel.JobQueue" />
+    <EntitySet Name="Lists" EntityType="EMarket_DBModel.List" />
+    <EntitySet Name="Schemata" EntityType="EMarket_DBModel.Schema" />
+    <EntitySet Name="Servers" EntityType="EMarket_DBModel.Server" />
+    <EntitySet Name="Sets" EntityType="EMarket_DBModel.Set" />
+    <EntitySet Name="States" EntityType="EMarket_DBModel.State" />
+    <AssociationSet Name="FK_HangFire_JobParameter_Job" Association="EMarket_DBModel.FK_HangFire_JobParameter_Job">
+      <End Role="Job" EntitySet="Jobs" />
+      <End Role="JobParameter" EntitySet="JobParameters" />
+    </AssociationSet>
+    <AssociationSet Name="FK_HangFire_State_Job" Association="EMarket_DBModel.FK_HangFire_State_Job">
+      <End Role="Job" EntitySet="Jobs" />
+      <End Role="State" EntitySet="States" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Promotion_Category" Association="EMarket_DBModel.FK_Promotion_Category">
+      <End Role="ProductCategory" EntitySet="ProductCategories" />
+      <End Role="Promotion" EntitySet="Promotions" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Orders_Parent" Association="EMarket_DBModel.FK_Orders_Parent">
+      <End Role="Order" EntitySet="Orders" />
+      <End Role="Order1" EntitySet="Orders" />
+    </AssociationSet>
+    <EntitySet Name="AI_Anomaly_Category" EntityType="EMarket_DBModel.AI_Anomaly_Category" />
+    <EntitySet Name="AI_Product_Insight" EntityType="EMarket_DBModel.AI_Product_Insight" />
+    <EntitySet Name="AI_Purchase_Recommendation" EntityType="EMarket_DBModel.AI_Purchase_Recommendation" />
+    <EntitySet Name="AI_ReplenishmentAdvice" EntityType="EMarket_DBModel.AI_ReplenishmentAdvice" />
+    <EntitySet Name="AI_Training_Data" EntityType="EMarket_DBModel.AI_Training_Data" />
+    <EntitySet Name="ExpenseCategories" EntityType="EMarket_DBModel.ExpenseCategory" />
+    <EntitySet Name="Expenses" EntityType="EMarket_DBModel.Expens" />
+    <EntitySet Name="QuotationDetails" EntityType="EMarket_DBModel.QuotationDetail" />
+    <EntitySet Name="Quotations" EntityType="EMarket_DBModel.Quotation" />
+    <AssociationSet Name="FK__Expenses__branch__536D5C82" Association="EMarket_DBModel.FK__Expenses__branch__536D5C82">
+      <End Role="Branch" EntitySet="Branches" />
+      <End Role="Expens" EntitySet="Expenses" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Quotation__branc__5C02A283" Association="EMarket_DBModel.FK__Quotation__branc__5C02A283">
+      <End Role="Branch" EntitySet="Branches" />
+      <End Role="Quotation" EntitySet="Quotations" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Quotation__custo__5CF6C6BC" Association="EMarket_DBModel.FK__Quotation__custo__5CF6C6BC">
+      <End Role="Customer" EntitySet="Customers" />
+      <End Role="Quotation" EntitySet="Quotations" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Expenses__catego__546180BB" Association="EMarket_DBModel.FK__Expenses__catego__546180BB">
+      <End Role="ExpenseCategory" EntitySet="ExpenseCategories" />
+      <End Role="Expens" EntitySet="Expenses" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Quotation__conve__5DEAEAF5" Association="EMarket_DBModel.FK__Quotation__conve__5DEAEAF5">
+      <End Role="Order" EntitySet="Orders" />
+      <End Role="Quotation" EntitySet="Quotations" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Quotation__produ__62AFA012" Association="EMarket_DBModel.FK__Quotation__produ__62AFA012">
+      <End Role="Product" EntitySet="Products" />
+      <End Role="QuotationDetail" EntitySet="QuotationDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Quotation__quota__61BB7BD9" Association="EMarket_DBModel.FK__Quotation__quota__61BB7BD9">
+      <End Role="Quotation" EntitySet="Quotations" />
+      <End Role="QuotationDetail" EntitySet="QuotationDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Expenses__user_i__63A3C44B" Association="EMarket_DBModel.FK__Expenses__user_i__63A3C44B">
+      <End Role="User" EntitySet="Users" />
+      <End Role="Expens" EntitySet="Expenses" />
+    </AssociationSet>
+    <EntitySet Name="AppLogs" EntityType="EMarket_DBModel.AppLog" />
+    <EntitySet Name="AuditLogs" EntityType="EMarket_DBModel.AuditLog" />
+    <AssociationSet Name="FK_AuditLogs_Users" Association="EMarket_DBModel.FK_AuditLogs_Users">
+      <End Role="User" EntitySet="Users" />
+      <End Role="AuditLog" EntitySet="AuditLogs" />
+    </AssociationSet>
+    <FunctionImport Name="sp_Admin_Dashboard_BranchPerformance">
+      <Parameter Name="FromDate" Mode="In" Type="DateTime" />
+      <Parameter Name="ToDate" Mode="In" Type="DateTime" />
+      <Parameter Name="BranchId" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_Admin_Dashboard_Overview" ReturnType="Collection(EMarket_DBModel.sp_Admin_Dashboard_Overview_Result)">
+      <Parameter Name="BranchId" Mode="In" Type="Int32" />
+      <Parameter Name="FromDate" Mode="In" Type="DateTime" />
+      <Parameter Name="ToDate" Mode="In" Type="DateTime" />
+      <Parameter Name="GroupBy" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="sp_Admin_Dashboard_StockChart">
+      <Parameter Name="BranchId" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_Admin_Dashboard_Summary">
+      <Parameter Name="BranchId" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_AI_Analyze_Anomalies">
+      <Parameter Name="TargetBranchId" Mode="In" Type="Int32" />
+      <Parameter Name="AnalysisDate" Mode="In" Type="DateTime" />
+    </FunctionImport>
+    <FunctionImport Name="sp_AI_Analyze_ProductInsights">
+      <Parameter Name="TargetBranchId" Mode="In" Type="Int32" />
+      <Parameter Name="AnalysisDate" Mode="In" Type="DateTime" />
+    </FunctionImport>
+    <FunctionImport Name="sp_AI_Analyze_Purchasing">
+      <Parameter Name="TargetBranchId" Mode="In" Type="Int32" />
+      <Parameter Name="AnalysisDate" Mode="In" Type="DateTime" />
+    </FunctionImport>
+    <FunctionImport Name="sp_AI_Refresh_Training_Data" />
+    <FunctionImport Name="sp_AI_Run_Full_Analysis">
+      <Parameter Name="TargetBranchId" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_Finance_GetDashboardData" ReturnType="Collection(EMarket_DBModel.sp_Finance_GetDashboardData_Result)">
+      <Parameter Name="DaysBack" Mode="In" Type="Int32" />
+      <Parameter Name="BranchId" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_GetSuperAdminHubData" />
+    <FunctionImport Name="sp_GetSupplierDebtDashboard" ReturnType="Collection(EMarket_DBModel.sp_GetSupplierDebtDashboard_Result)">
+      <Parameter Name="BranchId" Mode="In" Type="Int32" />
+      <Parameter Name="SupplierId" Mode="In" Type="Int32" />
+      <Parameter Name="FromDate" Mode="In" Type="DateTime" />
+      <Parameter Name="ToDate" Mode="In" Type="DateTime" />
+    </FunctionImport>
+    <FunctionImport Name="sp_PeopleDashboard_Charts" ReturnType="Collection(EMarket_DBModel.sp_PeopleDashboard_Charts_Result)" />
+    <FunctionImport Name="sp_PeopleDashboard_KPI" ReturnType="Collection(EMarket_DBModel.sp_PeopleDashboard_KPI_Result)" />
+    <FunctionImport Name="sp_Quotation_ConvertToOrder">
+      <Parameter Name="quotation_id" Mode="In" Type="Int32" />
+      <Parameter Name="user_id" Mode="In" Type="Int32" />
+      <Parameter Name="payment_method" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="sp_Sales_Checkout">
+      <Parameter Name="branch_id" Mode="In" Type="Int32" />
+      <Parameter Name="user_id" Mode="In" Type="Int32" />
+      <Parameter Name="customer_id" Mode="In" Type="Int32" />
+      <Parameter Name="total_amount" Mode="In" Type="Decimal" />
+      <Parameter Name="points_redeemed" Mode="In" Type="Int32" />
+      <Parameter Name="status" Mode="In" Type="String" />
+      <Parameter Name="points_earned" Mode="In" Type="Int32" />
+      <Parameter Name="manual_discount" Mode="In" Type="Decimal" />
+      <Parameter Name="discount_reason" Mode="In" Type="String" />
+      <Parameter Name="parent_order_id" Mode="In" Type="Int32" />
+      <Parameter Name="payment_method" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="sp_Sales_Checkout_Core">
+      <Parameter Name="branch_id" Mode="In" Type="Int32" />
+      <Parameter Name="user_id" Mode="In" Type="Int32" />
+      <Parameter Name="customer_id" Mode="In" Type="Int32" />
+      <Parameter Name="total_amount" Mode="In" Type="Decimal" />
+      <Parameter Name="points_redeemed" Mode="In" Type="Int32" />
+      <Parameter Name="status" Mode="In" Type="String" />
+      <Parameter Name="points_earned" Mode="In" Type="Int32" />
+      <Parameter Name="manual_discount" Mode="In" Type="Decimal" />
+      <Parameter Name="discount_reason" Mode="In" Type="String" />
+      <Parameter Name="parent_order_id" Mode="In" Type="Int32" />
+      <Parameter Name="payment_method" Mode="In" Type="String" />
+      <Parameter Name="new_order_id" Mode="InOut" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_Warehouse_GetDashboardData">
+      <Parameter Name="DaysBack" Mode="In" Type="Int32" />
+      <Parameter Name="BranchId" Mode="In" Type="Int32" />
+      <Parameter Name="WarehouseId" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <EntitySet Name="ForgotPasswordOtps" EntityType="EMarket_DBModel.ForgotPasswordOtp" />
+    <EntitySet Name="Inventories" EntityType="EMarket_DBModel.Inventory" />
+    <AssociationSet Name="FK__Inventory__wareh__628FA481" Association="EMarket_DBModel.FK__Inventory__wareh__628FA481">
+      <End Role="Warehouse" EntitySet="Warehouses" />
+      <End Role="Inventory" EntitySet="Inventories" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Inventory_ProductLots" Association="EMarket_DBModel.FK_Inventory_ProductLots">
+      <End Role="ProductLot" EntitySet="ProductLots" />
+      <End Role="Inventory" EntitySet="Inventories" />
+    </AssociationSet>
+    <EntitySet Name="AI_ChatLog" EntityType="EMarket_DBModel.AI_ChatLog" />
+    <EntitySet Name="AI_InventoryWarning" EntityType="EMarket_DBModel.AI_InventoryWarning" />
+    <EntitySet Name="AI_SalesForecast" EntityType="EMarket_DBModel.AI_SalesForecast" />
+    <EntitySet Name="v_AI_Customer_Analytics" EntityType="EMarket_DBModel.v_AI_Customer_Analytics" />
+    <EntitySet Name="v_AI_Master_Input" EntityType="EMarket_DBModel.v_AI_Master_Input" />
+    <EntitySet Name="v_AI_Master_Input_XGB" EntityType="EMarket_DBModel.v_AI_Master_Input_XGB" />
+    <EntitySet Name="v_WeeklySales_ByProduct" EntityType="EMarket_DBModel.v_WeeklySales_ByProduct" />
+    <AssociationSet Name="FK_StockMovements_PurchaseOrders" Association="EMarket_DBModel.FK_StockMovements_PurchaseOrders">
+      <End Role="PurchaseOrder" EntitySet="PurchaseOrders" />
+      <End Role="StockMovement" EntitySet="StockMovements" />
+    </AssociationSet>
+  </EntityContainer>
+  <Association Name="FK__PurchaseO__lot_i__0697FACD">
+    <End Type="EMarket_DBModel.ProductLot" Role="ProductLot" Multiplicity="0..1" />
+    <End Type="EMarket_DBModel.PurchaseOrderDetail" Role="PurchaseOrderDetail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ProductLot">
+        <PropertyRef Name="lot_id" />
+      </Principal>
+      <Dependent Role="PurchaseOrderDetail">
+        <PropertyRef Name="lot_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Users__supplier___2CBDA3B5">
+    <End Type="EMarket_DBModel.Supplier" Role="Supplier" Multiplicity="0..1" />
+    <End Type="EMarket_DBModel.User" Role="User" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Supplier">
+        <PropertyRef Name="supplier_id" />
+      </Principal>
+      <Dependent Role="User">
+        <PropertyRef Name="supplier_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_SupplierPayments_Users">
+    <End Type="EMarket_DBModel.User" Role="User" Multiplicity="0..1" />
+    <End Type="EMarket_DBModel.SupplierPayment" Role="SupplierPayment" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="user_id" />
+      </Principal>
+      <Dependent Role="SupplierPayment">
+        <PropertyRef Name="user_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="SystemConfig">
+    <Key>
+      <PropertyRef Name="config_key" />
+    </Key>
+    <Property Name="config_key" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="config_value" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="description" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="updated_at" Type="DateTime" Precision="3" />
+    <Property Name="updated_by" Type="Int32" />
+  </EntityType>
+  <EntityType Name="AggregatedCounter">
+    <Key>
+      <PropertyRef Name="Key" />
+    </Key>
+    <Property Name="Key" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Value" Type="Int64" Nullable="false" />
+    <Property Name="ExpireAt" Type="DateTime" Precision="3" />
+  </EntityType>
+  <EntityType Name="Counter">
+    <Key>
+      <PropertyRef Name="Key" />
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Key" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Value" Type="Int32" Nullable="false" />
+    <Property Name="ExpireAt" Type="DateTime" Precision="3" />
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+  </EntityType>
+  <EntityType Name="Hash">
+    <Key>
+      <PropertyRef Name="Key" />
+      <PropertyRef Name="Field" />
+    </Key>
+    <Property Name="Key" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Field" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Value" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ExpireAt" Type="DateTime" Precision="3" />
+  </EntityType>
+  <EntityType Name="Job">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="StateId" Type="Int64" />
+    <Property Name="StateName" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="InvocationData" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Arguments" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="ExpireAt" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="JobParameters" Relationship="EMarket_DBModel.FK_HangFire_JobParameter_Job" FromRole="Job" ToRole="JobParameter" />
+    <NavigationProperty Name="States" Relationship="EMarket_DBModel.FK_HangFire_State_Job" FromRole="Job" ToRole="State" />
+  </EntityType>
+  <EntityType Name="JobParameter">
+    <Key>
+      <PropertyRef Name="JobId" />
+      <PropertyRef Name="Name" />
+    </Key>
+    <Property Name="JobId" Type="Int64" Nullable="false" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="true" />
+    <Property Name="Value" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Job" Relationship="EMarket_DBModel.FK_HangFire_JobParameter_Job" FromRole="JobParameter" ToRole="Job" />
+  </EntityType>
+  <EntityType Name="JobQueue">
+    <Key>
+      <PropertyRef Name="Id" />
+      <PropertyRef Name="Queue" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="JobId" Type="Int64" Nullable="false" />
+    <Property Name="Queue" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="FetchedAt" Type="DateTime" Precision="3" />
+  </EntityType>
+  <EntityType Name="List">
+    <Key>
+      <PropertyRef Name="Id" />
+      <PropertyRef Name="Key" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Key" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Value" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ExpireAt" Type="DateTime" Precision="3" />
+  </EntityType>
+  <EntityType Name="Schema">
+    <Key>
+      <PropertyRef Name="Version" />
+    </Key>
+    <Property Name="Version" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Server">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="Data" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="LastHeartbeat" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="Set">
+    <Key>
+      <PropertyRef Name="Key" />
+      <PropertyRef Name="Value" />
+    </Key>
+    <Property Name="Key" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Score" Type="Double" Nullable="false" />
+    <Property Name="Value" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+    <Property Name="ExpireAt" Type="DateTime" Precision="3" />
+  </EntityType>
+  <EntityType Name="State">
+    <Key>
+      <PropertyRef Name="Id" />
+      <PropertyRef Name="JobId" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="JobId" Type="Int64" Nullable="false" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="Reason" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Data" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Job" Relationship="EMarket_DBModel.FK_HangFire_State_Job" FromRole="State" ToRole="Job" />
+  </EntityType>
+  <Association Name="FK_HangFire_JobParameter_Job">
+    <End Type="EMarket_DBModel.Job" Role="Job" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Type="EMarket_DBModel.JobParameter" Role="JobParameter" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Job">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="JobParameter">
+        <PropertyRef Name="JobId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_HangFire_State_Job">
+    <End Type="EMarket_DBModel.Job" Role="Job" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Type="EMarket_DBModel.State" Role="State" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Job">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="State">
+        <PropertyRef Name="JobId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Promotion_Category">
+    <End Type="EMarket_DBModel.ProductCategory" Role="ProductCategory" Multiplicity="0..1" />
+    <End Type="EMarket_DBModel.Promotion" Role="Promotion" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ProductCategory">
+        <PropertyRef Name="category_id" />
+      </Principal>
+      <Dependent Role="Promotion">
+        <PropertyRef Name="category_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Orders_Parent">
+    <End Type="EMarket_DBModel.Order" Role="Order" Multiplicity="0..1" />
+    <End Type="EMarket_DBModel.Order" Role="Order1" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Order">
+        <PropertyRef Name="order_id" />
+      </Principal>
+      <Dependent Role="Order1">
+        <PropertyRef Name="parent_order_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="AI_Anomaly_Category">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="branch_id" Type="Int32" />
+    <Property Name="category_id" Type="Int32" />
+    <Property Name="period_start" Type="DateTime" Precision="3" />
+    <Property Name="period_end" Type="DateTime" Precision="3" />
+    <Property Name="actual_qty" Type="Int32" />
+    <Property Name="forecast_qty" Type="Int32" />
+    <Property Name="deviation_percent" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="anomaly_type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="severity" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="detected_at" Type="DateTime" Precision="3" />
+  </EntityType>
+  <EntityType Name="AI_Product_Insight">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="branch_id" Type="Int32" />
+    <Property Name="category_id" Type="Int32" />
+    <Property Name="product_id" Type="Int32" />
+    <Property Name="period_start" Type="DateTime" Precision="3" />
+    <Property Name="period_end" Type="DateTime" Precision="3" />
+    <Property Name="qty_sold" Type="Int32" />
+    <Property Name="baseline_qty" Type="Int32" />
+    <Property Name="growth_percent" Type="Decimal" Precision="6" Scale="2" />
+    <Property Name="contribution_percent" Type="Decimal" Precision="6" Scale="2" />
+    <Property Name="insight_level" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="created_at" Type="DateTime" Precision="3" />
+  </EntityType>
+  <EntityType Name="AI_Purchase_Recommendation">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="branch_id" Type="Int32" />
+    <Property Name="warehouse_id" Type="Int32" />
+    <Property Name="category_id" Type="Int32" />
+    <Property Name="product_id" Type="Int32" />
+    <Property Name="period_start" Type="DateTime" Precision="3" />
+    <Property Name="period_end" Type="DateTime" Precision="3" />
+    <Property Name="forecast_demand" Type="Int32" />
+    <Property Name="current_stock" Type="Int32" />
+    <Property Name="recommended_min" Type="Int32" />
+    <Property Name="recommended_max" Type="Int32" />
+    <Property Name="reason" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="confidence_level" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="created_at" Type="DateTime" Precision="3" />
+  </EntityType>
+  <EntityType Name="AI_ReplenishmentAdvice">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="branch_id" Type="Int32" />
+    <Property Name="product_id" Type="Int32" />
+    <Property Name="current_stock" Type="Int32" />
+    <Property Name="suggested_qty" Type="Int32" />
+    <Property Name="created_at" Type="DateTime" Precision="3" />
+    <Property Name="expected_demand_30d" Type="Int32" />
+    <Property Name="confidence_score" Type="Decimal" Precision="5" Scale="2" />
+    <Property Name="priority_level" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="AI_Training_Data">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="branch_id" Type="Int32" />
+    <Property Name="product_id" Type="Int32" />
+    <Property Name="sale_date" Type="DateTime" Precision="3" />
+    <Property Name="qty" Type="Int32" />
+    <Property Name="category_id" Type="Int32" />
+  </EntityType>
+  <EntityType Name="ExpenseCategory">
+    <Key>
+      <PropertyRef Name="category_id" />
+    </Key>
+    <Property Name="category_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="name" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="description" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="is_active" Type="Boolean" />
+    <NavigationProperty Name="Expenses" Relationship="EMarket_DBModel.FK__Expenses__catego__546180BB" FromRole="ExpenseCategory" ToRole="Expens" />
+  </EntityType>
+  <EntityType Name="Expens">
+    <Key>
+      <PropertyRef Name="expense_id" />
+    </Key>
+    <Property Name="expense_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="branch_id" Type="Int32" Nullable="false" />
+    <Property Name="category_id" Type="Int32" Nullable="false" />
+    <Property Name="user_id" Type="Int32" Nullable="false" />
+    <Property Name="amount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="expense_date" Type="DateTime" Precision="3" />
+    <Property Name="note" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="ref_image" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="payment_method" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="status" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="created_at" Type="DateTime" Precision="3" />
+    <Property Name="updated_at" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="Branch" Relationship="EMarket_DBModel.FK__Expenses__branch__536D5C82" FromRole="Expens" ToRole="Branch" />
+    <NavigationProperty Name="ExpenseCategory" Relationship="EMarket_DBModel.FK__Expenses__catego__546180BB" FromRole="Expens" ToRole="ExpenseCategory" />
+    <Property Name="approved_by" Type="Int32" />
+    <Property Name="approved_at" Type="DateTime" Precision="3" />
+    <Property Name="rejected_by" Type="Int32" />
+    <Property Name="rejected_at" Type="DateTime" Precision="3" />
+    <Property Name="reject_reason" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="User" Relationship="EMarket_DBModel.FK__Expenses__user_i__63A3C44B" FromRole="Expens" ToRole="User" />
+  </EntityType>
+  <EntityType Name="QuotationDetail">
+    <Key>
+      <PropertyRef Name="detail_id" />
+    </Key>
+    <Property Name="detail_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="quotation_id" Type="Int32" Nullable="false" />
+    <Property Name="product_id" Type="Int32" Nullable="false" />
+    <Property Name="quantity" Type="Int32" Nullable="false" />
+    <Property Name="unit_price" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="discount" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="total_price" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="note" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Product" Relationship="EMarket_DBModel.FK__Quotation__produ__62AFA012" FromRole="QuotationDetail" ToRole="Product" />
+    <NavigationProperty Name="Quotation" Relationship="EMarket_DBModel.FK__Quotation__quota__61BB7BD9" FromRole="QuotationDetail" ToRole="Quotation" />
+  </EntityType>
+  <EntityType Name="Quotation">
+    <Key>
+      <PropertyRef Name="quotation_id" />
+    </Key>
+    <Property Name="quotation_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="quotation_code" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="branch_id" Type="Int32" Nullable="false" />
+    <Property Name="customer_id" Type="Int32" />
+    <Property Name="user_id" Type="Int32" Nullable="false" />
+    <Property Name="total_amount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="discount_amount" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="final_amount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="issue_date" Type="DateTime" Precision="3" />
+    <Property Name="expiry_date" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="status" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="note" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="converted_order_id" Type="Int32" />
+    <Property Name="created_at" Type="DateTime" Precision="3" />
+    <Property Name="updated_at" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="Branch" Relationship="EMarket_DBModel.FK__Quotation__branc__5C02A283" FromRole="Quotation" ToRole="Branch" />
+    <NavigationProperty Name="Customer" Relationship="EMarket_DBModel.FK__Quotation__custo__5CF6C6BC" FromRole="Quotation" ToRole="Customer" />
+    <NavigationProperty Name="Order" Relationship="EMarket_DBModel.FK__Quotation__conve__5DEAEAF5" FromRole="Quotation" ToRole="Order" />
+    <NavigationProperty Name="QuotationDetails" Relationship="EMarket_DBModel.FK__Quotation__quota__61BB7BD9" FromRole="Quotation" ToRole="QuotationDetail" />
+    <Property Name="manual_discount" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="discount_reason" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <Association Name="FK__Expenses__branch__536D5C82">
+    <End Type="EMarket_DBModel.Branch" Role="Branch" Multiplicity="1" />
+    <End Type="EMarket_DBModel.Expens" Role="Expens" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Branch">
+        <PropertyRef Name="branch_id" />
+      </Principal>
+      <Dependent Role="Expens">
+        <PropertyRef Name="branch_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Quotation__branc__5C02A283">
+    <End Type="EMarket_DBModel.Branch" Role="Branch" Multiplicity="1" />
+    <End Type="EMarket_DBModel.Quotation" Role="Quotation" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Branch">
+        <PropertyRef Name="branch_id" />
+      </Principal>
+      <Dependent Role="Quotation">
+        <PropertyRef Name="branch_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Quotation__custo__5CF6C6BC">
+    <End Type="EMarket_DBModel.Customer" Role="Customer" Multiplicity="0..1" />
+    <End Type="EMarket_DBModel.Quotation" Role="Quotation" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Customer">
+        <PropertyRef Name="customer_id" />
+      </Principal>
+      <Dependent Role="Quotation">
+        <PropertyRef Name="customer_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Expenses__catego__546180BB">
+    <End Type="EMarket_DBModel.ExpenseCategory" Role="ExpenseCategory" Multiplicity="1" />
+    <End Type="EMarket_DBModel.Expens" Role="Expens" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ExpenseCategory">
+        <PropertyRef Name="category_id" />
+      </Principal>
+      <Dependent Role="Expens">
+        <PropertyRef Name="category_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Quotation__conve__5DEAEAF5">
+    <End Type="EMarket_DBModel.Order" Role="Order" Multiplicity="0..1" />
+    <End Type="EMarket_DBModel.Quotation" Role="Quotation" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Order">
+        <PropertyRef Name="order_id" />
+      </Principal>
+      <Dependent Role="Quotation">
+        <PropertyRef Name="converted_order_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Quotation__produ__62AFA012">
+    <End Type="EMarket_DBModel.Product" Role="Product" Multiplicity="1" />
+    <End Type="EMarket_DBModel.QuotationDetail" Role="QuotationDetail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Product">
+        <PropertyRef Name="product_id" />
+      </Principal>
+      <Dependent Role="QuotationDetail">
+        <PropertyRef Name="product_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Quotation__quota__61BB7BD9">
+    <End Type="EMarket_DBModel.Quotation" Role="Quotation" Multiplicity="1" />
+    <End Type="EMarket_DBModel.QuotationDetail" Role="QuotationDetail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Quotation">
+        <PropertyRef Name="quotation_id" />
+      </Principal>
+      <Dependent Role="QuotationDetail">
+        <PropertyRef Name="quotation_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Expenses__user_i__63A3C44B">
+    <End Type="EMarket_DBModel.User" Role="User" Multiplicity="1" />
+    <End Type="EMarket_DBModel.Expens" Role="Expens" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="user_id" />
+      </Principal>
+      <Dependent Role="Expens">
+        <PropertyRef Name="user_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="AppLog">
+    <Key>
+      <PropertyRef Name="log_id" />
+    </Key>
+    <Property Name="log_id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="thread" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="log_level" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="logger" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="message" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="exception" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="created_at" Type="DateTime" Precision="3" />
+  </EntityType>
+  <EntityType Name="AuditLog">
+    <Key>
+      <PropertyRef Name="audit_id" />
+    </Key>
+    <Property Name="audit_id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="user_id" Type="Int32" />
+    <Property Name="table_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="primary_key_id" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="action_type" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="old_values" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="new_values" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ip_address" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="created_at" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="User" Relationship="EMarket_DBModel.FK_AuditLogs_Users" FromRole="AuditLog" ToRole="User" />
+  </EntityType>
+  <Association Name="FK_AuditLogs_Users">
+    <End Type="EMarket_DBModel.User" Role="User" Multiplicity="0..1" />
+    <End Type="EMarket_DBModel.AuditLog" Role="AuditLog" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="user_id" />
+      </Principal>
+      <Dependent Role="AuditLog">
+        <PropertyRef Name="user_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <ComplexType Name="sp_Admin_Dashboard_Overview_Result">
+    <Property Type="Decimal" Name="TotalSales" Nullable="false" Precision="38" Scale="2" />
+    <Property Type="Int32" Name="TotalOrders" Nullable="true" />
+    <Property Type="Decimal" Name="TotalPurchase" Nullable="true" Precision="38" Scale="2" />
+  </ComplexType>
+  <ComplexType Name="sp_Finance_GetDashboardData_Result">
+    <Property Type="Decimal" Name="TotalRevenue" Nullable="true" Precision="18" Scale="2" />
+    <Property Type="Decimal" Name="TotalPurchase" Nullable="true" Precision="18" Scale="2" />
+    <Property Type="Decimal" Name="GrossProfit" Nullable="true" Precision="18" Scale="2" />
+    <Property Type="Decimal" Name="SupplierDebt" Nullable="true" Precision="18" Scale="2" />
+  </ComplexType>
+  <ComplexType Name="sp_GetSupplierDebtDashboard_Result">
+    <Property Type="Decimal" Name="TotalOutstanding" Nullable="false" Precision="38" Scale="2" />
+    <Property Type="Decimal" Name="TotalOverdue" Nullable="false" Precision="38" Scale="2" />
+    <Property Type="Decimal" Name="TotalUpcoming" Nullable="false" Precision="38" Scale="2" />
+    <Property Type="Decimal" Name="TotalPaidInPeriod" Nullable="true" Precision="38" Scale="2" />
+  </ComplexType>
+  <ComplexType Name="sp_PeopleDashboard_Charts_Result">
+    <Property Type="Int32" Name="Month" Nullable="true" />
+    <Property Type="Int32" Name="CustomerCount" Nullable="true" />
+    <Property Type="Int32" Name="UserCount" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="sp_PeopleDashboard_KPI_Result">
+    <Property Type="Int32" Name="TotalCustomers" Nullable="true" />
+    <Property Type="Int32" Name="VipCount" Nullable="true" />
+    <Property Type="Int32" Name="ActiveEmployees" Nullable="true" />
+  </ComplexType>
+  <EntityType Name="ForgotPasswordOtp">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Otp" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="ExpireAt" Type="DateTime" Precision="3" />
+  </EntityType>
+  <EntityType Name="Inventory">
+    <Key>
+      <PropertyRef Name="inventory_id" />
+    </Key>
+    <Property Name="inventory_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="warehouse_id" Type="Int32" Nullable="false" />
+    <Property Name="quantity" Type="Int32" />
+    <Property Name="last_update" Type="DateTime" Precision="3" />
+    <Property Name="lot_id" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Warehouse" Relationship="EMarket_DBModel.FK__Inventory__wareh__628FA481" FromRole="Inventory" ToRole="Warehouse" />
+    <NavigationProperty Name="ProductLot" Relationship="EMarket_DBModel.FK_Inventory_ProductLots" FromRole="Inventory" ToRole="ProductLot" />
+  </EntityType>
+  <Association Name="FK__Inventory__wareh__628FA481">
+    <End Type="EMarket_DBModel.Warehouse" Role="Warehouse" Multiplicity="1" />
+    <End Type="EMarket_DBModel.Inventory" Role="Inventory" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Warehouse">
+        <PropertyRef Name="warehouse_id" />
+      </Principal>
+      <Dependent Role="Inventory">
+        <PropertyRef Name="warehouse_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Inventory_ProductLots">
+    <End Type="EMarket_DBModel.ProductLot" Role="ProductLot" Multiplicity="1" />
+    <End Type="EMarket_DBModel.Inventory" Role="Inventory" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ProductLot">
+        <PropertyRef Name="lot_id" />
+      </Principal>
+      <Dependent Role="Inventory">
+        <PropertyRef Name="lot_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="AI_ChatLog">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="SessionId" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Role" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="Content" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="TokenCount" Type="Int32" />
+    <Property Name="CreatedAt" Type="DateTime" Precision="3" />
+  </EntityType>
+  <EntityType Name="AI_InventoryWarning">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="branch_id" Type="Int32" />
+    <Property Name="product_id" Type="Int32" />
+    <Property Name="current_stock" Type="Int32" />
+    <Property Name="days_to_exhaust" Type="Int32" />
+    <Property Name="warning_type" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="confidence_score" Type="Decimal" Precision="5" Scale="2" />
+    <Property Name="risk_reason" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="created_at" Type="DateTime" Precision="3" />
+  </EntityType>
+  <EntityType Name="AI_SalesForecast">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="branch_id" Type="Int32" />
+    <Property Name="product_id" Type="Int32" />
+    <Property Name="forecast_date" Type="DateTime" Precision="0" />
+    <Property Name="predicted_qty" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="confidence_score" Type="Decimal" Precision="5" Scale="2" />
+    <Property Name="created_at" Type="DateTime" Precision="3" />
+  </EntityType>
+  <EntityType Name="v_AI_Customer_Analytics">
+    <Key>
+      <PropertyRef Name="customer_id" />
+      <PropertyRef Name="points_balance" />
+    </Key>
+    <Property Name="customer_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="customer_type" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="points_balance" Type="Int32" Nullable="false" />
+    <Property Name="masked_name" Type="String" MaxLength="9" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="v_AI_Master_Input">
+    <Key>
+      <PropertyRef Name="product_name" />
+      <PropertyRef Name="current_stock" />
+      <PropertyRef Name="is_payday" />
+      <PropertyRef Name="is_festive" />
+    </Key>
+    <Property Name="ds" Type="DateTime" Precision="3" />
+    <Property Name="branch_id" Type="Int32" />
+    <Property Name="product_id" Type="Int32" />
+    <Property Name="y" Type="Int32" />
+    <Property Name="product_name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="min_stock" Type="Int32" />
+    <Property Name="current_stock" Type="Int32" Nullable="false" />
+    <Property Name="is_payday" Type="Int32" Nullable="false" />
+    <Property Name="is_festive" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="v_AI_Master_Input_XGB">
+    <Key>
+      <PropertyRef Name="current_stock" />
+      <PropertyRef Name="is_weekend" />
+      <PropertyRef Name="is_payday" />
+      <PropertyRef Name="is_festive" />
+    </Key>
+    <Property Name="ds" Type="DateTime" Precision="3" />
+    <Property Name="branch_id" Type="Int32" />
+    <Property Name="product_id" Type="Int32" />
+    <Property Name="category_id" Type="Int32" />
+    <Property Name="y" Type="Int32" />
+    <Property Name="min_stock" Type="Int32" />
+    <Property Name="current_stock" Type="Int32" Nullable="false" />
+    <Property Name="day_of_month" Type="Int32" />
+    <Property Name="month" Type="Int32" />
+    <Property Name="day_of_week" Type="Int32" />
+    <Property Name="is_weekend" Type="Int32" Nullable="false" />
+    <Property Name="is_payday" Type="Int32" Nullable="false" />
+    <Property Name="is_festive" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="v_WeeklySales_ByProduct">
+    <Key>
+      <PropertyRef Name="product_id" />
+    </Key>
+    <Property Name="branch_id" Type="Int32" />
+    <Property Name="category_id" Type="Int32" />
+    <Property Name="product_id" Type="Int32" Nullable="false" />
+    <Property Name="SaleYear" Type="Int32" />
+    <Property Name="SaleWeek" Type="Int32" />
+    <Property Name="WeeklyQty" Type="Int32" />
+  </EntityType>
+  <Association Name="FK_StockMovements_PurchaseOrders">
+    <End Type="EMarket_DBModel.PurchaseOrder" Role="PurchaseOrder" Multiplicity="0..1" />
+    <End Type="EMarket_DBModel.StockMovement" Role="StockMovement" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PurchaseOrder">
+        <PropertyRef Name="purchase_order_id" />
+      </Principal>
+      <Dependent Role="StockMovement">
+        <PropertyRef Name="purchase_order_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

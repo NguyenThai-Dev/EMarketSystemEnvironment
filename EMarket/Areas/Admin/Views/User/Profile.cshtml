@@ -1,0 +1,330 @@
+﻿@using EMarket.Modules.UserModule.Services.Interfaces
+@using EMarket.Modules.UserModule.DTOs
+@{
+    ViewBag.Title = "Hồ sơ cá nhân";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+
+    // 1. Lấy Context
+    var userContext = System.Web.Mvc.DependencyResolver.Current.GetService<IUserContext>();
+    var currentUser = userContext?.CurrentUser;
+
+    // 2. Fallback data nếu null (đề phòng crash view)
+    var userId = currentUser?.UserId ?? 0;
+    var fullName = currentUser?.FullName ?? "N/A";
+    var userName = currentUser?.Username ?? "N/A";
+    var email = currentUser?.Email ?? "";
+    var phone = currentUser?.Phone ?? "";
+    // Xử lý ảnh: Nếu null thì dùng ảnh mặc định
+    var avatarUrl = !string.IsNullOrEmpty(currentUser?.Image) ? currentUser.Image : "/assets/img/customer/customer5.jpg";
+
+    // Lấy tên Role đầu tiên để hiển thị (cho đẹp)
+    var roleName = currentUser?.Roles != null && currentUser.Roles.Count > 0
+                   ? currentUser.Roles[0].Name
+                   : "Thành viên";
+}
+
+<div class="page-wrapper">
+    <div class="content">
+        <div class="page-header">
+            <div class="page-title">
+                <h4>Hồ sơ cá nhân</h4>
+                <h6>Quản lý thông tin tài khoản của bạn</h6>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <div class="profile-set">
+                    <div class="profile-head"></div>
+                    <div class="profile-top">
+                        <div class="profile-content">
+                            <div class="profile-contentimg">
+                                <img src="@avatarUrl" alt="avatar" id="imgPreview" style="object-fit: cover;" />
+                                <div class="profileupload">
+                                    <input type="file" id="inpAvatar" accept="image/*" />
+                                    <a href="javascript:void(0);"><img src="~/assets/img/icons/edit-set.svg" alt="edit" /></a>
+                                </div>
+                            </div>
+                            <div class="profile-contentname">
+                                <h2>@fullName</h2>
+                                <h4>
+                                    @if (userContext.IsAdmin)
+                                    {
+                                        <span class="badge bg-success">Administrator</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-info">@roleName</span>
+                                    }
+                                    - @email
+                                </h4>
+                            </div>
+                        </div>
+                        <div class="ms-auto">
+                            <button class="btn btn-submit me-2" id="btnSaveProfile">Lưu thay đổi</button>
+                            <button class="btn btn-cancel" onclick="window.location.reload()">Hủy</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <input type="hidden" id="UserId" value="@userId" />
+
+                    <div class="col-lg-6 col-sm-12">
+                        <div class="form-group">
+                            <label>Họ và tên <span class="text-danger">*</span></label>
+                            <input type="text" id="FullName" value="@fullName" placeholder="Nhập họ tên của bạn" />
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 col-sm-12">
+                        <div class="form-group">
+                            <label>Số điện thoại</label>
+                            <input type="text" id="Phone" value="@phone" placeholder="Nhập số điện thoại" />
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 col-sm-12">
+                        <div class="form-group">
+                            <label>Email <span class="text-secondary" style="font-size: 0.8rem;">(Cần xác thực để thay đổi)</span></label>
+
+                            <div class="input-group">
+                                <input type="text" id="Email" value="@email"
+                                       readonly class="form-control" style="background-color: #e9ecef;" />
+
+                                <button class="btn btn-outline-primary input-group-text"
+                                        type="button" data-bs-toggle="modal" data-bs-target="#modalChangeEmail">
+                                    <i class="fas fa-edit"></i> Thay đổi
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-lg-6 col-sm-12">
+                        <div class="form-group">
+                            <label>Tên đăng nhập</label>
+                            <input type="text" id="Username" value="@userName" />
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 col-sm-12">
+                        <div class="form-group">
+                            <label>Vai trò hệ thống</label>
+                            <input type="text" value="@roleName" readonly style="background-color: #e9ecef;" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalChangeEmail" tabindex="-1" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Thay đổi Email hệ thống</h5>
+                <button type="button" class="btn-close-custom" data-bs-dismiss="modal"><img src="~/assets/img/icons/close-circle1.svg" /></button>
+            </div>
+            <div class="modal-body">
+                <div id="step1">
+                    <p class="text-muted small">Mã OTP sẽ được gửi đến email hiện tại (@email) để xác nhận danh tính của bạn.</p>
+                    <button type="button" class="btn btn-primary w-100" id="btnSendOtpOld">
+                        Gửi mã xác nhận đến Email cũ
+                    </button>
+                </div>
+
+                <div id="step2" style="display:none;">
+                    <div class="form-group mb-3">
+                        <label>Mã OTP (6 số)</label>
+                        <input type="text" id="OtpCode" class="form-control text-center" maxlength="6" />
+                    </div>
+                    <div class="form-group mb-3">
+                        <label>Email mới</label>
+                        <input type="email" id="NewEmail" class="form-control" placeholder="example@newemail.com" />
+                    </div>
+                    <button type="button" class="btn btn-success w-100" id="btnVerifyAndChange">
+                        Xác nhận thay đổi Email
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(function () {
+            // 1. Preview ảnh khi chọn file
+            $("#inpAvatar").change(function () {
+                const file = this.files[0];
+                if (file) {
+                    // Check định dạng và size nếu cần
+                    if (file.size > 2 * 1024 * 1024) { // 2MB
+                        Swal.fire({ icon: 'warning', title: 'File quá lớn', text: 'Vui lòng chọn ảnh nhỏ hơn 2MB' });
+                        this.value = ""; // Reset
+                        return;
+                    }
+
+                    let reader = new FileReader();
+                    reader.onload = function (event) {
+                        $('#imgPreview').attr('src', event.target.result);
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // 2. Xử lý Save
+            $('#btnSaveProfile').click(async () => {
+                // Validate Client-side
+                const fullName = $('#FullName').val()?.trim();
+                if (!fullName) {
+                    Swal.fire({ icon: 'warning', title: 'Thiếu thông tin', text: 'Họ và tên không được để trống', confirmButtonColor: '#ff9b44' });
+                    return;
+                }
+
+                // Chuẩn bị FormData (Vì có upload file)
+                var formData = new FormData();
+
+                // Map đúng với CurrentUserDTO
+                formData.append("UserId", $('#UserId').val());
+                formData.append("FullName", fullName);
+                formData.append("Phone", $('#Phone').val()?.trim());
+                formData.append("Email", $('#Email').val()); 
+                formData.append("Username", $('#Username').val());
+
+                // File ảnh
+                var fileInput = $("#inpAvatar")[0];
+                if (fileInput.files.length > 0) {
+                    formData.append("file", fileInput.files[0]); 
+                }
+
+                Swal.showLoading();
+
+                try {
+                    const res = await $.ajax({
+                        url: '/User/UpdateMyProfile',
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false
+                    });
+
+                    if (res.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Thành công',
+                            text: 'Cập nhật hồ sơ thành công!',
+                            timer: 1500,
+                            showConfirmButton: false
+                        }).then(() => {
+                            location.reload(); 
+                        });
+                    } else {
+                        Swal.fire({ icon: 'error', title: 'Lỗi', text: res.message || 'Không thể lưu dữ liệu' });
+                    }
+                } catch (err) {
+                    console.error(err);
+                    Swal.fire({ icon: 'error', title: 'Lỗi hệ thống', text: 'Kết nối máy chủ thất bại' });
+                }
+            });
+        });
+        $(function () {
+            // --- BIẾN TẤU RIÊNG CHO ĐỔI EMAIL ---
+
+            // 1. Gửi OTP đến Email cũ
+            $('#btnSendOtpOld').click(async function () {
+                const currentEmail = $('#Email').val();
+                $(this).prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span> Đang gửi...');
+
+                try {
+                    const res = await $.post('/Login/RequestOtp', { email: currentEmail });
+                    if (res.success) {
+                        Swal.fire({ icon: 'success', title: 'Đã gửi!', text: 'Vui lòng kiểm tra mã OTP.', timer: 2000 });
+                        $('#step1').hide();
+                        $('#step2').fadeIn();
+                    } else {
+                        Swal.fire('Lỗi', res.message, 'error');
+                        $(this).prop('disabled', false).text('Gửi mã xác nhận đến Email cũ');
+                    }
+                } catch {
+                    Swal.fire('Lỗi', 'Không thể kết nối đến máy chủ', 'error');
+                    $(this).prop('disabled', false).text('Gửi mã xác nhận đến Email cũ');
+                }
+            });
+
+            // 2. Xác nhận OTP và Email mới
+            $('#btnVerifyAndChange').click(async function () {
+                const otp = $('#OtpCode').val()?.trim();
+                const newEmail = $('#NewEmail').val()?.trim();
+
+                if (!otp || !newEmail) {
+                    Swal.fire('Chú ý', 'Vui lòng nhập đầy đủ mã OTP và Email mới', 'warning');
+                    return;
+                }
+
+                Swal.showLoading();
+                try {
+                    const res = await $.post('/User/VerifyAndChangeEmail', {
+                        otp: otp,
+                        newEmail: newEmail
+                    });
+
+                    if (res.success) {
+                        $('#modalChangeEmail').modal('hide');
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Thành công',
+                            text: 'Email đã được cập nhật. Hệ thống sẽ tải lại.',
+                            showConfirmButton: true
+                        }).then(() => {
+                            location.reload();
+                        });
+                    } else {
+                        Swal.fire('Thất bại', res.message, 'error');
+                    }
+                } catch {
+                    Swal.fire('Lỗi', 'Xử lý yêu cầu thất bại', 'error');
+                }
+            });
+
+            // Reset modal khi đóng
+            $('#modalChangeEmail').on('hidden.bs.modal', function () {
+                $('#step1').show();
+                $('#step2').hide();
+                $('#btnSendOtpOld').prop('disabled', false).text('Gửi mã xác nhận đến Email cũ');
+                $('#OtpCode, #NewEmail').val('');
+            });
+        });
+    </script>
+
+    <style>
+        /* Style cho nút đóng tùy chỉnh */
+        .btn-close-custom {
+            background: none;
+            border: none;
+            padding: 5px;
+            line-height: 1;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .btn-close-custom img {
+                width: 24px; 
+                height: 24px;
+                transition: transform 0.2s ease;
+            }
+
+            .btn-close-custom:hover img {
+                filter: invert(27%) sepia(91%) saturate(2352%) hue-rotate(346deg) brightness(104%) contrast(97%);
+                transform: scale(1.1);
+            }
+
+            .btn-close-custom:active {
+                transform: scale(0.9);
+            }
+    </style>
+}

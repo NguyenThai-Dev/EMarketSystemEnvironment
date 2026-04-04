@@ -1,0 +1,183 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|d:\\bai_tap_cac_mon\\nghien_cuu_khoa_hoc\\emarket\\areas\\admin\\views\\logs\\systemlog.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:areas\\admin\\views\\logs\\systemlog.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\pythonmodel\\forecast_by_category.py||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:pythonmodel\\forecast_by_category.py||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\global.asax.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:global.asax.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\events\\implementations\\supplierpaymentnotificationhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:events\\implementations\\supplierpaymentnotificationhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\events\\implementations\\inmemoryeventdispatcher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:events\\implementations\\inmemoryeventdispatcher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\modules\\usermodule\\services\\implementations\\loginservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:modules\\usermodule\\services\\implementations\\loginservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\startup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:startup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\events\\implementations\\smtpemailservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:events\\implementations\\smtpemailservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\events\\implementations\\telegramservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:events\\implementations\\telegramservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 298,
+          "SelectedChildIndex": 8,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{eefa5220-e298-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "forecast_by_category.py",
+              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\PythonModel\\forecast_by_category.py",
+              "RelativeDocumentMoniker": "PythonModel\\forecast_by_category.py",
+              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\PythonModel\\forecast_by_category.py",
+              "RelativeToolTip": "PythonModel\\forecast_by_category.py",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAAB8AAAA7AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
+              "WhenOpened": "2026-03-12T08:04:28.524Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Global.asax.cs",
+              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Global.asax.cs",
+              "RelativeDocumentMoniker": "Global.asax.cs",
+              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Global.asax.cs",
+              "RelativeToolTip": "Global.asax.cs",
+              "ViewState": "AgIAAM4AAAAAAAAAAAAAwNsAAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-12T03:12:43.643Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "InMemoryEventDispatcher.cs",
+              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Events\\Implementations\\InMemoryEventDispatcher.cs",
+              "RelativeDocumentMoniker": "Events\\Implementations\\InMemoryEventDispatcher.cs",
+              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Events\\Implementations\\InMemoryEventDispatcher.cs",
+              "RelativeToolTip": "Events\\Implementations\\InMemoryEventDispatcher.cs",
+              "ViewState": "AgIAACwAAAAAAAAAAAAhwG0AAAA9AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-12T03:11:45.393Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Startup.cs",
+              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Startup.cs",
+              "RelativeDocumentMoniker": "Startup.cs",
+              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Startup.cs",
+              "RelativeToolTip": "Startup.cs",
+              "ViewState": "AgIAACwAAAAAAAAAAAAgwD4AAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-12T03:05:06.059Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "TelegramService.cs",
+              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Events\\Implementations\\TelegramService.cs",
+              "RelativeDocumentMoniker": "Events\\Implementations\\TelegramService.cs",
+              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Events\\Implementations\\TelegramService.cs",
+              "RelativeToolTip": "Events\\Implementations\\TelegramService.cs",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAQwBUAAABgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-12T03:01:58.358Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "SupplierPaymentNotificationHandler.cs",
+              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Events\\Implementations\\SupplierPaymentNotificationHandler.cs",
+              "RelativeDocumentMoniker": "Events\\Implementations\\SupplierPaymentNotificationHandler.cs",
+              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Events\\Implementations\\SupplierPaymentNotificationHandler.cs",
+              "RelativeToolTip": "Events\\Implementations\\SupplierPaymentNotificationHandler.cs",
+              "ViewState": "AgIAAEABAAAAAAAAAAAAwFwBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-12T02:59:10.736Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "SystemLog.cshtml",
+              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\Logs\\SystemLog.cshtml",
+              "RelativeDocumentMoniker": "Areas\\Admin\\Views\\Logs\\SystemLog.cshtml",
+              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\Logs\\SystemLog.cshtml",
+              "RelativeToolTip": "Areas\\Admin\\Views\\Logs\\SystemLog.cshtml",
+              "ViewState": "AgIAAA0AAAAAAAAAAAAQwBUAAAAeAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-03-12T02:57:31.295Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "SmtpEmailService.cs",
+              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Events\\Implementations\\SmtpEmailService.cs",
+              "RelativeDocumentMoniker": "Events\\Implementations\\SmtpEmailService.cs",
+              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Events\\Implementations\\SmtpEmailService.cs",
+              "RelativeToolTip": "Events\\Implementations\\SmtpEmailService.cs",
+              "ViewState": "AgIAABcAAAAAAAAAAAAAwBwAAABJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-12T02:55:13.63Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "LoginService.cs",
+              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Modules\\UserModule\\Services\\Implementations\\LoginService.cs",
+              "RelativeDocumentMoniker": "Modules\\UserModule\\Services\\Implementations\\LoginService.cs",
+              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Modules\\UserModule\\Services\\Implementations\\LoginService.cs",
+              "RelativeToolTip": "Modules\\UserModule\\Services\\Implementations\\LoginService.cs",
+              "ViewState": "AgIAAPYAAAAAAAAAAAAewP0AAABHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-12T02:54:35.286Z"
+            }
+          ]
+        },
+        {
+          "DockedWidth": 268,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,480 @@
+﻿@using EMarket.Modules.UserModule.Services.Interfaces
+@{
+    var UserContext = System.Web.Mvc.DependencyResolver.Current.GetService<IUserContext>();
+
+    bool HasPerm(string moduleName)
+    {
+        return UserContext != null && UserContext.HasPermission(moduleName);
+    }
+
+    bool IsAdmin()
+    {
+        return UserContext != null && UserContext.IsAdmin;
+    }
+    var ImageUrl = UserContext?.Image ?? "/assets/img/EMarket_Logo.png";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0" />
+    <meta name="description"
+          content="EMarket Admin là nền tảng quản trị vận hành dành cho doanh nghiệp bán lẻ và chuỗi siêu thị, hỗ trợ quản lý hàng hóa, kiểm soát tồn kho, quy trình nhập – xuất – bán hàng, quản lý cửa hàng, người dùng, phân quyền và báo cáo vận hành toàn diện." />
+    <meta name="keywords"
+          content="EMarket, quản trị doanh nghiệp bán lẻ, vận hành chuỗi siêu thị, POS doanh nghiệp, quản trị hàng hóa, quản lý tồn kho, quản trị cửa hàng, hệ thống bán lẻ, quản lý người dùng, phân quyền nâng cao" />
+    <meta name="author" content="EMarket Enterprise Platform" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>EMarket Admin — Nền tảng quản trị vận hành cho chuỗi siêu thị & bán lẻ</title>
+
+    <link rel="shortcut icon" type="image/x-icon" href="~/assets/img/EMarket_Logo_Icon.png" />
+
+    <link rel="stylesheet" href="~/assets/css/bootstrap.min.css" />
+
+    <link rel="stylesheet" href="~/assets/css/animate.css" />
+
+    <link rel="stylesheet" href="~/assets/plugins/owlcarousel/owl.carousel.min.css" />
+
+    <link rel="stylesheet" href="~/assets/plugins/select2/css/select2.min.css" />
+
+    <link rel="stylesheet" href="~/assets/css/dataTables.bootstrap4.min.css" />
+
+    <link rel="stylesheet" href="~/assets/plugins/fontawesome/css/fontawesome.min.css" />
+    <link rel="stylesheet" href="~/assets/plugins/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+
+
+    <link rel="stylesheet" href="~/assets/css/style.css" />
+</head>
+<body>
+    <div id="global-loader">
+        <div class="whirly-loader"></div>
+    </div>
+
+    <div class="main-wrapper">
+        <div class="header">
+            <div class="header-left active">
+                <a href="@Url.Action("Index", "Admin", new { area = "Admin" })" class="logo">
+                    <img src="~/assets/img/EMarket_Logo.png" alt="" />
+                </a>
+                <a href="@Url.Action("Index", "Admin", new { area = "Admin" })" class="logo-small">
+                    <img src="~/assets/img/EMarket_Logo.png" alt="" />
+                </a>
+                <a id="toggle_btn" href="javascript:void(0);"> </a>
+            </div>
+
+            <a id="mobile_btn" class="mobile_btn" href="#sidebar">
+                <span class="bar-icon">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </span>
+            </a>
+
+            <ul class="nav user-menu">
+                <li class="nav-item">
+                    <div class="top-nav-search">
+                        <a href="javascript:void(0);" class="responsive-search">
+                            <i class="fa fa-search"></i>
+                        </a>
+                        <form action="#">
+                            <div class="searchinputs">
+                                <input type="text" placeholder="Search Here ..." />
+                                <div class="search-addon">
+                                    <span><img src="~/assets/img/icons/closes.svg" alt="img" /></span>
+                                </div>
+                            </div>
+                            <a class="btn" id="searchdiv"><img src="~/assets/img/icons/search.svg" alt="img" /></a>
+                        </form>
+                    </div>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <a href="javascript:void(0);" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
+                        <img src="~/assets/img/icons/notification-bing.svg" alt="img" /> <span class="badge rounded-pill">4</span>
+                    </a>
+                    <div class="dropdown-menu notifications">
+                        <div class="topnav-dropdown-header">
+                            <span class="notification-title">Notifications</span>
+                            <a href="javascript:void(0)" class="clear-noti"> Clear All </a>
+                        </div>
+                        <div class="noti-content">
+                            <ul class="notification-list">
+                                <li class="p-3 text-center">
+                                    <div class="spinner-border spinner-border-sm text-primary"></div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="topnav-dropdown-footer">
+                            <a href="@Url.Action("SystemLog", "Logs", new { area = "Admin" })">Xem tất cả nhật ký</a>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="nav-item dropdown has-arrow main-drop">
+                    <a href="javascript:void(0);" class="dropdown-toggle nav-link userset" data-bs-toggle="dropdown">
+                        <span class="user-img">
+                            <img src="@ImageUrl" alt="" /> <span class="status online"></span>
+                        </span>
+                    </a>
+                    <div class="dropdown-menu menu-drop-user">
+                        <div class="profilename">
+                            <div class="profileset">
+                                <span class="user-img">
+                                    <img src="@ImageUrl" alt="" /> <span class="status online"></span>
+                                </span>
+                                <div class="profilesets">
+                                    <h6>@UserContext.FullName</h6>
+                                    <h5>@UserContext.Roles[0].Name</h5>
+                                </div>
+                            </div>
+                            <hr class="m-0" />
+                            <a class="dropdown-item" href="@Url.Action("Profile", "User", new { area = "Admin" })"> <i class="me-2" data-feather="user"></i> Hồ sơ của tôi</a>
+                            <hr class="m-0" />
+                            <a class="dropdown-item logout pb-0" href="javascript:void(0)" onclick="logout()"><img src="~/assets/img/icons/log-out.svg" class="me-2" alt="img" /> Đăng xuất</a>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+
+            <div class="dropdown mobile-user-menu">
+                <a href="javascript:void(0);" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa fa-ellipsis-v"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <a class="dropdown-item" href="@Url.Action("Profile", "User", new { area = "Admin" })">My Profile</a>
+                    <a class="dropdown-item" href="javascript:void(0)" onclick="logout()">Logout</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-inner slimscroll">
+                <div id="sidebar-menu" class="sidebar-menu">
+                    <ul>
+                        @* --- MODULE: DASHBOARD (6) --- *@
+                        @if (HasPerm("DashboardModule"))
+                        {
+                            <li>
+                                <a href="@Url.Action("Index", "Admin", new { area = "Admin" })"><img src="~/assets/img/icons/dashboard.svg" alt="img" /><span> Dashboard</span> </a>
+                            </li>
+                        }
+
+                        @* --- MODULE: PRODUCT (3) --- *@
+                        @if (HasPerm("ProductModule"))
+                        {
+                            <li class="submenu">
+                                <a href="javascript:void(0);">
+                                    <img src="~/assets/img/icons/product.svg" alt="img" /><span> Sản phẩm</span>
+                                    <span class="menu-arrow"></span>
+                                </a>
+                                <ul>
+                                    <li><a href="@Url.Action("ProductList", "Product", new { area = "Admin" })">Danh sách sản phẩm</a></li>
+                                    <li><a href="@Url.Action("ProductCategoryList", "Product", new { area = "Admin" })">Danh sách loại sản phẩm</a></li>
+                                    <li><a href="@Url.Action("ImportProduct", "Product", new { area = "Admin" })">Nhập sản phẩm</a></li>
+                                    <li><a href="@Url.Action("PrintBarcode", "Product", new { area = "Admin" })">In mã vạch</a></li>
+                                </ul>
+                            </li>
+                        }
+
+                        @* --- MODULE: SALES (1) --- *@
+                        @if (HasPerm("SalesModule"))
+                        {
+                            <li class="submenu">
+                                <a href="javascript:void(0);">
+                                    <img src="~/assets/img/icons/sales1.svg" alt="img" /><span> Bán hàng</span>
+                                    <span class="menu-arrow"></span>
+                                </a>
+                                <ul>
+                                    <li><a href="@Url.Action("OrderList", "Order", new { area = "Admin" })">Danh sách bán hàng</a></li>
+                                    <li><a href="@Url.Action("POSEMarket", "Order", new { area = "Admin" })">Điểm bán hàng (POS)</a></li>
+                                    <li><a href="@Url.Action("PromotionManagement", "Promotion", new { area = "Admin" })">Khuyến mãi</a></li>
+                                </ul>
+                            </li>
+                        }
+
+                        @* --- MODULE: INVENTORY (4) & DEBT (8) --- *@
+                        @* Nhập hàng thường liên quan đến Tồn kho (Inventory) *@
+                        @if (HasPerm("InventoryModule"))
+                        {
+                            <li class="submenu">
+                                <a href="javascript:void(0);">
+                                    <img src="~/assets/img/icons/purchase1.svg" alt="img" /><span> Nhập hàng</span>
+                                    <span class="menu-arrow"></span>
+                                </a>
+                                <ul>
+                                    <li><a href="@Url.Action("PurchaseOrderList", "PurchaseOrder", new { area = "Admin" })">Danh sách Nhập hàng</a></li>
+
+                                    @* Riêng mục công nợ check thêm quyền DebtModule *@
+                                    @if (HasPerm("DebtModule"))
+                                    {
+                                        <li><a href="@Url.Action("SupplierDebtAndPayment", "Supplier", new { area = "Admin" })">Thanh toán (Công nợ)</a></li>
+                                    }
+                                </ul>
+                            </li>
+                        }
+
+                        @* --- MODULE: REPORT (2) hoặc SALES (1) --- *@
+                        @* Chi phí tạm gán vào ReportModule vì liên quan tài chính *@
+                        @if (HasPerm("ReportModule"))
+                        {
+                            <li class="submenu">
+                                <a href="javascript:void(0);">
+                                    <img src="~/assets/img/icons/expense1.svg" alt="img" /><span> Chi phí</span>
+                                    <span class="menu-arrow"></span>
+                                </a>
+                                <ul>
+                                    <li><a href="@Url.Action("ExpenseManagement", "Expense", new { area = "Admin" })">Danh sách chi phí</a></li>
+                                </ul>
+                            </li>
+                        }
+
+                        @* --- MODULE: SALES (1) --- *@
+                        @if (HasPerm("SalesModule"))
+                        {
+                            <li class="submenu">
+                                <a href="javascript:void(0);">
+                                    <img src="~/assets/img/icons/quotation1.svg" alt="img" /><span> Báo giá</span>
+                                    <span class="menu-arrow"></span>
+                                </a>
+                                <ul>
+                                    <li><a href="@Url.Action("QuotationManagement", "Quotation", new { area = "Admin" })">Danh sách báo giá</a></li>
+                                </ul>
+                            </li>
+                        }
+
+                        @* --- MODULE: INVENTORY (4) --- *@
+                        @if (HasPerm("InventoryModule"))
+                        {
+                            <li class="submenu">
+                                <a href="javascript:void(0);">
+                                    <img src="~/assets/img/icons/transfer1.svg" alt="img" /><span> Chuyển kho</span>
+                                    <span class="menu-arrow"></span>
+                                </a>
+                                <ul>
+                                    <li><a href="@Url.Action("StockHistory", "Warehouse", new { area = "Admin" })">Lịch sử lấy hàng</a></li>
+                                </ul>
+                            </li>
+                        }
+
+                        @* --- MODULE: USER (7) & CUSTOMER (5) --- *@
+                        @* Hiển thị menu cha nếu có quyền User HOẶC Customer *@
+                        @if (HasPerm("UserModule") || HasPerm("CustomerModule"))
+                        {
+                            <li class="submenu">
+                                <a href="javascript:void(0);">
+                                    <img src="~/assets/img/icons/users1.svg" alt="img" /><span> Người dùng</span>
+                                    <span class="menu-arrow"></span>
+                                </a>
+                                <ul>
+                                    @if (HasPerm("CustomerModule"))
+                                    {
+                                        <li><a href="@Url.Action("CustomerList", "Customer", new { area = "Admin" })">Danh sách khách hàng</a></li>
+                                    }
+
+                                    @* Thương hiệu (NCC) thường thuộc về Inventory hoặc Product *@
+                                    @if (HasPerm("InventoryModule") || HasPerm("ProductModule"))
+                                    {
+                                        <li><a href="@Url.Action("SupplierList", "Supplier", new { area = "Admin" })">Danh sách thương hiệu</a></li>
+                                    }
+
+                                    @if (HasPerm("UserModule"))
+                                    {
+                                        <li><a href="@Url.Action("UserList", "User", new { area = "Admin" })">Danh sách người dùng</a></li>
+                                    }
+                                </ul>
+                            </li>
+                        }
+
+                        @* --- MODULE: INVENTORY (4) --- *@
+                        @if (HasPerm("InventoryModule"))
+                        {
+                            <li class="submenu">
+                                <a href="javascript:void(0);">
+                                    <img src="~/assets/img/icons/places.svg" alt="img" /><span> Địa điểm</span>
+                                    <span class="menu-arrow"></span>
+                                </a>
+                                <ul>
+                                    <li><a href="@Url.Action("BranchList", "Branch", new { area = "Admin" })">Quản lý chi nhánh</a></li>
+                                    <li><a href="@Url.Action("WarehouseList", "Warehouse", new { area = "Admin" })">Quản lý kho</a></li>
+                                </ul>
+                            </li>
+                        }
+
+                        @* --- MODULE: DASHBOARD (6) - Cài đặt hệ thống --- *@
+                        @if (HasPerm("DashboardModule") && IsAdmin())
+                        {
+                            <li class="submenu">
+                                <a href="javascript:void(0);">
+                                    <img src="~/assets/img/icons/settings.svg" alt="img" /><span> Cài đặt</span>
+                                    <span class="menu-arrow"></span>
+                                </a>
+                                <ul>
+                                    <li><a href="@Url.Action("SystemManagement", "SystemConfig", new { area = "Admin" })">Hệ thống</a></li>
+                                    <li><a href="@Url.Action("RoleManagement", "Role", new { area = "Admin" })">Quyền hạn</a></li>
+                                    <li><a href="@Url.Action("SystemLog", "Logs", new { area = "Admin" })">Log hệ thống</a></li>
+                                </ul>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div id="antiforgery-token-holder" style="display:none">
+            @Html.AntiForgeryToken()
+        </div>
+        @RenderBody()
+    </div>
+
+    <script src="~/assets/js/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+
+
+    <script src="~/assets/js/feather.min.js"></script>
+
+    <script src="~/assets/js/jquery.slimscroll.min.js"></script>
+
+    <script src="~/assets/js/jquery.dataTables.min.js"></script>
+    <script src="~/assets/js/dataTables.bootstrap4.min.js"></script>
+
+    <script src="~/assets/js/bootstrap.bundle.min.js"></script>
+
+    <script src="~/assets/plugins/apexchart/chart-data.js"></script>
+
+    <script src="~/assets/plugins/owlcarousel/owl.carousel.min.js"></script>
+
+    <script src="~/assets/plugins/select2/js/select2.min.js"></script>
+
+    <script src="~/assets/plugins/sweetalert/sweetalert2.all.min.js"></script>
+    <script src="~/assets/plugins/sweetalert/sweetalerts.min.js"></script>
+
+    <script src="~/assets/js/script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/signalr.js/2.4.3/jquery.signalR.min.js"></script>
+
+    <script src="/signalr/hubs"></script>
+    @RenderSection("Scripts", required: false)
+    @RenderSection("Styles", required: false)
+
+    <script>
+
+    function loadSystemEvents() {
+        const apiUrl = '@Url.Action("GetLatestSystemEvents", "Logs", new { area = "Admin" })';
+
+        $.get(apiUrl, function (events) {
+            let html = '';
+
+            if (events && events.length > 0) {
+                events.forEach(item => {
+                    const themeCls = item.IsError ? 'text-danger' : 'text-primary';
+                    const bgCls = item.IsError ? 'bg-danger-light' : 'bg-primary-light';
+                    const iconCls = item.IsError ? 'fas fa-exclamation-triangle' : 'fas fa-history';
+                    const targetUrl = '@Url.Action("SystemLog", "Logs", new { area = "Admin" })';
+
+                    // 2. Xử lý thời gian (Backend trả về RawDate hoặc string)
+                    let timeDisplay = item.CreatedAt;
+                    if (typeof moment !== 'undefined') {
+                        timeDisplay = moment(item.RawDate).fromNow();
+                    }
+                    html += `
+<li class="notification-message">
+    <a href="${targetUrl}">
+        <div class="media d-flex align-items-center">
+            <span class="avatar avatar-sm flex-shrink-0">
+                <img src="${item.UserImgUrl}" onerror="this.src='/assets/img/EMarket_Logo.png'" class="rounded-circle" />
+            </span>
+            <div class="media-body flex-grow-1 ms-2">
+                <p class="noti-details mb-0">
+                    <span class="fw-bold ${item.IsError ? 'text-danger' : 'text-dark'}">${item.Title}</span>
+                    <span class="text-muted"> ${item.Summary}</span>
+                </p>
+                <p class="noti-time mb-0">
+                    <small class="text-muted">${moment(item.RawDate).fromNow()}</small>
+                </p>
+            </div>
+        </div>
+    </a>
+</li>`;
+                });
+
+                // Badge đỏ trên chuông: Chỉ hiện tổng số sự kiện mới
+                $('.nav-item.dropdown .badge').text(events.length).show();
+            } else {
+                html = '<li class="p-3 text-center text-muted">Không có hoạt động mới</li>';
+                $('.nav-item.dropdown .badge').hide();
+            }
+
+            $('.notification-list').html(html);
+
+        }).fail(function() {
+            $('.notification-list').html('<li class="p-2 text-center text-danger small">Lỗi kết nối Server</li>');
+        });
+    }
+
+        $(document).ready(function () {
+            if ($.fn.DataTable || $.fn.dataTable) {
+                $.fn.dataTable.ext.errMode = 'none';
+            }
+        });
+
+    $(function () {
+        loadSystemEvents();
+
+        if ($.connection && $.connection.systemLogHub) {
+            const logHub = $.connection.systemLogHub;
+
+            logHub.client.onNewLogReceived = function (res) {
+                console.log("Layout nhận tín hiệu onNewLogReceived:", res.type);
+
+                loadSystemEvents();
+
+                $(document).trigger('onSignalR_UpdateLogTable', [res]);
+
+                const isAtLogPage = window.location.pathname.toLowerCase().includes("systemlog");
+                if (!isAtLogPage && typeof toastr !== 'undefined') {
+                    if (res.type === "AppLog" && (res.data.LogLevel === "ERROR" || res.data.LogLevel === "FATAL")) {
+                        toastr.error("Hệ thống phát sinh lỗi mới!");
+                    }
+                }
+            };
+
+            logHub.client.forceLogout = function (message) {
+                console.warn("Tín hiệu Kick nhận được từ Server!");
+
+                if (typeof FormUtils !== 'undefined') {
+                    FormUtils.showNotification(message || "Tài khoản của bạn đã bị khóa hoặc hết hạn!", "error");
+                } else {
+                    alert(message || "Tài khoản của bạn đã bị khóa!");
+                }
+
+                setTimeout(function () {
+                    window.location.replace("/Admin/Admin/AccessDenied");
+                }, 2000);
+            };
+
+            logHub.client.updateLogTable = function (res) {
+                console.log("Layout nhận tín hiệu updateLogTable...");
+                $(document).trigger('onSignalR_UpdateLogTable', [res]);
+            };
+
+            $.connection.hub.start().done(function () {
+                console.log("SignalR Global Connected!");
+                logHub.server.joinLogGroup();
+            });
+        }
+
+        const currentPath = window.location.pathname.toLowerCase();
+        $('#sidebar-menu a[href]').each(function () {
+            const href = $(this).attr('href');
+            if (href && href !== '#' && !href.startsWith('javascript')) {
+                if (currentPath === href.toLowerCase()) {
+                    $(this).addClass('active');
+                    $(this).closest('li.submenu').find('a').first().addClass('active subdrop');
+                    $(this).closest('li.submenu').find('ul').first().show();
+                }
+            }
+        });
+    });
+    </script>
+</body>
+</html>

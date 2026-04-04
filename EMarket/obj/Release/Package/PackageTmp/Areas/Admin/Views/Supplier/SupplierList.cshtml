@@ -1,0 +1,486 @@
+﻿@{
+    ViewBag.Title = "SupplierList";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="page-wrapper">
+    <div class="content">
+
+        <div class="page-header">
+            <div class="page-title">
+                <h4>Danh sách nhà cung cấp</h4>
+                <h6>Quản lý danh sách nhà cung cấp</h6>
+            </div>
+            <div class="page-btn">
+                <button class="btn btn-added" id="btnAddSupplier">
+                    <img src="~/assets/img/icons/plus.svg" class="me-1" alt="add" />
+                    Thêm nhà cung cấp mới
+                </button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+
+                <div class="table-top">
+                    <div class="search-set">
+                        <div class="search-input">
+                            <a class="btn btn-searchset"><img src="~/assets/img/icons/search-white.svg" alt="img" /></a>
+                        </div>
+                    </div>
+                    <div class="wordset">
+                        <ul>
+                            <li><a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"><img src="~/assets/img/icons/pdf.svg" alt="img" /></a></li>
+                            <li><a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"><img src="~/assets/img/icons/excel.svg" alt="img" /></a></li>
+                            <li><a data-bs-toggle="tooltip" data-bs-placement="top" title="print"><img src="~/assets/img/icons/printer.svg" alt="img" /></a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table id="tblSuppliers" class="table datanew w-100">
+                        <thead>
+                            <tr>
+                                <th><label class="checkboxs"><input type="checkbox" id="select-all" /><span class="checkmarks"></span></label></th>
+                                <th>Tên</th>
+                                <th>Email</th>
+                                <th>Điện thoại</th>
+                                <th>Người liên hệ</th>
+                                <th style="width:140px;">Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalSupplierInput" tabindex="-1" data-bs-backdrop="static" 
+     data-bs-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">Add Supplier</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="SupplierId" value="0" />
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label>Tên nhà cung cấp<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="SupplierName" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label>Người liên hệ</label>
+                            <input type="text" class="form-control" id="ContactPerson" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label>Email</label>
+                            <input type="text" class="form-control" id="Email" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label>Số điện thoại</label>
+                            <input type="text" class="form-control" id="Phone" />
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group mb-3">
+                            <label>Địa chỉ</label>
+                            <input type="text" class="form-control" id="Address" />
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group mb-3">
+                            <label>Map URL (Embed Link)</label>
+                            <input type="text" class="form-control" id="AddressUrl" placeholder="https://www.google.com/maps/embed?..." />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <button class="btn btn-primary" id="btnSaveSupplier">Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalSupplierInfo" tabindex="-1" data-bs-backdrop="static" 
+     data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+
+            <!-- HEADER -->
+            <div class="modal-header">
+                <h5 class="modal-title fw-semibold">
+                    Địa chỉ nhà cung cấp và mô tả
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <!-- BODY -->
+            <div class="modal-body p-0">
+                <div class="row g-0">
+
+                    <!-- MAP (CHÍNH) -->
+                    <div class="col-lg-8">
+                        <iframe id="supplierMap"
+                                style="width:100%; height:520px; border:0"
+                                loading="lazy"
+                                referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
+
+                    <!-- INFO (PHỤ) -->
+                    <div class="col-lg-4 border-start">
+                        <div class="p-4">
+
+                            <h6 class="text-muted text-center mb-3">Thông tin nhà cung cấp</h6>
+
+                            <div class="mb-3">
+                                <div class="text-muted small">Tên nhà cung cấp</div>
+                                <div id="spName" class="fw-semibold fs-6 text-primary"></div>
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="text-muted small">Email</div>
+                                <div id="spEmail"></div>
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="text-muted small">Số điện thoại</div>
+                                <div id="spPhone"></div>
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="text-muted small">Người liên hệ</div>
+                                <div id="spContact"></div>
+                            </div>
+
+                            <div class="mb-4">
+                                <div class="text-muted small">Địa chỉ</div>
+                                <div id="spAddress" class="fw-medium"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- FOOTER -->
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">
+                    Đóng
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        let tblSuppliers;
+
+        $(function () {
+            // -- 1. INIT DATATABLE --
+            if ($.fn.DataTable.isDataTable('#tblSuppliers')) {
+                $('#tblSuppliers').DataTable().clear().destroy();
+            }
+
+            $.extend(true, $.fn.dataTable.defaults, {
+                dom: 't<"bottom_controls"lp>',
+                language: {
+                    search: "",
+                    searchPlaceholder: "Search...",
+                    info: "",
+                    infoEmpty: "",
+                    infoFiltered: "",
+                },
+            });
+
+            tblSuppliers = $('#tblSuppliers').DataTable({
+                processing: true,
+                serverSide: false,
+                responsive: true,
+                searching: false,
+                ajax: {
+                    url: '/Supplier/GetfilteredSupplier',
+                    data: function (d) {
+                        d.supplierName = $("#txtSearch").val() ?? "";
+                    },
+                    type: 'GET'
+                },
+                columns: [
+                    {
+                        data: null,
+                        orderable: false,
+                        className: 'text-center dt-checkbox-col',
+                        render: function (data, type, row) {
+                            return `
+                                    <label class="checkboxs">
+                                        <input type="checkbox" class="row-select" data-id="${row.SupplierId}" />
+                                        <span class="checkmarks"></span>
+                                    </label>`;
+                        }
+                    },
+                    { data: 'Name' },
+                    { data: 'Email', render: d => d || '-' },
+                    { data: 'Phone', render: d => d || '-' },
+                    { data: 'ContactPerson', render: d => d || '-' },
+                    {
+                        data: null,
+                        orderable: false,
+                        render: d => {
+                            // Logic Render Nút Action
+                            // Nút Info (Mắt): Để xem map (Logic cũ)
+                            const viewBtn = `
+                                    <a href="javascript:void(0)" class="me-3 btn-view" title="View Details"
+                                       data-obj='${JSON.stringify(d)}'>
+                                       <img src="/assets/img/icons/eye.svg" alt="view" />
+                                    </a>`;
+
+                            // Nút Edit (Bút)
+                            const editBtn = `
+                                    <a href="javascript:void(0)" class="me-3 btn-edit" title="Edit"
+                                       data-obj='${JSON.stringify(d)}'>
+                                       <img src="/assets/img/icons/edit.svg" alt="edit" />
+                                    </a>`;
+
+                            // Nút Delete (Thùng rác) - Có logic check CanBeDeleted nếu backend trả về
+                            const canDelete = d.CanBeDeleted !== false; // Mặc định cho xóa nếu backend không trả về false
+                            const deleteBtn = canDelete
+                                ? `<a href="javascript:void(0)" class="btn-delete me-3" title="Delete" data-id="${d.SupplierId}">
+                                         <img src="/assets/img/icons/delete.svg" alt="delete" />
+                                       </a>`
+                                : `<a href="javascript:void(0)" class="btn-delete btn-delete-disabled me-3" data-id="${d.SupplierId}">
+                                         <img src="/assets/img/icons/delete.svg" alt="delete" />
+                                       </a>`;
+
+                            return viewBtn + editBtn + deleteBtn;
+                        }
+                    }
+                ],
+                order: [[1, 'asc']],
+                drawCallback: function () {
+                    $('#tblSuppliers_filter input').attr('id', 'txtSearch');
+                },
+                error: function (xhr) {
+                    console.log("DataTable Error:", xhr);
+                }
+            });
+
+            $(document).on("keyup", "#txtSearch", function () {
+                clearTimeout(window.searchTimer);
+                window.searchTimer = setTimeout(() => tblSuppliers.ajax.reload(), 400);
+            });
+
+            // -- 2. HANDLE ACTIONS --
+
+            // Mở Modal Thêm mới
+            $('#btnAddSupplier').click(() => {
+                resetInputModal();
+                $('#modalTitle').text('Add Supplier');
+                $('#modalSupplierInput').modal('show');
+            });
+
+            // Mở Modal Xem Chi Tiết (Map) - Logic cũ được chuyển vào nút này
+            $(document).on('click', '.btn-view', function () {
+                const data = $(this).data('obj'); // Lấy object từ data attribute
+
+                $('#spName').text(data.Name);
+                $('#spEmail').text(data.Email || '-');
+                $('#spPhone').text(data.Phone || '-');
+                $('#spContact').text(data.ContactPerson || '-');
+                $('#spAddress').text(data.Address || '-');
+
+                if (data.AddressUrl) {
+                    $('#supplierMap').attr('src', data.AddressUrl);
+                    $('#supplierMap').show();
+                } else {
+                    $('#supplierMap').attr('src', '');
+                    $('#supplierMap').hide();
+                }
+
+                $('#modalSupplierInfo').modal('show');
+            });
+
+            // Mở Modal Edit
+            $(document).on('click', '.btn-edit', function () {
+                const data = $(this).data('obj');
+
+                $('#SupplierId').val(data.SupplierId);
+                $('#SupplierName').val(data.Name);
+                $('#Email').val(data.Email);
+                $('#Phone').val(data.Phone);
+                $('#ContactPerson').val(data.ContactPerson);
+                $('#Address').val(data.Address);
+                $('#AddressUrl').val(data.AddressUrl);
+
+                $('#modalTitle').text('Edit Supplier');
+                $('#modalSupplierInput').modal('show');
+            });
+
+            // Lưu Dữ Liệu (Create / Update)
+            $('#btnSaveSupplier').click(async function () {
+                const isEdit = Number($('#SupplierId').val() || 0) !== 0;
+
+                const dto = {
+                    SupplierId: Number($('#SupplierId').val() || 0),
+                    Name: $('#SupplierName').val(),
+                    Email: $('#Email').val(),
+                    Phone: $('#Phone').val(),
+                    ContactPerson: $('#ContactPerson').val(),
+                    Address: $('#Address').val(),
+                    AddressUrl: $('#AddressUrl').val()
+                };
+
+                // Validation đơn giản
+                if (!dto.Name) {
+                    Swal.fire({
+                        title: 'Validation Error!',
+                        text: 'Supplier Name is required.',
+                        icon: 'warning',
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#ffc107',
+                    });
+                    return;
+                }
+
+                const url = isEdit ? '@Url.Action("UpdateSupplier", "Supplier", new { area = "Admin" })' : '@Url.Action("CreateSupplier", "Supplier", new { area = "Admin" })';
+
+                try {
+                    const res = await $.post(url, dto);
+                    if (res.success) {
+                        $('#modalSupplierInput').modal('hide');
+                        tblSuppliers.ajax.reload(null, false);
+
+                        Swal.fire({
+                            title: 'Success!',
+                            text: isEdit ? 'Supplier updated successfully.' : 'New supplier created successfully.',
+                            icon: 'success',
+                            confirmButtonText: 'Done',
+                            confirmButtonColor: '#28a745',
+                            timer: 2000,
+                            timerProgressBar: true,
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: res.message || 'An error occurred.',
+                            icon: 'error',
+                            confirmButtonText: 'Close',
+                            confirmButtonColor: '#dc3545',
+                        });
+                    }
+                } catch (err) {
+                    Swal.fire('Error', 'Server communication failed.', 'error');
+                }
+            });
+
+            // Xóa Dữ Liệu
+            $(document).on('click', '.btn-delete', function () {
+                if ($(this).hasClass('btn-delete-disabled')) return;
+
+                const id = $(this).data('id');
+
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, delete it!',
+                    cancelButtonText: 'Cancel',
+                    confirmButtonColor: '#dc3545',
+                    cancelButtonColor: '#6c757d',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.post('/Supplier/DeleteSupplier', { id: id }, function (res) {
+                            if (res.success) {
+                                tblSuppliers.ajax.reload(null, false);
+                                Swal.fire({
+                                    title: 'Deleted!',
+                                    text: 'Supplier has been deleted.',
+                                    icon: 'info',
+                                    confirmButtonText: 'OK',
+                                    confirmButtonColor: '#17a2b8',
+                                    timer: 1500,
+                                    timerProgressBar: true
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'Failed!',
+                                    text: res.message || 'Cannot delete this supplier.',
+                                    icon: 'error',
+                                    confirmButtonColor: '#dc3545'
+                                });
+                            }
+                        });
+                    }
+                });
+            });
+
+            // Search Trigger
+            $('#btnSearch').on('click', function () {
+                tblSuppliers.ajax.reload();
+            });
+
+            $(document).on("keyup", "#tblSuppliers_filter input", function () {
+                clearTimeout(window.searchTimer);
+                window.searchTimer = setTimeout(function () {
+                    if (tblSuppliers) tblSuppliers.ajax.reload();
+                }, 400);
+            });
+        });
+
+        function resetInputModal() {
+            $('#SupplierId').val(0);
+            $('#SupplierName').val('');
+            $('#Email').val('');
+            $('#Phone').val('');
+            $('#ContactPerson').val('');
+            $('#Address').val('');
+            $('#AddressUrl').val('');
+        }
+    </script>
+}
+
+@section Styles{
+    <style>
+        table.dataTable td {
+            white-space: normal !important;
+            vertical-align: middle;
+        }
+
+        .btn-delete-disabled {
+            opacity: 0.4;
+            cursor: not-allowed !important;
+            pointer-events: none;
+        }
+
+        #modalSupplierInfo .list-group-item {
+            padding: 0.6rem 0;
+            border: none;
+        }
+
+        #modalSupplierInfo .card {
+            border-radius: 10px;
+        }
+
+        #modalSupplierInfo .modal-header,
+        #modalSupplierInfo .modal-footer {
+            border: none;
+        }
+    </style>
+}

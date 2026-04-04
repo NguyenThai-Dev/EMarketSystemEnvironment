@@ -1,0 +1,376 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>EMarket</name>
+    </assembly>
+    <members>
+        <member name="M:EMarket.ApiControllers.Admin.CustomerAdminApiController.GetAllCustomers">
+            <summary>
+            Lấy toàn bộ khách hàng.
+            </summary>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.CustomerAdminApiController.Search(System.String)">
+            <summary>
+            Tìm kiếm khách hàng.
+            </summary>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.CustomerAdminApiController.GetCustomerById(System.Int32)">
+            <summary>
+            Lấy chi tiết khách hàng theo ID.
+            </summary>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.CustomerAdminApiController.GetCustomerEmail(System.Int32)">
+            <summary>
+            Lấy email của khách hàng theo ID.
+            </summary>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.CustomerAdminApiController.GetCustomerSegments">
+            <summary>
+            Lấy danh sách phân khúc khách hàng.
+            </summary>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.CustomerAdminApiController.GetCustomersCreatedByMonth">
+            <summary>
+            Lấy thống kê số lượng khách hàng tạo theo từng tháng.
+            </summary>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.CustomerAdminApiController.GetTopCustomers(System.Int32)">
+            <summary>
+            Lấy top khách hàng theo tiêu chí hệ thống.
+            </summary>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.CustomerAdminApiController.GetAddressesByCustomer(System.Int32)">
+            <summary>
+            Lấy toàn bộ địa chỉ của khách hàng.
+            </summary>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.CustomerAdminApiController.GetDefaultAddress(System.Int32)">
+            <summary>
+            Lấy địa chỉ mặc định của khách hàng.
+            </summary>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.CustomerAdminApiController.GetAddressById(System.Int32)">
+            <summary>
+            Lấy địa chỉ theo ID.
+            </summary>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.CustomerAdminApiController.GetAllLoyalty">
+            <summary>
+            Lấy toàn bộ chương trình Loyalty.
+            </summary>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.CustomerAdminApiController.GetLoyaltyById(System.Int32)">
+            <summary>
+            Lấy chi tiết chương trình Loyalty theo ID.
+            </summary>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.DashboardAdminApiController.GetSummary(System.Nullable{System.Int32})">
+            <summary>
+            Lấy tổng quan dashboard: doanh thu, khách hàng, sản phẩm, tồn kho, ...
+            </summary>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.DashboardAdminApiController.GetBranchPerformance(System.Nullable{System.Int32},System.DateTime,System.DateTime)">
+            <summary>
+            Lấy hiệu suất chi nhánh theo khoảng thời gian.
+            </summary>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.DashboardAdminApiController.GetStockChart(System.Nullable{System.Int32})">
+            <summary>
+            Lấy dữ liệu biểu đồ tồn kho.
+            </summary>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.DashboardAdminApiController.GetOverview(System.Nullable{System.Int32},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.String)">
+            <summary>
+            Lấy dữ liệu tổng quan theo ngày hoặc tháng.
+            </summary>
+            <param name="branchId">ID chi nhánh.</param>
+            <param name="fromDate">Ngày bắt đầu.</param>
+            <param name="toDate">Ngày kết thúc.</param>
+            <param name="groupBy">"day" hoặc "month".</param>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.DashboardAdminApiController.GetPeopleDashboard">
+            <summary>
+            Lấy dashboard nhân sự.
+            </summary>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.DashboardAdminApiController.GetWarehouseDashboard(System.Int32,System.Nullable{System.Int32},System.Nullable{System.Int32})">
+            <summary>
+            Lấy dashboard kho (nhập - xuất - tồn).
+            </summary>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.DashboardAdminApiController.GetFinanceDashboard(System.Int32,System.Nullable{System.Int32})">
+            <summary>
+            Lấy dashboard tài chính: doanh thu, lợi nhuận, dòng tiền.
+            </summary>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.DashboardAdminApiController.GetDebtDashboard(System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.DateTime},System.Nullable{System.DateTime})">
+            <summary>
+            Lấy dashboard công nợ nhà cung cấp.
+            </summary>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.DashboardAdminApiController.GetSuperAdminHub">
+            <summary>
+            Lấy dữ liệu tổng hợp dành cho Super Admin.
+            </summary>
+        </member>
+        <member name="T:EMarket.ApiControllers.Admin.ExpenseAdminApiController">
+            <summary>
+            API dành cho việc đọc dữ liệu chi phí (Expense) trong hệ thống quản trị.
+            </summary>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.ExpenseAdminApiController.GetExpenses(System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.String)">
+            <summary>
+            Lấy danh sách chi phí với các bộ lọc tùy chọn: chi nhánh, danh mục, ngày, trạng thái.
+            </summary>
+            <param name="branchId">ID chi nhánh.</param>
+            <param name="categoryId">ID danh mục chi phí.</param>
+            <param name="fromDate">Ngày bắt đầu.</param>
+            <param name="toDate">Ngày kết thúc.</param>
+            <param name="status">Trạng thái: pending | approved | rejected | paid.</param>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.ExpenseAdminApiController.GetExpenseDetail(System.Int32)">
+            <summary>
+            Lấy thông tin chi tiết một khoản chi phí.
+            </summary>
+            <param name="id">ID chi phí.</param>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.ExpenseAdminApiController.GetExpenseCategories">
+            <summary>
+            Lấy danh sách tất cả danh mục chi phí.
+            </summary>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.InventoryAdminApiController.GetAllInventory">
+            <summary>
+            Lấy danh sách tồn kho tổng thể.
+            </summary>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.InventoryAdminApiController.GetFilteredInventory(System.Nullable{System.Int32},System.Nullable{System.Int32})">
+            <summary>
+            Lấy tồn kho theo sản phẩm và kho hàng.
+            </summary>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.InventoryAdminApiController.GetTotalStock(System.Int32,System.Int32)">
+            <summary>
+            Lấy tổng số lượng tồn kho thực tế của 1 sản phẩm tại 1 kho (Cộng dồn các lô).
+            </summary>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.InventoryAdminApiController.GetStockMovements(System.Int32,System.Int32,System.Nullable{System.Int32},System.String,System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.String)">
+            <summary>
+            Truy vấn biến động kho (Stock Movements) theo lịch sử.
+            </summary>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.InventoryAdminApiController.SearchPurchases(System.String,System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.Nullable{System.DateTime},System.Nullable{System.DateTime})">
+            <summary>
+            Tra cứu danh sách đơn nhập hàng với bộ lọc nâng cao.
+            </summary>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.InventoryAdminApiController.GetPurchaseById(System.Int32)">
+            <summary>
+            Lấy chi tiết đơn nhập hàng theo ID.
+            </summary>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.InventoryAdminApiController.GetSupplierDebts(System.String,System.Nullable{System.Int32},System.String,System.Nullable{System.DateTime},System.Nullable{System.DateTime})">
+            <summary>
+            Lấy danh sách công nợ nhà cung cấp.
+            </summary>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.InventoryAdminApiController.GetOverdueDebts">
+            <summary>
+            Lấy danh sách các khoản nợ quá hạn.
+            </summary>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.InventoryAdminApiController.GetNearDueDebts(System.Int32)">
+            <summary>
+            Lấy các khoản nợ sắp đến hạn trong N ngày tới.
+            </summary>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.InventoryAdminApiController.GetWarehouses(System.Nullable{System.Int32})">
+            <summary>
+            Lấy danh sách kho hàng theo chi nhánh.
+            </summary>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.InventoryAdminApiController.GetWarehouseDetail(System.Int32)">
+            <summary>
+            Lấy thông tin chi tiết một kho hàng.
+            </summary>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.ProductAdminApiController.GetAllProducts">
+            <summary>
+            Lấy toàn bộ danh sách sản phẩm.
+            </summary>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.ProductAdminApiController.SearchProducts(System.String,System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32})">
+            <summary>
+            Tìm kiếm sản phẩm nâng cao với nhiều bộ lọc (Category, Branch, Supplier, Warehouse).
+            </summary>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.ProductAdminApiController.GetProductById(System.Int32)">
+            <summary>
+            Lấy thông tin chi tiết sản phẩm theo ID.
+            </summary>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.ProductAdminApiController.GetLowStockAlerts(System.Int32)">
+            <summary>
+            Lấy danh sách các sản phẩm đang dưới định mức tồn kho (Cảnh báo tồn kho thấp).
+            </summary>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.ProductAdminApiController.GetLotsByProduct(System.Int32)">
+            <summary>
+            Lấy thông tin các lô hàng của một sản phẩm (Dùng để kiểm tra HSD/Ngày SX).
+            </summary>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.ProductAdminApiController.GetLotDetail(System.Int32)">
+            <summary>
+            Lấy thông tin chi tiết một lô hàng cụ thể.
+            </summary>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.ProductAdminApiController.GetAllCategories">
+            <summary>
+            Lấy toàn bộ danh mục sản phẩm.
+            </summary>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.ProductAdminApiController.GetAllSuppliers">
+            <summary>
+            Lấy danh sách toàn bộ nhà cung cấp.
+            </summary>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.ProductAdminApiController.SearchSuppliers(System.String)">
+            <summary>
+            Tìm kiếm nhà cung cấp theo tên.
+            </summary>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.QuotationAdminApiController.GetQuotations(System.String,System.Nullable{System.Int32},System.String,System.Nullable{System.DateTime},System.Nullable{System.DateTime})">
+            <summary>
+            Tra cứu danh sách báo giá với các bộ lọc: từ khóa, chi nhánh, trạng thái và thời gian.
+            </summary>
+            <param name="keyword">Tên khách hàng hoặc mã báo giá.</param>
+            <param name="branchId">ID chi nhánh.</param>
+            <param name="status">Trạng thái: Pending, Approved, Rejected, Converted...</param>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.QuotationAdminApiController.GetQuotationDetail(System.Int32)">
+            <summary>
+            Lấy chi tiết thông tin một bản báo giá theo ID (Bao gồm danh sách sản phẩm, đơn giá).
+            </summary>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.QuotationAdminApiController.ConvertToOrder(System.Int32,System.Int32)">
+            <summary>
+            Chuyển đổi một báo giá thành đơn hàng chính thức (Checkout).
+            AI có thể gọi API này nếu người dùng yêu cầu: "Chốt đơn từ báo giá số #123 cho tôi".
+            </summary>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.SalesAdminApiController.GetOrders(System.Int32,System.Int32,System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.String)">
+            <summary>
+            Lấy danh sách đơn hàng với bộ lọc nâng cao (DataTable).
+            Hỗ trợ AI trả lời về số lượng đơn, trạng thái và lọc theo ngày.
+            </summary>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.SalesAdminApiController.GetOrderDetail(System.Int32)">
+            <summary>
+            Lấy chi tiết một đơn hàng kèm theo danh sách sản phẩm (OrderDetails).
+            </summary>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.SalesAdminApiController.GetOrdersByBranch(System.Nullable{System.Int32},System.Nullable{System.DateTime},System.Nullable{System.DateTime})">
+            <summary>
+            Tra cứu nhanh danh sách đơn hàng theo chi nhánh và thời gian.
+            </summary>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.SalesAdminApiController.GetPaymentsByOrder(System.Int32)">
+            <summary>
+            Lấy lịch sử thanh toán của một đơn hàng.
+            Giúp AI kiểm tra xem đơn hàng đã trả đủ tiền chưa.
+            </summary>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.SalesAdminApiController.GetActivePromotions">
+            <summary>
+            Lấy danh sách các chương trình khuyến mãi đang có hiệu lực.
+            </summary>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.SalesAdminApiController.UpdateStatus(System.Int32,System.String,System.String)">
+            <summary>
+            Cập nhật trạng thái đơn hàng (Duyệt đơn, Đã giao, Hủy...).
+            AI có thể dùng để thực thi lệnh: "Xác nhận đơn hàng #555 cho khách nhé".
+            </summary>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.UserAdminApiController.GetAllBranches">
+            <summary>
+            Lấy toàn bộ danh sách chi nhánh.
+            </summary>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.UserAdminApiController.SearchBranches(System.String,System.Nullable{System.Double},System.Nullable{System.Double},System.Double)">
+            <summary>
+            Tìm kiếm chi nhánh theo tên hoặc vị trí (GPS).
+            Giúp AI trả lời: "Chi nhánh nào gần khách hàng này nhất?".
+            </summary>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.UserAdminApiController.GetUsers(System.String)">
+            <summary>
+            Lấy danh sách nhân viên/người dùng kèm bộ lọc.
+            </summary>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.UserAdminApiController.GetUserStats">
+            <summary>
+            Thống kê nhân sự: Tổng số, số lượng tạo mới, tỷ lệ theo vai trò.
+            Rất hữu ích khi quản lý hỏi: "Tình hình nhân sự tháng này thế nào?".
+            </summary>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.UserAdminApiController.GetWarehouseManagerEmails">
+            <summary>
+            Lấy danh sách Email của các quản lý kho.
+            AI có thể dùng để: "Gửi thông báo nợ cho các quản lý kho giúp tôi".
+            </summary>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.UserAdminApiController.GetAllRoles">
+            <summary>
+            Lấy danh sách các vai trò (Roles) trong hệ thống.
+            </summary>
+        </member>
+        <member name="M:EMarket.ApiControllers.Admin.UserAdminApiController.GetRolePermissions(System.Int32)">
+            <summary>
+            Kiểm tra các quyền (Permission ID) của một vai trò cụ thể.
+            </summary>
+        </member>
+        <member name="T:EMarket.SwaggerConfig">
+            <summary>
+            Configures Swagger for the EMarket API.
+            </summary>
+        </member>
+        <member name="M:EMarket.SwaggerConfig.Register">
+            <summary>
+            Registers the Swagger configuration.
+            </summary>
+        </member>
+        <member name="M:EMarket.SwaggerConfig.GetXmlCommentsPath">
+            <summary>
+            Gets the path to the XML comments file.
+            </summary>
+            <returns>The XML comments file path.</returns>
+        </member>
+        <member name="T:EMarket.WebApiConfig">
+            <summary>
+            Provides configuration for Web API routes.
+            </summary>
+        </member>
+        <member name="M:EMarket.WebApiConfig.Register(System.Web.Http.HttpConfiguration)">
+            <summary>
+            Registers Web API configuration and services.
+            </summary>
+            <param name="config">The HTTP configuration.</param>
+        </member>
+        <member name="T:EMarket.MvcApplication">
+            <summary>
+            Represents the ASP.NET MVC application class for EMarket.
+            Handles application startup, dependency injection, Hangfire configuration, and shutdown logic.
+            </summary>
+        </member>
+        <member name="M:EMarket.MvcApplication.Application_Start">
+            <summary>
+            Handles application startup logic, including dependency injection, Hangfire configuration, and MVC setup.
+            </summary>
+        </member>
+        <member name="M:EMarket.MvcApplication.Application_End">
+            <summary>
+            Handles application shutdown logic, including disposing of the Hangfire background job server.
+            </summary>
+        </member>
+    </members>
+</doc>

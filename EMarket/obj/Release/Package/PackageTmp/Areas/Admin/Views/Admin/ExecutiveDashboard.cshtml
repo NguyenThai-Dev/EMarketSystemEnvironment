@@ -1,0 +1,261 @@
+﻿@{
+    ViewBag.Title = "Super Admin Hub";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="page-wrapper" style="background-color: #f8f9fa;">
+    <div class="content container-fluid mt-3">
+
+        <div class="d-flex justify-content-between align-items-end mb-4">
+            <div>
+                <h6 class="text-muted text-uppercase mb-1 small fw-bold ls-1">Central Command</h6>
+                <h3 class="fw-bold text-dark mb-0">Tổng quan Hệ Thống</h3>
+            </div>
+            <div class="d-flex align-items-center">
+                <span class="badge bg-light text-dark border px-3 py-2">
+                    <i class="far fa-calendar-alt me-2"></i>Dữ liệu Tháng này
+                </span>
+            </div>
+        </div>
+
+        <div class="row g-3 mb-4">
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-sm h-100 bg-primary text-white overflow-hidden position-relative">
+                    <div class="position-absolute end-0 bottom-0 opacity-25" style="transform: translate(20%, 20%);">
+                        <i class="fas fa-chart-line" style="font-size: 150px;"></i>
+                    </div>
+
+                    <div class="card-body p-4 d-flex flex-column justify-content-between position-relative z-1">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <span class="badge bg-white bg-opacity-25 mb-2">Doanh thu tổng hợp</span>
+                                <h2 class="fw-bold mb-0 display-5" id="hubRevenue">...</h2>
+                                <p class="mb-0 mt-2" id="hubGrowthContainer">
+                                    <span id="hubGrowth" class="fw-bold">0%</span> so với tháng trước
+                                </p>
+                            </div>
+                            <div class="text-end">
+                                <a href="/Admin/Admin/AdminDashboard" class="btn btn-light fw-bold rounded-pill px-4">
+                                    Vào trang Kinh Doanh <i class="fas fa-arrow-right ms-2"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <h6 class="fw-bold text-secondary mb-0">Hệ thống Cảnh báo</h6>
+                            <span class="badge bg-danger rounded-pill" id="hubCriticalBadge">0 Critical</span>
+                        </div>
+
+                        <div class="alert-feed" id="hubAlertFeed">
+                            <div class="text-center text-muted py-4">
+                                <i class="fas fa-spinner fa-spin"></i> Đang tải...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h6 class="text-muted text-uppercase mb-3 small fw-bold ls-1">Phân hệ Quản trị</h6>
+        <div class="row g-3">
+
+            <div class="col-md-4">
+                <div class="dash-entry-card h-100 card border-0 shadow-sm">
+                    <div class="card-body p-4 d-flex flex-column">
+                        <div class="icon-box bg-soft-success text-success mb-3"><i class="fas fa-wallet"></i></div>
+                        <h5 class="fw-bold text-dark">Tài chính & Công nợ</h5>
+                        <p class="text-muted small">Kiểm soát dòng tiền và nghĩa vụ thanh toán.</p>
+
+                        <div class="mt-auto pt-3 border-top border-light">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="small text-muted">Tổng nợ phải trả</span>
+                                <span class="fw-bold text-danger" id="hubDebt">...</span>
+                            </div>
+                            <div class="d-grid gap-2">
+                                <a href="/Admin/Admin/FinanceManagementDashboard" class="btn btn-sm btn-light text-start fw-bold">
+                                    <i class="fas fa-chart-pie me-2 text-muted"></i>Tổng quan
+                                </a>
+                                <a href="/Admin/Admin/PayablesOverviewDashboard" class="btn btn-sm btn-light text-start fw-bold">
+                                    <i class="fas fa-file-invoice-dollar me-2 text-muted"></i>Chi tiết Công Nợ
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="dash-entry-card h-100 card border-0 shadow-sm">
+                    <div class="card-body p-4 d-flex flex-column">
+                        <div class="icon-box bg-soft-warning text-warning mb-3"><i class="fas fa-warehouse"></i></div>
+                        <h5 class="fw-bold text-dark">Kho vận & Hàng hóa</h5>
+                        <p class="text-muted small">Quản lý nhập xuất tồn và giá trị kho bãi.</p>
+
+                        <div class="mt-auto pt-3 border-top border-light">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <span class="small text-muted">Giá trị kho</span>
+                                <span class="fw-bold text-dark" id="hubStockValue">...</span>
+                            </div>
+                            <a href="/Admin/Admin/WarehouseManagementDashboard" class="btn btn-outline-warning w-100 fw-bold border-2">
+                                Truy cập Kho Vận
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="dash-entry-card h-100 card border-0 shadow-sm">
+                    <div class="card-body p-4 d-flex flex-column">
+                        <div class="icon-box bg-soft-info text-info mb-3"><i class="fas fa-users-cog"></i></div>
+                        <h5 class="fw-bold text-dark">Nhân sự & Hiệu suất</h5>
+                        <p class="text-muted small">Theo dõi nhân viên và hoạt động hệ thống.</p>
+
+                        <div class="mt-auto pt-3 border-top border-light">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <span class="small text-muted">Nhân sự Active</span>
+                                <span class="fw-bold text-dark" id="hubStaffCount">...</span>
+                            </div>
+                            <a href="/Admin/Admin/PeopleOperationsDashboard" class="btn btn-outline-info w-100 fw-bold border-2">
+                                Truy cập Nhân sự
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            loadHubData();
+        });
+
+        async function loadHubData() {
+            try {
+                // Gọi API lấy dữ liệu (Bạn nhớ tạo Controller Action trả về AdminHubDataDto nhé)
+                const res = await $.get('/Admin/Admin/GetSuperAdminHubData');
+
+                if (res.success) {
+                    const m = res.data.Metrics; // Metrics
+                    const a = res.data.Alerts;  // Alerts list
+
+                    // 1. Fill Metrics
+                    $('#hubRevenue').text(formatCurrency(m.RevenueCurrent));
+                    $('#hubDebt').text(formatCurrency(m.TotalDebt));
+                    $('#hubStockValue').text(formatCurrency(m.TotalStockValue));
+                    $('#hubStaffCount').text(m.ActiveStaffCount);
+                    $('#hubCriticalBadge').text(m.CriticalAlerts + ' Critical');
+
+                    // 2. Xử lý phần trăm tăng trưởng
+                    const growth = m.RevenueGrowth;
+                    const $growthEl = $('#hubGrowth');
+                    $growthEl.text(Math.abs(growth).toFixed(1) + '%');
+
+                    // Thêm icon mũi tên
+                    if (growth >= 0) {
+                        $('#hubGrowthContainer').prepend('<i class="fas fa-arrow-up me-1"></i>');
+                    } else {
+                        $('#hubGrowthContainer').prepend('<i class="fas fa-arrow-down me-1"></i>');
+                    }
+
+                    // 3. Render Alerts (Cảnh báo)
+                    const $feed = $('#hubAlertFeed').empty();
+                    if (a && a.length > 0) {
+                        a.forEach(item => {
+                            let icon = item.Type === 'DEBT' ? 'fa-clock text-danger' : 'fa-exclamation-triangle text-warning';
+                            $feed.append(`
+                                        <div class="d-flex align-items-start mb-3 pb-3 border-bottom border-light last-no-border">
+                                            <i class="fas ${icon} mt-1 me-3"></i>
+                                            <div>
+                                                <div class="small fw-bold text-dark">${item.Title}</div>
+                                                <div class="text-xs text-muted">${item.Message}</div>
+                                            </div>
+                                        </div>
+                                    `);
+                        });
+                    } else {
+                        $feed.append('<div class="text-success small"><i class="fas fa-check-circle me-1"></i> Hệ thống ổn định.</div>');
+                    }
+                }
+            } catch (err) {
+                console.error("Lỗi tải Hub Data", err);
+            }
+        }
+
+        // Helper format tiền tệ VNĐ
+        function formatCurrency(val) {
+            if (val >= 1000000000) return (val / 1000000000).toFixed(2) + ' Tỷ ₫';
+            if (val >= 1000000) return (val / 1000000).toFixed(1) + ' Tr ₫';
+            return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(val);
+        }
+    </script>
+}
+
+@section Styles {
+    <style>
+        .ls-1 {
+            letter-spacing: 1px;
+        }
+
+        .text-xs {
+            font-size: 11px;
+        }
+
+        /* Màu nền nhạt */
+        .bg-soft-success {
+            background-color: #d1fae5;
+        }
+
+        .bg-soft-warning {
+            background-color: #fef3c7;
+        }
+
+        .bg-soft-info {
+            background-color: #cffafe;
+        }
+
+        /* Icon Box */
+        .icon-box {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        /* Card Effect */
+        .dash-entry-card {
+            transition: all 0.2s ease;
+            border: 1px solid rgba(0,0,0,0.03) !important;
+        }
+
+            .dash-entry-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 15px 30px rgba(0,0,0,0.08) !important;
+            }
+
+        /* Alert Feed spacing */
+        .last-no-border:last-child {
+            border-bottom: none !important;
+            margin-bottom: 0 !important;
+            padding-bottom: 0 !important;
+        }
+
+        .display-5 {
+            font-size: 2.5rem;
+            letter-spacing: -1px;
+        }
+    </style>
+}

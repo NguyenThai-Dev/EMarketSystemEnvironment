@@ -1,0 +1,722 @@
+﻿@{
+    ViewBag.Title = "System Monitoring";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="page-wrapper">
+    <div class="content">
+        <div class="page-header">
+            <div class="page-title">
+                <h4>System Monitor</h4>
+                <h6>Trung tâm giám sát hoạt động & lỗi hệ thống</h6>
+            </div>
+            <div class="page-btn">
+                <button class="btn btn-added" id="btnRefreshLogs">
+                    <img src="~/assets/img/icons/return1.svg" class="me-2" alt="img">
+                    Làm mới
+                </button>
+            </div>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="row mb-4">
+            <div class="col-lg-4 col-md-6">
+                <div class="stat-card">
+                    <div class="stat-body">
+                        <h5 class="stat-title">Audit Logs (Hôm nay)</h5>
+                        <h2 class="stat-value" id="statTodayAudit">0</h2>
+                    </div>
+                    <div class="stat-badge">
+                        <i class="fas fa-fingerprint"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="stat-card stat-error">
+                    <div class="stat-body">
+                        <h5 class="stat-title">Lỗi phát sinh (Hôm nay)</h5>
+                        <h2 class="stat-value" id="statTodayErrors">0</h2>
+                    </div>
+                    <div class="stat-badge">
+                        <i class="fas fa-bug"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="stat-card stat-total">
+                    <div class="stat-body">
+                        <h5 class="stat-title">Tổng bản ghi hệ thống</h5>
+                        <h2 class="stat-value" id="statTotalAudit">0</h2>
+                    </div>
+                    <div class="stat-badge">
+                        <i class="fas fa-database"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Logs Card -->
+        <div class="card">
+            <div class="card-body p-0">
+                <!-- Tabs Navigation -->
+                <div class="logs-tabs">
+                    <div class="tabs-container">
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-bs-toggle="tab" href="#audit-panel" role="tab">
+                                    <i class="fas fa-user-shield"></i>
+                                    <span>Audit Logs</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-bs-toggle="tab" href="#app-panel" role="tab">
+                                    <i class="fas fa-server"></i>
+                                    <span>Application Logs</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Tab Content -->
+                <div class="tab-content">
+                    <!-- Audit Logs Tab -->
+                    <div class="tab-pane fade show active" id="audit-panel" role="tabpanel">
+                        <div class="table-wrapper">
+                            <div class="table-responsive">
+                                <table id="tblAudit" class="table datanew w-100">
+                                    <thead>
+                                        <tr>
+                                            <th>Thời gian</th>
+                                            <th>Người dùng</th>
+                                            <th>Bảng</th>
+                                            <th>Hành động</th>
+                                            <th>Khóa chính</th>
+                                            <th>IP Address</th>
+                                            <th class="text-center" style="width:60px;">Chi tiết</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- App Logs Tab -->
+                    <div class="tab-pane fade" id="app-panel" role="tabpanel">
+                        <div class="table-wrapper">
+                            <div class="table-responsive">
+                                <table id="tblApp" class="table datanew w-100">
+                                    <thead>
+                                        <tr>
+                                            <th>Thời gian</th>
+                                            <th>Cấp độ</th>
+                                            <th>Nguồn (Logger)</th>
+                                            <th>Thông báo</th>
+                                            <th class="text-center" style="width:60px;">Chi tiết</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Audit Detail -->
+<div class="modal fade" id="modalAuditDetail" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title fw-bold">Chi tiết thay đổi dữ liệu</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="json-card old-value">
+                            <div class="json-header">
+                                <i class="fas fa-history me-2"></i>Dữ liệu cũ
+                            </div>
+                            <pre id="oldJson" class="json-viewer"></pre>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="json-card new-value">
+                            <div class="json-header">
+                                <i class="fas fa-check-circle me-2"></i>Dữ liệu mới
+                            </div>
+                            <pre id="newJson" class="json-viewer"></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer border-0">
+                <button class="btn btn-light" data-bs-dismiss="modal">Đóng</button>
+                <button class="btn btn-primary" onclick="copyAuditJson()">
+                    <i class="fas fa-copy me-1"></i>Copy JSON
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal App Log Detail -->
+<div class="modal fade" id="modalAppLogDetail" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header border-0 bg-danger bg-opacity-10">
+                <h5 class="modal-title fw-bold text-danger">
+                    <i class="fas fa-exclamation-triangle me-2"></i>Chi tiết lỗi hệ thống
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-4">
+                    <label class="fw-bold text-muted mb-2 d-block">
+                        <i class="fas fa-comment me-1 text-danger"></i>Thông báo lỗi
+                    </label>
+                    <div id="appMessage" class="alert alert-light border border-danger border-opacity-25 mb-0"></div>
+                </div>
+                <div>
+                    <label class="fw-bold text-muted mb-2 d-block">
+                        <i class="fas fa-code me-1 text-danger"></i>Stack Trace
+                    </label>
+                    <div class="code-container">
+                        <pre id="appException" class="code-viewer"></pre>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer border-0">
+                <button class="btn btn-light" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/signalr.js/2.4.3/jquery.signalR.min.js"></script>
+    <script src="/signalr/hubs"></script>
+    <script>
+        let tblAudit, tblApp;
+
+        $(function () {
+            if ($.fn.DataTable.isDataTable('#tblAudit')) {
+                $('#tblAudit').DataTable().clear().destroy();
+            }
+            if ($.fn.DataTable.isDataTable('#tblApp')) {
+                $('#tblApp').DataTable().clear().destroy();
+            }
+
+            $.extend(true, $.fn.dataTable.defaults, {
+                dom: 't<"bottom_controls"lp>',
+                language: {
+                    search: "",
+                    searchPlaceholder: "Search...",
+                    info: "",
+                    infoEmpty: "",
+                    infoFiltered: "",
+                    paginate: { previous: "Trước", next: "Sau" }
+                },
+                processing: true,
+                serverSide: true,
+                pageLength: 10
+            });
+
+            // Audit Log Table
+            tblAudit = $('#tblAudit').DataTable({
+                ajax: {
+                    url: '/Admin/Logs/GetAuditLogsTable',
+                    type: 'POST'
+                },
+                columns: [
+                    {
+                        data: 'CreatedAt',
+                        render: d => {
+                            const time = moment(d).format('HH:mm:ss');
+                            const date = moment(d).format('DD/MM');
+                            return `<div><strong>${time}</strong><br><small class="text-muted">${date}</small></div>`;
+                        }
+                    },
+                    {
+                        data: 'Username',
+                        render: d => `<span class="badge bg-light text-dark">${d}</span>`
+                    },
+                    {
+                        data: 'TableName',
+                        render: d => `<span class="fw-bold text-primary">${d}</span>`
+                    },
+                    {
+                        data: 'ActionType',
+                        render: d => {
+                            const colors = {
+                                'Deleted': 'danger',
+                                'Added': 'success',
+                                'Modified': 'warning'
+                            };
+                            const color = colors[d] || 'secondary';
+                            return `<span class="badge bg-${color}">${d}</span>`;
+                        }
+                    },
+                    {
+                        data: 'PrimaryKeyId',
+                        render: d => `<code class="text-muted">#${d}</code>`
+                    },
+                    {
+                        data: 'IpAddress',
+                        render: d => `<code class="text-muted">${d}</code>`
+                    },
+                    {
+                        data: 'AuditId',
+                        orderable: false,
+                        className: 'text-center',
+                        render: id => `<a href="javascript:void(0)" class="btn-view" onclick="viewAudit(${id})" title="Xem chi tiết"><i class="fas fa-eye"></i></a>`
+                    }
+                ],
+                order: [[0, 'desc']]
+            });
+
+            // App Log Table
+            tblApp = $('#tblApp').DataTable({
+                ajax: {
+                    url: '/Admin/Logs/GetAppLogsTable',
+                    type: 'POST'
+                },
+                columns: [
+                    {
+                        data: 'CreatedAt',
+                        render: d => {
+                            const time = moment(d).format('HH:mm:ss');
+                            const date = moment(d).format('DD/MM');
+                            return `<div><strong>${time}</strong><br><small class="text-muted">${date}</small></div>`;
+                        }
+                    },
+                    {
+                        data: 'LogLevel',
+                        render: d => {
+                            const colors = {
+                                'ERROR': 'danger',
+                                'FATAL': 'danger',
+                                'WARN': 'warning',
+                                'INFO': 'info'
+                            };
+                            const color = colors[d] || 'secondary';
+                            return `<span class="badge bg-${color}">${d}</span>`;
+                        }
+                    },
+                    {
+                        data: 'Logger',
+                        render: d => `<code class="text-muted text-truncate d-block">${d}</code>`
+                    },
+                    {
+                        data: 'Message',
+                        render: d => `<small class="text-truncate d-block" title="${d}">${d || '-'}</small>`
+                    },
+                    {
+                        data: 'LogId',
+                        orderable: false,
+                        className: 'text-center',
+                        render: id => `<a href="javascript:void(0)" class="btn-view" onclick="viewAppLog(${id})" title="Xem chi tiết"><i class="fas fa-eye"></i></a>`
+                    }
+                ],
+                order: [[0, 'desc']]
+            });
+
+            // Refresh Button
+            $('#btnRefreshLogs').click(() => {
+                tblAudit.ajax.reload();
+                tblApp.ajax.reload();
+                loadStats();
+            });
+
+            loadStats();
+        });
+
+        async function viewAudit(id) {
+            try {
+                const res = await $.get('/Admin/Logs/GetAuditDetail/' + id);
+                const oldVal = res.OldValues ? JSON.parse(res.OldValues) : {};
+                const newVal = res.NewValues ? JSON.parse(res.NewValues) : {};
+
+                $('#oldJson').text(JSON.stringify(oldVal, null, 2));
+                $('#newJson').text(JSON.stringify(newVal, null, 2));
+                $('#modalAuditDetail').modal('show');
+            } catch (e) {
+                Swal.fire({ icon: 'error', title: 'Lỗi', text: 'Không thể tải chi tiết log' });
+            }
+        }
+
+        async function viewAppLog(id) {
+            try {
+                const res = await $.get('/Admin/Logs/GetAppLogDetail/' + id);
+                $('#appMessage').text(res.Message || '-');
+                $('#appException').text(res.Exception || 'Không có stack trace.');
+                $('#modalAppLogDetail').modal('show');
+            } catch (e) {
+                Swal.fire({ icon: 'error', title: 'Lỗi', text: 'Không thể tải chi tiết lỗi' });
+            }
+        }
+
+        function loadStats() {
+            $.get('/Admin/Logs/GetStats', function (data) {
+                $('#statTodayAudit').text(data.todayAudit || 0);
+                $('#statTodayErrors').text(data.todayErrors || 0);
+                $('#statTotalAudit').text(data.totalAudit || 0);
+            });
+        }
+
+        function copyAuditJson() {
+            const t1 = $('#oldJson').text();
+            const t2 = $('#newJson').text();
+            navigator.clipboard.writeText(`OLD:\n${t1}\n\nNEW:\n${t2}`).then(() => {
+                Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Copied!', showConfirmButton: false, timer: 1500 });
+            });
+        }
+
+        $(function () {
+            $(document).on('onSignalR_UpdateLogTable', function (e, res) {
+                console.log("View đã bắt được sự kiện từ Layout:", res);
+
+                let targetTable = (res.type === "Audit") ? tblAudit : tblApp;
+
+                if (targetTable) {
+                    // Logic thêm dòng mới giữ nguyên
+                    var newRow = targetTable.row.add(res.data).draw(false).node();
+                    $(newRow).addClass('highlight-new-row');
+                    setTimeout(function () {
+                        $(newRow).removeClass('highlight-new-row');
+                    }, 3000);
+                    targetTable.page('first').draw(false);
+                }
+
+                // Cập nhật Card số liệu
+                updateStatCards(res.type);
+
+                if (res.type === "Audit") {
+                    let totalId = "#statTotalAudit";
+                    let currentTotal = parseInt($(totalId).text()) || 0;
+                    $(totalId).text(currentTotal + 1);
+                }
+
+                // Toastr báo riêng cho trang này
+                let toastCls = (res.type === "AppLog" && (res.data.LogLevel === "ERROR" || res.data.LogLevel === "FATAL"))
+                    ? 'error' : 'success';
+
+                // Lấy tên bảng hoặc Logger name an toàn hơn
+                let loggerName = res.data.TableName || (res.data.Logger ? res.data.Logger.split('.').pop() : 'System');
+
+                toastr[toastCls](`Mới: ${res.type} - ${loggerName}`);
+            });
+
+            function updateStatCards(type) {
+                let id = type === "Audit" ? "#statTodayAudit" : "#statTodayErrors";
+                let current = parseInt($(id).text()) || 0;
+                $(id).text(current + 1);
+            }
+        });
+    </script>
+}
+
+@section Styles {
+    <style>
+        @@keyframes highlight-fade {
+            from {
+                background-color: rgba(255, 155, 68, 0.3);
+            }
+            /* Màu cam nhạt */
+            to {
+                background-color: transparent;
+            }
+        }
+
+        .highlight-new-row {
+            animation: highlight-fade 3s ease-out;
+        }
+        /* ===== STAT CARDS ===== */
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+
+            .stat-card:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+            }
+
+        .stat-body {
+            flex: 1;
+        }
+
+        .stat-title {
+            font-size: 12px;
+            color: #6c757d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #212529;
+            margin: 0;
+            line-height: 1;
+        }
+
+        .stat-badge {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            background: rgba(76, 175, 80, 0.1);
+            color: #4caf50;
+            flex-shrink: 0;
+            margin-left: 15px;
+        }
+
+        .stat-card.stat-error .stat-badge {
+            background: rgba(244, 67, 54, 0.1);
+            color: #f44336;
+        }
+
+        .stat-card.stat-total .stat-badge {
+            background: rgba(33, 150, 243, 0.1);
+            color: #2196f3;
+        }
+
+        /* ===== LOGS TABS ===== */
+        .logs-tabs {
+            padding: 0 20px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .tabs-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-tabs {
+            border: none !important;
+            gap: 5px;
+        }
+
+            .nav-tabs .nav-link {
+                border: none !important;
+                color: #6c757d;
+                padding: 15px 20px;
+                font-weight: 500;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                border-bottom: 3px solid transparent;
+                transition: all 0.3s ease;
+                background: transparent;
+            }
+
+                .nav-tabs .nav-link:hover {
+                    color: #ff9b44;
+                    background: transparent;
+                }
+
+                .nav-tabs .nav-link.active {
+                    color: #ff9b44;
+                    border-bottom-color: #ff9b44 !important;
+                    background: transparent;
+                }
+
+        /* ===== TABLE ===== */
+        .table-wrapper {
+            padding: 20px;
+        }
+
+        table.dataTable thead tr {
+            background-color: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        table.dataTable thead th {
+            padding: 12px 15px;
+            font-weight: 600;
+            font-size: 12px;
+            color: #495057;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        table.dataTable tbody td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #f0f0f0;
+            vertical-align: middle;
+            white-space: normal;
+        }
+
+        table.dataTable tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .btn-view {
+            color: #6c757d;
+            font-size: 16px;
+            transition: all 0.2s ease;
+            padding: 5px 8px;
+        }
+
+            .btn-view:hover {
+                color: #ff9b44;
+                background: #fff3e0;
+                border-radius: 4px;
+            }
+
+        /* ===== JSON VIEWER ===== */
+        .json-card {
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+            overflow: hidden;
+        }
+
+        .json-header {
+            padding: 12px 15px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+            font-weight: 600;
+            font-size: 13px;
+            color: #495057;
+            display: flex;
+            align-items: center;
+        }
+
+        .json-card.old-value .json-header {
+            background: #fff5f5;
+            color: #d32f2f;
+            border-bottom-color: #ffebee;
+        }
+
+        .json-card.new-value .json-header {
+            background: #f1f8f4;
+            color: #28a745;
+            border-bottom-color: #e8f5e9;
+        }
+
+        .json-viewer {
+            padding: 12px 15px;
+            font-size: 12px;
+            color: #333;
+            max-height: 300px;
+            overflow: auto;
+            background: #f8f9fa;
+            margin: 0;
+            font-family: 'Monaco', 'Courier New', monospace;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        /* ===== CODE VIEWER ===== */
+        .code-container {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .code-viewer {
+            padding: 15px;
+            font-size: 11px;
+            color: #333;
+            background: #f8f9fa;
+            margin: 0;
+            font-family: 'Monaco', 'Courier New', monospace;
+            line-height: 1.6;
+            max-height: 400px;
+            overflow: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #d1d1d1;
+            border-radius: 3px;
+        }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: #999;
+            }
+
+        /* ===== PAGINATION ===== */
+        .dataTables_wrapper .dataTables_paginate {
+            padding: 15px 20px 0;
+        }
+
+            .dataTables_wrapper .dataTables_paginate .paginate_button {
+                padding: 5px 10px;
+                border-radius: 4px;
+                border: 1px solid #dee2e6;
+                color: #495057;
+                transition: all 0.2s;
+            }
+
+                .dataTables_wrapper .dataTables_paginate .paginate_button:hover:not(.disabled) {
+                    background: #ff9b44;
+                    color: white;
+                    border-color: #ff9b44;
+                }
+
+                .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+                    background: #ff9b44;
+                    color: white;
+                    border-color: #ff9b44;
+                }
+
+        /* ===== RESPONSIVE ===== */
+        @@media (max-width: 768px) {
+            .stat-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .stat-badge {
+                margin-left: 0;
+                margin-top: 10px;
+                align-self: flex-end;
+            }
+
+            table.dataTable thead th,
+            table.dataTable tbody td {
+                padding: 8px 10px;
+                font-size: 12px;
+            }
+
+            .nav-tabs .nav-link {
+                padding: 12px 15px;
+                font-size: 13px;
+            }
+        }
+    </style>
+}

@@ -1,0 +1,476 @@
+﻿@{
+    ViewBag.Title = "WarehouseList";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="page-wrapper">
+    <div class="content">
+
+        <div class="page-header">
+            <div class="page-title">
+                <h4>Danh sách kho hàng</h4>
+                <h6>Quản lý hệ thống kho bãi & lưu trữ</h6>
+            </div>
+            <div class="page-btn">
+                <button class="btn btn-added" id="btnAddWarehouse">
+                    <img src="~/assets/img/icons/plus.svg" class="me-1" />
+                    Thêm kho mới
+                </button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <div class="table-top">
+                    <div class="search-set">
+                        <div class="search-path">
+                            <a class="btn btn-filter" id="filter_search">
+                                <img src="~/assets/img/icons/filter.svg" alt="img" />
+                                <span><img src="~/assets/img/icons/closes.svg" alt="img" /></span>
+                            </a>
+                        </div>
+                        <div class="search-input">
+                            <a class="btn btn-searchset"><img src="~/assets/img/icons/search-white.svg" alt="img" /></a>
+                        </div>
+                    </div>
+                    <div class="wordset">
+                        <ul>
+                            <li>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf">
+                                    <img src="~/assets/img/icons/pdf.svg" alt="img" />
+                                </a>
+                            </li>
+                            <li>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel">
+                                    <img src="~/assets/img/icons/excel.svg" alt="img" />
+                                </a>
+                            </li>
+                            <li>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="print">
+                                    <img src="~/assets/img/icons/printer.svg" alt="img" />
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card mb-0" id="filter_inputs">
+                    <div class="card-body pb-0">
+                        <div class="row">
+                            <div class="col-lg-12 col-sm-12">
+                                <div class="row">
+                                    <div class="col-lg col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <select id="filterBranch" class="select">
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-1 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <a class="btn btn-filters ms-auto" id="btnSearch">
+                                                <img src="~/assets/img/icons/search-whites.svg" alt="img" />
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table id="tblWarehouses" class="table datanew w-100">
+                        <thead>
+                            <tr>
+                                <th><label class="checkboxs"><input type="checkbox" id="select-all" /><span class="checkmarks"></span></label></th>
+                                <th>Tên kho</th>
+                                <th>Chi nhánh trực thuộc</th>
+                                <th>Địa chỉ</th>
+                                <th style="width:140px;">Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalWarehouseInput" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">Add Warehouse</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <input type="hidden" id="WarehouseId" value="0" />
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label>Tên kho <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="WarehouseName" />
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label>Chi nhánh <span class="text-danger">*</span></label>
+                            <select class="form-select" id="BranchIdSelect">
+                                <option value="">-- Chọn chi nhánh --</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="form-group mb-3">
+                            <label>Địa chỉ</label>
+                            <input type="text" class="form-control" id="Address" />
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="form-group mb-3">
+                            <label>Map URL (Embed)</label>
+                            <input type="text" class="form-control" id="AddressUrl" placeholder="http://googleusercontent.com/maps.google.com/..." />
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label>Latitude</label>
+                            <input type="text" class="form-control" id="Latitude" placeholder="Ví dụ: 10°46'36.8&quot;N" />
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label>Longitude</label>
+                            <input type="text" class="form-control" id="Longitude" placeholder="Ví dụ: 106°42'05.3&quot;E" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <button class="btn btn-primary" id="btnSaveWarehouse">Lưu</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalWarehouseInfo" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title fw-semibold">Thông tin kho hàng</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body p-0">
+                <div class="row g-0">
+                    <div class="col-lg-8">
+                        <iframe id="warehouseMap" style="width:100%; height:520px; border:0" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+
+                    <div class="col-lg-4 border-start">
+                        <div class="p-4">
+                            <h6 class="text-muted text-center mb-3">Chi tiết</h6>
+
+                            <div class="mb-3">
+                                <div class="text-muted small">Tên kho</div>
+                                <div id="spWarehouseName" class="fw-semibold fs-6 text-primary"></div>
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="text-muted small">Thuộc chi nhánh</div>
+                                <div id="spBranchName" class="fw-bold text-dark"></div>
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="text-muted small">Địa chỉ</div>
+                                <div id="spAddress"></div>
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="text-muted small">Tọa độ</div>
+                                <div>
+                                    <span id="spLat"></span>, <span id="spLng"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        let tblWarehouses;
+
+        $(function () {
+            loadBranches();
+
+            function convertToDecimalValue(dms) {
+                if (!dms) return 0;
+                const regex = /(\d+)°(\d+)'([\d.]+)"([NSEW])/;
+                const matches = dms.match(regex);
+                if (!matches) return 0;
+                const deg = parseInt(matches[1]);
+                const min = parseInt(matches[2]);
+                const sec = parseFloat(matches[3]);
+                const dir = matches[4];
+                let decimal = deg + min / 60 + sec / 3600;
+                if (dir === 'S' || dir === 'W') decimal *= -1;
+                return parseFloat(decimal.toFixed(6));
+            }
+
+            function convertToDMS(decimal, isLatitude) {
+                if (decimal === null || decimal === undefined || isNaN(decimal)) return "";
+                let direction = isLatitude ? (decimal >= 0 ? "N" : "S") : (decimal >= 0 ? "E" : "W");
+                const absolute = Math.abs(decimal);
+                const degrees = Math.floor(absolute);
+                const minutesNotTruncated = (absolute - degrees) * 60;
+                const minutes = Math.floor(minutesNotTruncated);
+                const seconds = ((minutesNotTruncated - minutes) * 60).toFixed(1);
+                const minStr = minutes.toString().padStart(2, '0');
+                return `${degrees}°${minStr}'${seconds}"${direction}`;
+            }
+
+            if ($.fn.DataTable.isDataTable('#tblWarehouses')) {
+                $('#tblWarehouses').DataTable().clear().destroy();
+            }
+
+            $.extend(true, $.fn.dataTable.defaults, {
+                dom: 't<"bottom_controls"lp>',
+                language: {
+                    search: "",
+                    searchPlaceholder: "Search...",
+                    info: "",
+                    infoEmpty: "",
+                    infoFiltered: "",
+                },
+            });
+
+            tblWarehouses = $('#tblWarehouses').DataTable({
+                processing: true,
+                serverSide: false,
+                searching: false,
+                ajax: {
+                    url: '/Warehouse/GetFilteredWarehouse',
+                    type: 'GET',
+                    
+                    data: d => {
+                        d.warehouseName = $('#txtSearch').val();
+                        d.BranchId = $('#filterBranch').val() ;
+                    }
+                },
+                columns: [
+                    {
+                        data: null,
+                        orderable: false,
+                        className: 'text-center dt-checkbox-col',
+                        render: (data, type, row) => `
+                                    <label class="checkboxs">
+                                        <input type="checkbox" class="row-select" data-id="${row.WarehouseId}" />
+                                        <span class="checkmarks"></span>
+                                    </label>`
+                    },
+                    { data: 'Name'},
+                    {
+                        data: 'BranchName',
+                        render: d => `<span class="text-secondary">${d || 'N/A'}</span>`
+                    },
+                    { data: 'Address', render: d => d || '-' },
+                    {
+                        data: null,
+                        orderable: false,
+                        render: d => {
+                            const viewBtn = `<a href="javascript:void(0)" class="me-3 btn-view" data-obj='${JSON.stringify(d)}'><img src="/assets/img/icons/eye.svg" /></a>`;
+                            const editBtn = `<a href="javascript:void(0)" class="me-3 btn-edit" data-obj='${JSON.stringify(d)}'><img src="/assets/img/icons/edit.svg" /></a>`;
+                            const canDelete = d.CanBeDeleted !== false;
+                            const deleteBtn = canDelete
+                                ? `<a href="javascript:void(0)" class="btn-delete" data-id="${d.WarehouseId}"><img src="/assets/img/icons/delete.svg" /></a>`
+                                : `<a href="javascript:void(0)" class="btn-delete btn-delete-disabled" data-id="${d.WarehouseId}"><img src="/assets/img/icons/delete.svg" /></a>`;
+                            return viewBtn + editBtn + deleteBtn;
+                        }
+                    }
+                ],
+                order: [[1, 'asc']],
+                drawCallback: function () {
+                    $('#tblWarehouses_filter input').attr('id', 'txtSearch');
+                },
+            });
+
+            $('#btnAddWarehouse').click(() => {
+                resetModal();
+                $('#modalTitle').text('Thêm kho hàng mới');
+                $('#modalWarehouseInput').modal('show');
+            });
+
+            $(document).on('click', '.btn-view', function () {
+                const d = $(this).data('obj');
+                $('#spWarehouseName').text(d.Name);
+                $('#spBranchName').text(d.BranchName || '-');
+                $('#spAddress').text(d.Address || '-');
+                $('#spLat').text(convertToDMS(d.Latitude, true) || '-');
+                $('#spLng').text(convertToDMS(d.Longitude, false) || '-');
+                $('#warehouseMap').attr('src', d.AddressUrl || '');
+                $('#modalWarehouseInfo').modal('show');
+            });
+
+            $(document).on('click', '.btn-edit', function () {
+                const d = $(this).data('obj');
+                $('#WarehouseId').val(d.WarehouseId);
+                $('#WarehouseName').val(d.Name);
+                $('#BranchIdSelect').val(d.BranchId);
+                $('#Address').val(d.Address);
+                $('#AddressUrl').val(d.AddressUrl);
+                $('#Latitude').val(convertToDMS(d.Latitude, true));
+                $('#Longitude').val(convertToDMS(d.Longitude, false));
+                $('#modalTitle').text('Cập nhật kho hàng');
+                $('#modalWarehouseInput').modal('show');
+            });
+
+            $('#btnSaveWarehouse').click(async () => {
+                const dto = {
+                    WarehouseId: Number($('#WarehouseId').val()),
+                    BranchId: Number($('#BranchIdSelect').val()),
+                    Name: $('#WarehouseName').val()?.trim(),
+                    Address: $('#Address').val()?.trim(),
+                    AddressUrl: $('#AddressUrl').val()?.trim(),
+                    Latitude: convertToDecimalValue($('#Latitude').val()),
+                    Longitude: convertToDecimalValue($('#Longitude').val())
+                };
+
+                if (!dto.Name) {
+                    Swal.fire({ icon: 'warning', title: 'Thiếu thông tin', text: 'Vui lòng nhập tên kho!', confirmButtonColor: '#ff9b44' });
+                    return;
+                }
+                if (!dto.BranchId) {
+                    Swal.fire({ icon: 'warning', title: 'Thiếu thông tin', text: 'Vui lòng chọn chi nhánh!', confirmButtonColor: '#ff9b44' });
+                    return;
+                }
+
+                Swal.showLoading();
+                const url = dto.WarehouseId ? '/Warehouse/UpdateWarehouse' : '/Warehouse/CreateWarehouse';
+
+                try {
+                    const res = await $.post(url, dto);
+                    if (res.success) {
+                        $('#modalWarehouseInput').modal('hide');
+                        Swal.fire({ icon: 'success', title: 'Thành công', text: 'Dữ liệu đã được lưu', timer: 1500, showConfirmButton: false });
+                        tblWarehouses.ajax.reload(null, false);
+                    } else {
+                        Swal.fire({ icon: 'error', title: 'Lỗi', text: res.message || 'Không thể lưu dữ liệu' });
+                    }
+                } catch {
+                    Swal.fire({ icon: 'error', title: 'Lỗi hệ thống', text: 'Kết nối thất bại' });
+                }
+            });
+
+            $(document).on('click', '.btn-delete', function () {
+                const id = $(this).data('id');
+                if ($(this).hasClass('btn-delete-disabled')) {
+                    Swal.fire({ icon: 'error', title: 'Không thể xóa', text: 'Kho hàng này đang có dữ liệu nhập/xuất!', confirmButtonColor: '#3085d6' });
+                    return;
+                }
+
+                Swal.fire({
+                    title: 'Xác nhận xóa?',
+                    text: "Dữ liệu kho sẽ bị xóa vĩnh viễn!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#ff9b44',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Đồng ý',
+                    cancelButtonText: 'Hủy'
+                }).then(async (result) => {
+                    if (result.isConfirmed) {
+                        const res = await $.post('/Warehouse/DeleteWarehouse', { id: id });
+                        if (res.success) {
+                            Swal.fire({ icon: 'success', title: 'Đã xóa', timer: 1500, showConfirmButton: false });
+                            tblWarehouses.ajax.reload(null, false);
+                        } else {
+                            Swal.fire('Lỗi', res.message, 'error');
+                        }
+                    }
+                });
+            });
+
+            $('#btnSearch').on('click', () => tblWarehouses.ajax.reload());
+            $(document).on("keyup", "#txtSearch", function () {
+                clearTimeout(window.searchTimer);
+                window.searchTimer = setTimeout(() => tblWarehouses.ajax.reload(), 400);
+            });
+
+            $(document).on("change",
+                "#filterBranch",
+                function () {
+                    if (tblWarehouses) {
+                        tblWarehouses.ajax.reload();
+                    }
+                }
+            );
+        });
+
+        function resetModal() {
+            $('#WarehouseId').val(0);
+            $('#WarehouseName').val('');
+            $('#BranchIdSelect').val('');
+            $('#Address').val('');
+            $('#AddressUrl').val('');
+            $('#Latitude').val('');
+            $('#Longitude').val('');
+        }
+
+        async function loadBranches() {
+            try {
+                // SỬA Ở ĐÂY: Xử lý object trả về để lấy mảng
+                const res = await $.get('/Branch/GetAllBranch'); // URL api lấy list branch
+
+                // Kiểm tra: nếu res là mảng thì dùng res, nếu là object chứa data thì dùng res.data
+                const branches = Array.isArray(res) ? res : (res.data || res.result || []);
+
+                if (Array.isArray(branches)) {
+                    let html = '<option value="">-- Chọn chi nhánh --</option>';
+                    branches.forEach(b => {
+                        html += `<option value="${b.BranchId}">${b.Name}</option>`;
+                    });
+                    $('#BranchIdSelect').html(html);
+                    $('#filterBranch').html(html);
+                }
+            } catch (err) {
+                console.error("Lỗi load branch", err);
+            }
+        }
+    </script>
+}
+
+@section Styles {
+    <style>
+        table.dataTable td {
+            white-space: normal !important;
+            vertical-align: middle;
+        }
+
+        .btn-delete-disabled {
+            opacity: 0.4;
+            cursor: not-allowed !important;
+            pointer-events: none;
+        }
+
+    </style>
+}
