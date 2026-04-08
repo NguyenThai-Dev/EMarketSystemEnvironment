@@ -13,5 +13,12 @@
         // So sánh kỳ trước (%)
         public decimal SalesGrowthPercent { get; set; }
         public decimal PurchaseGrowthPercent { get; set; }
+
+        // BỔ SUNG: Giá trị hàng hóa thất thoát (Hết hạn)
+        public decimal InventoryLossValue { get; set; }
+
+        // Tính toán Lợi nhuận gộp và Lợi nhuận thực tế ngay 
+        public decimal GrossProfit => TotalSales - TotalPurchase;
+        public decimal ActualProfit => GrossProfit - InventoryLossValue;
     }
 }

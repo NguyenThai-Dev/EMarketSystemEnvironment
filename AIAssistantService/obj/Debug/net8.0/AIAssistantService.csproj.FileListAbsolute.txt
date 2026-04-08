@@ -105,3 +105,5 @@ D:\Bai_Tap_Cac_Mon\Nghien_Cuu_Khoa_Hoc\AIAssistantService\bin\Debug\net8.0\runti
 D:\Bai_Tap_Cac_Mon\Nghien_Cuu_Khoa_Hoc\AIAssistantService\bin\Debug\net8.0\runtimes\win\lib\net8.0\System.Diagnostics.EventLog.dll
 D:\Bai_Tap_Cac_Mon\Nghien_Cuu_Khoa_Hoc\AIAssistantService\bin\Debug\net8.0\runtimes\win\lib\net8.0\System.Security.Cryptography.Pkcs.dll
 D:\Bai_Tap_Cac_Mon\Nghien_Cuu_Khoa_Hoc\AIAssistantService\bin\Debug\net8.0\Newtonsoft.Json.dll
+D:\Bai_Tap_Cac_Mon\Nghien_Cuu_Khoa_Hoc\AIAssistantService\obj\Debug\net8.0\AIAssistantService.sourcelink.json
+D:\Bai_Tap_Cac_Mon\Nghien_Cuu_Khoa_Hoc\AIAssistantService\obj\Debug\net8.0\swae.build.ex.cache

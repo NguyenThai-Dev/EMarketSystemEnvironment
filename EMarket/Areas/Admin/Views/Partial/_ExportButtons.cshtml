@@ -1,0 +1,69 @@
+﻿@model string
+<div class="wordset">
+    <ul>
+        <li>
+            <a href="javascript:void(0);" onclick="GenericExport('@Model', 'pdf')" data-bs-toggle="tooltip" data-bs-placement="top" title="PDF / Print">
+                <img src="~/assets/img/icons/pdf.svg" alt="img" />
+            </a>
+        </li>
+        <li>
+            <a href="javascript:void(0);" onclick="GenericExport('@Model', 'excel')" data-bs-toggle="tooltip" data-bs-placement="top" title="Xuất Excel">
+                <img src="~/assets/img/icons/excel.svg" alt="img" />
+            </a>
+        </li>
+    </ul>
+</div>
+
+<script>
+    // Hàm này sẽ gom toàn bộ data của DataTable và quăng cho Controller xử lý
+    function GenericExport(tableId, exportType) {
+        var table = $('#' + tableId).DataTable();
+
+        // Lấy dữ liệu của các dòng đang được lọc trên lưới
+        var data = table.rows({ search: 'applied' }).data().toArray();
+
+        if (data.length === 0) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Thông báo',
+                text: 'Không có dữ liệu để xuất!',
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Đồng ý'
+            });
+            return;
+        }
+
+        Swal.fire({
+            title: 'Đang khởi tạo...',
+            text: 'Vui lòng chờ trong giây lát',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
+        // Tạo Form chìm để submit (Post JSON siêu dài an toàn hơn GET)
+        var form = $('<form>', {
+            action: '/Admin/Partial/Generate',
+            method: 'POST',
+            target: '_blank'
+        });
+
+        var token = $('input[name="__RequestVerificationToken"]').val();
+        if (token) {
+            form.append($('<input>', { type: 'hidden', name: '__RequestVerificationToken', value: token }));
+        }
+
+        form.append($('<input>', { type: 'hidden', name: 'type', value: exportType }));
+        form.append($('<input>', { type: 'hidden', name: 'jsonData', value: JSON.stringify(data) }));
+        form.append($('<input>', { type: 'hidden', name: 'title', value: document.title }));
+
+        $('body').append(form);
+        form.submit();
+        form.remove();
+
+        setTimeout(() => {
+            Swal.close();
+        }, 1000);
+    }
+</script>

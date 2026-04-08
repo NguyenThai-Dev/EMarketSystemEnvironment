@@ -8,8 +8,8 @@
 
         <div class="page-header d-flex flex-wrap justify-content-between align-items-center mb-4 mt-3">
             <div class="mb-2">
-                <h3 class="fw-bold text-dark">Dashboard Quản Trị</h3>
-                <span class="text-muted">Xin chào, đây là tổng quan hoạt động chuỗi siêu thị của bạn.</span>
+                <h3 class="fw-bold text-dark">Dashboard Quản Trị Trung Tâm</h3>
+                <span class="text-muted">Báo cáo hiệu quả kinh doanh & kiểm soát rủi ro toàn chuỗi.</span>
             </div>
 
             <div style="min-width: 250px;">
@@ -29,43 +29,33 @@
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <span class="text-label">Tổng doanh thu</span>
-                                <h3 id="spTotalSales" class="h3-counter mt-2">0</h3>
-                            </div>
-                            <div class="icon-shape bg-light-success">
-                                <i class="fas fa-dollar-sign"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-xl-3 col-md-6">
-                <div class="card card-hover">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <span class="text-label">Tổng nhập hàng</span>
-                                <h3 id="spTotalPurchase" class="h3-counter mt-2">0</h3>
+                                <h3 id="spTotalSales" class="h3-counter mt-2 text-dark">0</h3>
                             </div>
                             <div class="icon-shape bg-light-primary">
-                                <i class="fas fa-truck-loading"></i>
+                                <i class="fas fa-wallet"></i>
                             </div>
+                        </div>
+                        <div class="mt-3 text-muted small">
+                            <span class="fw-bold">Tiền hàng nhập:</span> <span id="spTotalPurchase" class="text-dark">0</span> đ
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="col-xl-3 col-md-6">
-                <div class="card card-hover">
+                <div class="card card-hover border-start border-4 border-success">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <span class="text-label">Đơn hàng bán</span>
-                                <h3 id="spTotalOrders" class="h3-counter mt-2">0</h3>
+                                <span class="text-label text-success">Lợi nhuận thực tế</span>
+                                <h3 id="spActualProfit" class="h3-counter mt-2 text-success">0</h3>
                             </div>
-                            <div class="icon-shape bg-light-info">
-                                <i class="fas fa-shopping-bag"></i>
+                            <div class="icon-shape bg-light-success">
+                                <i class="fas fa-hand-holding-usd"></i>
                             </div>
+                        </div>
+                        <div class="mt-3 text-muted small">
+                            <span class="fw-bold">Lãi gộp:</span> <span id="spGrossProfit" class="text-dark">0</span> đ
                         </div>
                     </div>
                 </div>
@@ -76,12 +66,34 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <span class="text-label text-danger">Sắp hết hàng</span>
-                                <h3 id="spLowStock" class="h3-counter mt-2 text-danger">0</h3>
+                                <span class="text-label text-danger">Thất thoát (Hết hạn)</span>
+                                <h3 id="spInventoryLoss" class="h3-counter mt-2 text-danger">0</h3>
                             </div>
                             <div class="icon-shape bg-light-danger">
-                                <i class="fas fa-exclamation-triangle"></i>
+                                <i class="fas fa-trash-alt"></i>
                             </div>
+                        </div>
+                        <div class="mt-3 text-muted small">
+                            <span class="fw-bold">Chiếm:</span> <span id="spLossRate" class="text-danger fw-bold">0</span>% Lãi gộp
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6">
+                <div class="card card-hover border-start border-4 border-warning">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-label text-warning">Mã sắp hết hàng</span>
+                                <h3 id="spLowStock" class="h3-counter mt-2 text-warning">0</h3>
+                            </div>
+                            <div class="icon-shape" style="background-color: rgba(255, 193, 7, 0.15); color: #ffc107;">
+                                <i class="fas fa-boxes"></i>
+                            </div>
+                        </div>
+                        <div class="mt-3 text-muted small">
+                            <span class="fw-bold">Tổng tồn:</span> <span id="spTotalInventory" class="text-dark">0</span> đ/vị
                         </div>
                     </div>
                 </div>
@@ -111,12 +123,9 @@
                                 <thead class="bg-light">
                                     <tr>
                                         <th class="ps-4">Chi nhánh</th>
-
                                         <th class="text-end">Doanh thu</th>
-
                                         <th class="text-end">Nhập hàng</th>
-
-                                        <th class="text-end">Tồn kho</th>
+                                        <th class="text-center">Cảnh báo</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -133,7 +142,7 @@
                 <div class="card">
                     <div class="card-header bg-white border-0 pt-4 pb-0">
                         <div class="d-flex flex-wrap justify-content-between align-items-center">
-                            <h5 class="card-title fw-bold mb-2">Biểu đồ doanh thu & Nhập hàng</h5>
+                            <h5 class="card-title fw-bold mb-2">Biểu đồ Doanh thu & Nhập hàng</h5>
 
                             <div class="d-flex gap-2 align-items-center flex-wrap">
                                 <div style="width: 200px;">
@@ -178,9 +187,7 @@
 
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/countup.js@2.6.0/dist/countUp.umd.js"></script>
     <script>
         let tblBranch;
@@ -191,25 +198,18 @@
 
         $(async function () {
             await getCurrentUserBranch();
-
             await loadBranches();
-
             initEmptyTable();
-
             refreshAllData();
 
             // --- EVENTS ---
             $('#BranchFilter, #TimeRange').on('change', function () {
-                // Hiện/Ẩn custom date nếu chọn custom
                 $('#CustomDateRange').toggleClass('d-none', $('#TimeRange').val() !== 'custom');
-
-                // Nếu không phải custom, load luôn. Nếu custom, đợi bấm nút hoặc chọn ngày xong mới load
                 if ($('#TimeRange').val() !== 'custom') {
                     refreshAllData();
                 }
             });
 
-            // Chỉ load khi chọn đủ ngày ở chế độ Custom
             $('#FromDate, #ToDate').on('change', function () {
                 if ($('#TimeRange').val() === 'custom' && $('#FromDate').val() && $('#ToDate').val()) {
                     refreshAllData();
@@ -219,17 +219,9 @@
 
         async function getCurrentUserBranch() {
             try {
-                const resp = await $.ajax({
-                    url: '/Admin/Login/GetCurrentUser',
-                    type: 'GET'
-                });
-
-                if (resp.success) {
-                    currentUserBranchId = resp.data.BranchId;
-                }
-            } catch (error) {
-                console.error("Lỗi khi lấy thông tin user:", error);
-            }
+                const resp = await $.ajax({ url: '/Admin/Login/GetCurrentUser', type: 'GET' });
+                if (resp.success) { currentUserBranchId = resp.data.BranchId; }
+            } catch (error) { console.error("Lỗi khi lấy thông tin user:", error); }
         }
 
         // --- MAIN FUNCTION: GỘP REQUEST ---
@@ -237,316 +229,119 @@
             const branchId = $('#BranchFilter').val();
             const range = resolveDateRange();
 
-            // 1. Bật trạng thái Loading (Skeleton)
             toggleLoadingState(true);
 
-            // 2. Gọi song song 3 API cùng lúc (Thay vì chờ từng cái)
-            // Dùng Promise.all giúp giảm thời gian chờ tổng thể
             try {
                 const [overviewData, stockData, branchData] = await Promise.all([
-                    // Request 1: Tổng quan KPI + Biểu đồ Trend (Nặng nhất)
-                    $.get('/Admin/Admin/Overview', {
-                        branchId, fromDate: range.fromDate, toDate: range.toDate, groupBy: range.groupBy
-                    }),
-
-                    // Request 2: Biểu đồ tồn kho
+                    $.get('/Admin/Admin/Overview', { branchId, fromDate: range.fromDate, toDate: range.toDate, groupBy: range.groupBy }),
                     $.get('/Admin/Admin/GetStockChart', { branchId }),
-
-                    // Request 3: Table Performance (Load lại data cho bảng)
-                    $.get('/Admin/Admin/GetBranchPerformance', {
-                        branchId, fromDate: range.fromDate, toDate: range.toDate
-                    }) // API này có thể cần param branchId nếu logic BE yêu cầu
+                    $.get('/Admin/Admin/GetBranchPerformance', { branchId, fromDate: range.fromDate, toDate: range.toDate })
                 ]);
 
-                // 3. Render dữ liệu khi có kết quả
                 renderKPI(overviewData.Summary);
                 renderSalesChart(overviewData.Trend);
                 renderStockChart(stockData);
-                renderBranchTable(branchData); // Reload bảng bằng JS thuần thay vì Ajax của Datatable để đồng bộ
+                renderBranchTable(branchData);
 
             } catch (err) {
                 console.error("Lỗi tải dashboard:", err);
-                // Có thể hiện Toast báo lỗi ở đây
             } finally {
-                // 4. Tắt loading
                 toggleLoadingState(false);
             }
         }
 
         // --- RENDER FUNCTIONS ---
-
         function toggleLoadingState(isLoading) {
             if (isLoading) {
-                // Thêm class skeleton vào các số liệu KPI
-                $('#spTotalSales, #spTotalPurchase, #spTotalOrders, #spLowStock').addClass('skeleton').text('');
-                // Làm mờ biểu đồ
+                $('#spTotalSales, #spActualProfit, #spInventoryLoss, #spLowStock').addClass('skeleton').text('');
                 $('canvas').addClass('chart-loading');
             } else {
-                $('#spTotalSales, #spTotalPurchase, #spTotalOrders, #spLowStock').removeClass('skeleton');
+                $('#spTotalSales, #spActualProfit, #spInventoryLoss, #spLowStock').removeClass('skeleton');
                 $('canvas').removeClass('chart-loading');
             }
         }
 
         function renderKPI(summary) {
-            // Hàm chạy số (Count Up Animation)
+            // Animation cho các số lớn
             animateValue("spTotalSales", summary.TotalSales);
-            animateValue("spTotalPurchase", summary.TotalPurchase);
-            animateValue("spTotalOrders", summary.TotalOrders);
+            animateValue("spActualProfit", summary.ActualProfit);
+            animateValue("spInventoryLoss", summary.InventoryLossValue);
             animateValue("spLowStock", summary.LowStockProducts);
+
+            // Set text cho các chỉ số phụ (Sub-metrics)
+            $('#spTotalPurchase').text(summary.TotalPurchase.toLocaleString());
+            $('#spGrossProfit').text(summary.GrossProfit.toLocaleString());
+            $('#spTotalInventory').text(summary.TotalInventoryQuantity.toLocaleString());
+
+            // Tính % thất thoát so với lãi gộp
+            const lossRate = summary.GrossProfit > 0
+                ? ((summary.InventoryLossValue / summary.GrossProfit) * 100).toFixed(1)
+                : 0;
+            $('#spLossRate').text(lossRate);
         }
 
-        // Hàm tạo hiệu ứng số chạy
         function animateValue(id, value) {
             const element = document.getElementById(id);
             if (!element) return;
 
-            // Sử dụng countUp từ biến toàn cục của thư viện
-            const options = {
-                startVal: 0,
-                duration: 1.5,      // Thời gian chạy (giây)
-                separator: ',',     // Phân cách hàng nghìn
-                decimal: '.'
-            };
-
-            // Khởi tạo CountUp: (id_phần_tử, giá_trị_đích, options)
+            const options = { startVal: 0, duration: 1.5, separator: ',', decimal: '.' };
             let demo = new countUp.CountUp(id, value, options);
 
             if (!demo.error) {
                 demo.start();
             } else {
-                console.error(demo.error);
-                // Nếu lỗi thư viện thì hiện số thuần túy để không mất data
                 $(element).text(value.toLocaleString());
             }
         }
 
+        // [Các hàm renderSalesChart, renderStockChart, initEmptyTable, renderBranchTable, loadBranches, resolveDateRange
+        // ĐƯỢC GIỮ NGUYÊN HOÀN TOÀN NHƯ CODE CŨ CỦA BRO]
+
         function renderSalesChart(trendData) {
             const options = {
                 series: [
-                    {
-                        name: 'Doanh thu',
-                        data: trendData.Sales // Mảng dữ liệu doanh số
-                    },
-                    {
-                        name: 'Nhập hàng',
-                        data: trendData.Purchases // Mảng dữ liệu nhập hàng
-                    }
+                    { name: 'Doanh thu', data: trendData.Sales },
+                    { name: 'Nhập hàng', data: trendData.Purchases }
                 ],
-                chart: {
-                    height: 350,
-                    type: 'area', // Dùng area để có hiệu ứng đổ màu phía dưới
-                    toolbar: {
-                        show: true // Hiện nút download, zoom
-                    },
-                    zoom: {
-                        enabled: true
-                    }
-                },
-                colors: ['#28c76f', '#7367f0'], // Màu xanh lá và màu tím
-                dataLabels: {
-                    enabled: false
-                },
-                stroke: {
-                    curve: 'smooth', // Làm mượt đường kẻ (tương đương tension: 0.4)
-                    width: [3, 3],
-                    dashArray: [0, 5] // Series 1 nét liền, Series 2 nét đứt [5, 5]
-                },
-                fill: {
-                    type: 'gradient',
-                    gradient: {
-                        shadeIntensity: 1,
-                        opacityFrom: 0.4,
-                        opacityTo: 0.1,
-                        stops: [0, 90, 100]
-                    }
-                },
-                xaxis: {
-                    categories: trendData.Labels,
-                    axisBorder: { show: false },
-                    axisTicks: { show: false }
-                },
-                yaxis: {
-                    labels: {
-                        formatter: function (val) {
-                            return val.toLocaleString() + ' đ'; // Định dạng tiền Việt
-                        }
-                    }
-                },
-                tooltip: {
-                    shared: true,
-                    intersect: false,
-                    y: {
-                        formatter: function (val) {
-                            return val.toLocaleString() + ' VNĐ';
-                        }
-                    }
-                },
-                legend: {
-                    position: 'top',
-                    horizontalAlign: 'right'
-                }
+                chart: { height: 350, type: 'area', toolbar: { show: true }, zoom: { enabled: true } },
+                colors: ['#28c76f', '#7367f0'],
+                dataLabels: { enabled: false },
+                stroke: { curve: 'smooth', width: [3, 3], dashArray: [0, 5] },
+                fill: { type: 'gradient', gradient: { shadeIntensity: 1, opacityFrom: 0.4, opacityTo: 0.1, stops: [0, 90, 100] } },
+                xaxis: { categories: trendData.Labels, axisBorder: { show: false }, axisTicks: { show: false } },
+                yaxis: { labels: { formatter: function (val) { return val.toLocaleString() + ' đ'; } } },
+                tooltip: { shared: true, intersect: false, y: { formatter: function (val) { return val.toLocaleString() + ' VNĐ'; } } },
+                legend: { position: 'top', horizontalAlign: 'right' }
             };
 
-            // Kiểm tra nếu biểu đồ đã tồn tại thì hủy hoặc cập nhật
-            if (salesChartInstance) {
-                salesChartInstance.destroy();
-            }
-
-            // Khởi tạo mới
+            if (salesChartInstance) { salesChartInstance.destroy(); }
             salesChartInstance = new ApexCharts(document.querySelector("#salesChart"), options);
             salesChartInstance.render();
         }
 
         function renderStockChart(data) {
-            const labels = data.map(x => x.Label);
-            const values = data.map(x => x.Value);
-
-            var options = {
+            const options = {
                 series: [
-                    {
-                        name: 'Số lượng tồn',
-                        type: 'column',
-                        data: data.map(x => x.Value)
-                    },
-                    {
-                        name: 'Giá trị tồn kho',
-                        type: 'line',
-                        data: data.map(x => x.ExtraValue)
-                    }
+                    { name: 'Số lượng tồn', type: 'column', data: data.map(x => x.Value) },
+                    { name: 'Giá trị tồn kho', type: 'line', data: data.map(x => x.ExtraValue) }
                 ],
-
-                chart: {
-                    height: 340,
-                    type: 'line',
-                    stacked: false,
-                    toolbar: { show: false },
-                    zoom: { enabled: false },
-                    animations: {
-                        enabled: true,
-                        easing: 'easeinout',
-                        speed: 700
-                    }
-                },
-
-                // Màu dịu – không gắt
+                chart: { height: 340, type: 'line', stacked: false, toolbar: { show: false }, zoom: { enabled: false }, animations: { enabled: true, easing: 'easeinout', speed: 700 } },
                 colors: ['#0dcaf0', '#fd7e14'],
-
-                stroke: {
-                    width: [0, 5],
-                    curve: 'smooth', // chỉ smooth line → tạo cảm giác mềm
-                    lineCap: 'round'
-                },
-
-                plotOptions: {
-                    bar: {
-                        columnWidth: '42%',
-                        borderRadius: 6
-                    }
-                },
-
-                fill: {
-                    type: ['solid', 'gradient'],
-                    gradient: {
-                        shade: 'light',
-                        type: 'vertical',
-                        opacityFrom: 0.7,
-                        opacityTo: 0.2,
-                        stops: [0, 100]
-                    }
-                },
-
-                markers: {
-                    size: 4,
-                    strokeWidth: 2,
-                    strokeColors: '#fff',
-                    hover: { size: 6 }
-                },
-
-                xaxis: {
-                    categories: data.map(x => x.Label),
-                    labels: {
-                        rotate: -30,
-                        style: {
-                            fontSize: '12px',
-                            colors: '#6c757d'
-                        }
-                    },
-                    axisBorder: { show: false },
-                    axisTicks: { show: false }
-                },
-
+                stroke: { width: [0, 5], curve: 'smooth', lineCap: 'round' },
+                plotOptions: { bar: { columnWidth: '42%', borderRadius: 6 } },
+                fill: { type: ['solid', 'gradient'], gradient: { shade: 'light', type: 'vertical', opacityFrom: 0.7, opacityTo: 0.2, stops: [0, 100] } },
+                markers: { size: 4, strokeWidth: 2, strokeColors: '#fff', hover: { size: 6 } },
+                xaxis: { categories: data.map(x => x.Label), labels: { rotate: -30, style: { fontSize: '12px', colors: '#6c757d' } }, axisBorder: { show: false }, axisTicks: { show: false } },
                 yaxis: [
-                    {
-                        title: {
-                            text: 'Số lượng (cái)',
-                            style: {
-                                color: '#74c0fc',
-                                fontWeight: 600
-                            }
-                        },
-                        labels: {
-                            formatter: v => v.toLocaleString(),
-                            style: { colors: '#6c757d' }
-                        }
-                    },
-                    {
-                        opposite: true,
-                        title: {
-                            text: 'Giá trị tồn kho',
-                            style: {
-                                color: '#ff922b',
-                                fontWeight: 600
-                            }
-                        },
-                        labels: {
-                            formatter: v => (v / 1_000_000).toFixed(1) + ' M',
-                            style: { colors: '#6c757d' }
-                        }
-                    }
+                    { title: { text: 'Số lượng (cái)', style: { color: '#74c0fc', fontWeight: 600 } }, labels: { formatter: v => v.toLocaleString(), style: { colors: '#6c757d' } } },
+                    { opposite: true, title: { text: 'Giá trị tồn kho', style: { color: '#ff922b', fontWeight: 600 } }, labels: { formatter: v => (v / 1_000_000).toFixed(1) + ' M', style: { colors: '#6c757d' } } }
                 ],
-
-                tooltip: {
-                    shared: true,
-                    intersect: false,
-                    x: {
-                        show: true
-                    },
-                    y: [
-                        {
-                            formatter: v => v.toLocaleString() + ' cái'
-                        },
-                        {
-                            formatter: v => v.toLocaleString() + ' VNĐ'
-                        }
-                    ]
-                },
-
-                legend: {
-                    position: 'top',
-                    horizontalAlign: 'right',
-                    fontSize: '13px',
-                    markers: {
-                        width: 10,
-                        height: 10,
-                        radius: 3
-                    }
-                },
-
-                grid: {
-                    borderColor: '#f1f3f5',
-                    strokeDashArray: 4,
-                    padding: {
-                        left: 10,
-                        right: 10
-                    }
-                }
+                tooltip: { shared: true, intersect: false, x: { show: true }, y: [{ formatter: v => v.toLocaleString() + ' cái' }, { formatter: v => v.toLocaleString() + ' VNĐ' }] },
+                legend: { position: 'top', horizontalAlign: 'right', fontSize: '13px', markers: { width: 10, height: 10, radius: 3 } },
+                grid: { borderColor: '#f1f3f5', strokeDashArray: 4, padding: { left: 10, right: 10 } }
             };
 
-
-            if (stockChartInstance) {
-                stockChartInstance.destroy();
-            }
-
+            if (stockChartInstance) { stockChartInstance.destroy(); }
             stockChartInstance = new ApexCharts(document.querySelector("#stockChart"), options);
             stockChartInstance.render();
         }
@@ -559,11 +354,9 @@
                     { data: 'SalesAmount', render: $.fn.dataTable.render.number(',', '.', 0) },
                     { data: 'PurchaseAmount', render: $.fn.dataTable.render.number(',', '.', 0) },
                     {
-                        data: 'LowStockCount',
+                        data: 'LowStockCount', className: 'text-center',
                         render: function (d) {
-                            return d > 0
-                                ? `<span class="badge badge-soft-danger"><i class="fas fa-exclamation-circle"></i> ${d}</span>`
-                                : `<span class="badge badge-soft-success">OK</span>`;
+                            return d > 0 ? `<span class="badge badge-soft-danger"><i class="fas fa-exclamation-circle"></i> ${d}</span>` : `<span class="badge badge-soft-success">OK</span>`;
                         }
                     }
                 ]
@@ -571,24 +364,19 @@
         }
 
         function renderBranchTable(data) {
-            // Clear data cũ và add data mới (Không gọi Ajax nữa)
             tblBranch.clear();
-            // Kiểm tra data trả về có đúng định dạng mảng không
             const list = Array.isArray(data) ? data : (data.data || []);
             tblBranch.rows.add(list).draw();
         }
 
-        // --- HELPER FUNCTIONS ---
         async function loadBranches() {
             try {
                 const res = await $.get('/Branch/GetAllBranch');
                 const branches = Array.isArray(res) ? res : (res.data || []);
                 let html = '<option value="">-- Tất cả chi nhánh --</option>';
-                branches.forEach(b => html += `<option value="${b.BranchId}">${b.Name}</option>`);               
+                branches.forEach(b => html += `<option value="${b.BranchId}">${b.Name}</option>`);
                 $('#BranchFilter').html(html);
-                if (currentUserBranchId != 0) {
-                    $('#BranchFilter').val(currentUserBranchId);
-                }
+                if (currentUserBranchId != 0) { $('#BranchFilter').val(currentUserBranchId); }
             } catch (e) { console.error(e); }
         }
 
@@ -598,10 +386,8 @@
             let fromDate, toDate;
 
             if (range === 'custom') {
-                fromDate = dayjs($('#FromDate').val());
-                toDate = dayjs($('#ToDate').val());
+                fromDate = dayjs($('#FromDate').val()); toDate = dayjs($('#ToDate').val());
             } else {
-                // Logic tính ngày như cũ của bạn
                 switch (range) {
                     case 'today': fromDate = today; toDate = today; break;
                     case 'yesterday': fromDate = today.subtract(1, 'day'); toDate = fromDate; break;
@@ -624,147 +410,26 @@
     </script>
 }
 
-
 @section Styles {
     <style>
-        /* Làm nền sáng hơn chút */
-        body {
-            background-color: #f8f9fa;
-        }
-
-        /* Card đẹp hơn: Bo góc, bóng mờ, bỏ viền cứng */
-        .card {
-            border: none;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px 0 rgba(0,0,0,0.05);
-            transition: all 0.3s ease;
-            margin-bottom: 24px;
-        }
-
-        /* Hiệu ứng nhấc lên khi hover vào KPI */
-        .card-hover:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px 0 rgba(0,0,0,0.1);
-        }
-
-        /* Icon tròn trong thẻ KPI */
-        .icon-shape {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-        }
-
-        /* Màu nền nhạt cho icon */
-        .bg-light-success {
-            background-color: rgba(40, 199, 111, 0.15);
-            color: #28c76f;
-        }
-
-        .bg-light-primary {
-            background-color: rgba(115, 103, 240, 0.15);
-            color: #7367f0;
-        }
-
-        .bg-light-info {
-            background-color: rgba(0, 207, 232, 0.15);
-            color: #00cfe8;
-        }
-
-        .bg-light-danger {
-            background-color: rgba(234, 84, 85, 0.15);
-            color: #ea5455;
-        }
-
-        /* Typography */
-        .text-label {
-            font-size: 0.85rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: #6c757d;
-        }
-
-        .h3-counter {
-            font-size: 1.75rem;
-            font-weight: 700;
-            margin-bottom: 0;
-            color: #343a40;
-        }
-
-        /* Table */
-        .table thead th {
-            border-top: none;
-            border-bottom: 2px solid #e9ecef;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            color: #6c757d;
-            font-weight: 600;
-        }
-
-        .table td {
-            vertical-align: middle;
-        }
-
-        /* Badge nền nhạt, chữ đậm */
-        .badge-soft-success {
-            background-color: rgba(40, 199, 111, 0.12) !important; /* Màu xanh lá nhạt */
-            color: #28c76f !important; /* Chữ xanh lá đậm */
-        }
-
-        .badge-soft-danger {
-            background-color: rgba(234, 84, 85, 0.12) !important; /* Màu đỏ nhạt */
-            color: #ea5455 !important; /* Chữ đỏ đậm */
-        }
-
-        /* Thêm chút padding cho thoáng */
-        .badge-pill {
-            padding: 0.35em 0.8em;
-            border-radius: 50rem; /* Bo tròn 2 đầu */
-            font-weight: 600;
-            font-size: 0.8rem;
-        }
-
-        /* Hiệu ứng Skeleton Loading */
-        .skeleton {
-            background: #e1e4e8;
-            color: transparent !important;
-            border-radius: 4px;
-            position: relative;
-            overflow: hidden;
-            display: inline-block;
-            width: 100%;
-            min-height: 20px;
-        }
-
-            /* Hiệu ứng sóng ánh sáng chạy qua */
-            .skeleton::after {
-                position: absolute;
-                top: 0;
-                right: 0;
-                bottom: 0;
-                left: 0;
-                transform: translateX(-100%);
-                background-image: linear-gradient( 90deg, rgba(255, 255, 255, 0) 0, rgba(255, 255, 255, 0.2) 20%, rgba(255, 255, 255, 0.5) 60%, rgba(255, 255, 255, 0) );
-                animation: shimmer 2s infinite;
-                content: '';
-            }
-
-        @@keyframes shimmer {
-            100% {
-                transform: translateX(100%);
-            }
-        }
-
-        /* Class để làm mờ biểu đồ khi đang load */
-        .chart-loading {
-            opacity: 0.5;
-            pointer-events: none;
-            filter: blur(2px);
-            transition: all 0.3s;
-        }
+        body { background-color: #f8f9fa; }
+        .card { border: none; border-radius: 12px; box-shadow: 0 4px 20px 0 rgba(0,0,0,0.05); transition: all 0.3s ease; margin-bottom: 24px; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 8px 25px 0 rgba(0,0,0,0.1); }
+        .icon-shape { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+        .bg-light-success { background-color: rgba(40, 199, 111, 0.15); color: #28c76f; }
+        .bg-light-primary { background-color: rgba(115, 103, 240, 0.15); color: #7367f0; }
+        .bg-light-info { background-color: rgba(0, 207, 232, 0.15); color: #00cfe8; }
+        .bg-light-danger { background-color: rgba(234, 84, 85, 0.15); color: #ea5455; }
+        .text-label { font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: #6c757d; }
+        .h3-counter { font-size: 1.75rem; font-weight: 700; margin-bottom: 0; }
+        .table thead th { border-top: none; border-bottom: 2px solid #e9ecef; font-size: 0.85rem; text-transform: uppercase; color: #6c757d; font-weight: 600; }
+        .table td { vertical-align: middle; }
+        .badge-soft-success { background-color: rgba(40, 199, 111, 0.12) !important; color: #28c76f !important; }
+        .badge-soft-danger { background-color: rgba(234, 84, 85, 0.12) !important; color: #ea5455 !important; }
+        .badge-pill { padding: 0.35em 0.8em; border-radius: 50rem; font-weight: 600; font-size: 0.8rem; }
+        .skeleton { background: #e1e4e8; color: transparent !important; border-radius: 4px; position: relative; overflow: hidden; display: inline-block; width: 100%; min-height: 20px; }
+        .skeleton::after { position: absolute; top: 0; right: 0; bottom: 0; left: 0; transform: translateX(-100%); background-image: linear-gradient( 90deg, rgba(255, 255, 255, 0) 0, rgba(255, 255, 255, 0.2) 20%, rgba(255, 255, 255, 0.5) 60%, rgba(255, 255, 255, 0) ); animation: shimmer 2s infinite; content: ''; }
+        @@keyframes shimmer { 100% { transform: translateX(100%); } }
+        .chart-loading { opacity: 0.5; pointer-events: none; filter: blur(2px); transition: all 0.3s; }
     </style>
 }

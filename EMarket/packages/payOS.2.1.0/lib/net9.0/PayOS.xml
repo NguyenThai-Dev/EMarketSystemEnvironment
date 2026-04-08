@@ -1,0 +1,1070 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>PayOS</name>
+    </assembly>
+    <members>
+        <member name="T:PayOS.Crypto.CryptoSignatureOptions">
+            <summary>
+            Signature options for customizing HMAC signature generation
+            </summary>
+        </member>
+        <member name="P:PayOS.Crypto.CryptoSignatureOptions.EncodeUri">
+            <summary>
+            Whether to URL encode the query string parameters (default: true)
+            </summary>
+        </member>
+        <member name="P:PayOS.Crypto.CryptoSignatureOptions.SortArrays">
+            <summary>
+            Whether to sort arrays in the data (default: false)
+            </summary>
+        </member>
+        <member name="P:PayOS.Crypto.CryptoSignatureOptions.Algorithm">
+            <summary>
+            HMAC algorithm to use (default: SHA256)
+            </summary>
+        </member>
+        <member name="T:PayOS.Crypto.CryptoProvider">
+            <summary>
+            Default implementation of crypto provider
+            </summary>
+        </member>
+        <member name="M:PayOS.Crypto.CryptoProvider.CreateSignatureFromObject(System.Object,System.String)">
+            <summary>
+            Create HMAC signature from object data (for 'body' signature type)
+            </summary>
+            <param name="data">The data object to sign</param>
+            <param name="key">The secret key for HMAC generation</param>
+            <returns>The signature or null if input is invalid</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown when data is null</exception>
+            <exception cref="T:System.ArgumentException">Thrown when key is null or empty</exception>
+        </member>
+        <member name="M:PayOS.Crypto.CryptoProvider.CreateSignatureOfPaymentRequest(System.Object,System.String)">
+            <summary>
+            Create HMAC signature for payment request using specific fields (for 'create-payment-link' signature type)
+            </summary>
+            <param name="data">The payment request data containing required fields</param>
+            <param name="key">The secret key for HMAC generation</param>
+            <returns>The signature or null if input is invalid</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown when data is null</exception>
+            <exception cref="T:System.ArgumentException">Thrown when key is invalid or required fields are missing</exception>
+        </member>
+        <member name="M:PayOS.Crypto.CryptoProvider.CreateSignature(System.String,System.Object,PayOS.Crypto.CryptoSignatureOptions)">
+            <summary>
+            Create HMAC signature from JSON data (for 'header' signature type)
+            </summary>
+            <param name="secretKey">Secret key for HMAC signature generation</param>
+            <param name="jsonData">JSON object data to be signed</param>
+            <param name="options">Configuration options for signature generation</param>
+            <returns>HMAC signature in hexadecimal format</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown when secretKey or jsonData is null</exception>
+            <exception cref="T:System.ArgumentException">Thrown when secretKey is empty</exception>
+        </member>
+        <member name="M:PayOS.Crypto.CryptoProvider.CreateUuidv4">
+            <summary>
+            Generate a UUID v4
+            </summary>
+        </member>
+        <member name="M:PayOS.Crypto.CryptoProvider.CreateHmac(System.String,System.String,System.String)">
+            <summary>
+            Create HMAC signature using specified algorithm
+            </summary>
+            <param name="algorithm">The HMAC algorithm to use</param>
+            <param name="key">The secret key</param>
+            <param name="data">The data to sign</param>
+            <returns>HMAC signature in hexadecimal format</returns>
+            <exception cref="T:System.ArgumentException">Thrown when algorithm, key, or data is invalid</exception>
+            <exception cref="T:System.NotSupportedException">Thrown when algorithm is not supported</exception>
+        </member>
+        <member name="M:PayOS.Crypto.CryptoProvider.ConvertToSortedQueryString(System.Object,System.Boolean)">
+            <summary>
+            Convert object to sorted query string format (for backward compatibility)
+            </summary>
+            <param name="data">The data object to convert</param>
+            <param name="encodeUri">Whether to URL encode the parameters</param>
+            <returns>Query string representation of the data</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown when data is null</exception>
+        </member>
+        <member name="M:PayOS.Crypto.CryptoProvider.ConvertToAdvancedQueryString(System.Object,PayOS.Crypto.CryptoSignatureOptions)">
+            <summary>
+            Convert object to query string with advanced options
+            </summary>
+            <param name="data">The data object to convert</param>
+            <param name="options">Configuration options for conversion</param>
+            <returns>Query string representation of the data</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown when data or options is null</exception>
+        </member>
+        <member name="M:PayOS.Crypto.CryptoProvider.DeepSortObject(System.Text.Json.JsonElement,System.Boolean)">
+            <summary>
+            Deep sort object
+            </summary>
+        </member>
+        <member name="M:PayOS.Crypto.CryptoProvider.ConvertJsonElementToObject(System.Text.Json.JsonElement,System.Boolean)">
+            <summary>
+            Convert JsonElement to appropriate object type
+            </summary>
+        </member>
+        <member name="M:PayOS.Crypto.CryptoProvider.SortArrayElements(System.Text.Json.JsonElement)">
+            <summary>
+            Sort array elements
+            </summary>
+        </member>
+        <member name="M:PayOS.Crypto.CryptoProvider.FlattenJsonElement(System.Text.Json.JsonElement,System.String,System.Collections.Generic.SortedDictionary{System.String,System.String})">
+            <summary>
+            Recursively flatten JSON element into key-value pairs (for backward compatibility)
+            </summary>
+        </member>
+        <member name="M:PayOS.Crypto.CryptoProvider.SortJsonObject(System.Text.Json.JsonElement)">
+            <summary>
+            Sort JSON object properties alphabetically
+            </summary>
+        </member>
+        <member name="M:PayOS.Crypto.CryptoProvider.ConvertJsonElementToValue(System.Text.Json.JsonElement)">
+            <summary>
+            Convert JsonElement to appropriate value type
+            </summary>
+        </member>
+        <member name="T:PayOS.Exceptions.PayOSException">
+            <summary>
+            Base exception class for all PayOS-related errors
+            </summary>
+        </member>
+        <member name="T:PayOS.Exceptions.ApiException">
+            <summary>
+            Exception thrown when API requests fail
+            </summary>
+        </member>
+        <member name="T:PayOS.Exceptions.UserAbortException">
+            <summary>
+            Exception thrown when request is aborted by user
+            </summary>
+        </member>
+        <member name="M:PayOS.Exceptions.UserAbortException.#ctor(System.String)">
+            <summary>
+            Exception thrown when request is aborted by user
+            </summary>
+        </member>
+        <member name="T:PayOS.Exceptions.ConnectionException">
+            <summary>
+            Exception thrown when connection fails
+            </summary>
+        </member>
+        <member name="T:PayOS.Exceptions.ConnectionTimeoutException">
+            <summary>
+            Exception thrown when request times out
+            </summary>
+        </member>
+        <member name="M:PayOS.Exceptions.ConnectionTimeoutException.#ctor(System.String)">
+            <summary>
+            Exception thrown when request times out
+            </summary>
+        </member>
+        <member name="T:PayOS.Exceptions.BadRequestException">
+            <summary>
+            Exception thrown for 400 Bad Request responses
+            </summary>
+        </member>
+        <member name="M:PayOS.Exceptions.BadRequestException.#ctor(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.Object})">
+            <summary>
+            Exception thrown for 400 Bad Request responses
+            </summary>
+        </member>
+        <member name="T:PayOS.Exceptions.UnauthorizedException">
+            <summary>
+            Exception thrown for 401 Unauthorized responses
+            </summary>
+        </member>
+        <member name="M:PayOS.Exceptions.UnauthorizedException.#ctor(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.Object})">
+            <summary>
+            Exception thrown for 401 Unauthorized responses
+            </summary>
+        </member>
+        <member name="T:PayOS.Exceptions.ForbiddenException">
+            <summary>
+            Exception thrown for 403 Forbidden responses
+            </summary>
+        </member>
+        <member name="M:PayOS.Exceptions.ForbiddenException.#ctor(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.Object})">
+            <summary>
+            Exception thrown for 403 Forbidden responses
+            </summary>
+        </member>
+        <member name="T:PayOS.Exceptions.NotFoundException">
+            <summary>
+            Exception thrown for 404 Not Found responses
+            </summary>
+        </member>
+        <member name="M:PayOS.Exceptions.NotFoundException.#ctor(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.Object})">
+            <summary>
+            Exception thrown for 404 Not Found responses
+            </summary>
+        </member>
+        <member name="T:PayOS.Exceptions.TooManyRequestsException">
+            <summary>
+            Exception thrown for 429 Too Many Requests responses
+            </summary>
+        </member>
+        <member name="M:PayOS.Exceptions.TooManyRequestsException.#ctor(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.Object})">
+            <summary>
+            Exception thrown for 429 Too Many Requests responses
+            </summary>
+        </member>
+        <member name="T:PayOS.Exceptions.InternalServerErrorException">
+            <summary>
+            Exception thrown for 5xx Internal Server Error responses
+            </summary>
+        </member>
+        <member name="M:PayOS.Exceptions.InternalServerErrorException.#ctor(System.Int32,System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.Object})">
+            <summary>
+            Exception thrown for 5xx Internal Server Error responses
+            </summary>
+        </member>
+        <member name="T:PayOS.Exceptions.InvalidSignatureException">
+            <summary>
+            Exception thrown when signature validation fails
+            </summary>
+        </member>
+        <member name="M:PayOS.Exceptions.InvalidSignatureException.#ctor(System.String)">
+            <summary>
+            Exception thrown when signature validation fails
+            </summary>
+        </member>
+        <member name="T:PayOS.Exceptions.WebhookException">
+            <summary>
+            Exception thrown when webhook operations fail
+            </summary>
+        </member>
+        <member name="M:PayOS.Exceptions.WebhookException.#ctor(System.String)">
+            <summary>
+            Exception thrown when webhook operations fail
+            </summary>
+        </member>
+        <member name="T:PayOS.Internal.Logger">
+            <summary>
+            Simple console logger implementation for PayOS when no external logger is provided
+            </summary>
+        </member>
+        <member name="M:PayOS.Internal.Logger.#ctor(System.String,Microsoft.Extensions.Logging.LogLevel)">
+            <summary>
+            Simple console logger implementation for PayOS when no external logger is provided
+            </summary>
+        </member>
+        <member name="T:PayOS.Internal.Page`2">
+            <summary>
+            Represents a page of paginated results with navigation and iteration capabilities
+            </summary>
+            <typeparam name="TItem">The type of items being paginated</typeparam>
+            <typeparam name="TResponse">The type of the paginated response</typeparam>
+        </member>
+        <member name="M:PayOS.Internal.Page`2.#ctor(`1,System.Func{System.Int32,System.Int32,System.Threading.CancellationToken,System.Threading.Tasks.Task{`1}},System.Func{`1,PayOS.Models.V1.Payouts.Pagination},System.Func{`1,System.Collections.Generic.IEnumerable{`0}})">
+            <summary>
+            Initializes a new instance of the Page class
+            </summary>
+            <param name="response">The response data</param>
+            <param name="fetchPage">Function to fetch a page of data</param>
+            <param name="getPagination">Function to extract pagination info from response</param>
+            <param name="getItems">Function to extract items from response</param>
+        </member>
+        <member name="P:PayOS.Internal.Page`2.Data">
+            <summary>
+            The items in the current page
+            </summary>
+        </member>
+        <member name="P:PayOS.Internal.Page`2.Pagination">
+            <summary>
+            Pagination information for the current page
+            </summary>
+        </member>
+        <member name="P:PayOS.Internal.Page`2.HasNextPage">
+            <summary>
+            Check if there are more pages available
+            </summary>
+        </member>
+        <member name="P:PayOS.Internal.Page`2.HasPreviousPage">
+            <summary>
+            Check if there are previous pages available
+            </summary>
+        </member>
+        <member name="M:PayOS.Internal.Page`2.GetNextPageAsync(System.Threading.CancellationToken)">
+            <summary>
+            Get the next page of results
+            </summary>
+            <param name="cancellationToken">Cancellation token</param>
+            <returns>The next page</returns>
+        </member>
+        <member name="M:PayOS.Internal.Page`2.GetPreviousPageAsync(System.Threading.CancellationToken)">
+            <summary>
+            Get the previous page of results
+            </summary>
+            <param name="cancellationToken">Cancellation token</param>
+            <returns>The previous page</returns>
+        </member>
+        <member name="M:PayOS.Internal.Page`2.GetAsyncEnumerator(System.Threading.CancellationToken)">
+            <summary>
+            Async iterator implementation for automatic pagination through all pages
+            </summary>
+            <param name="cancellationToken">Cancellation token</param>
+            <returns>Async enumerator</returns>
+        </member>
+        <member name="M:PayOS.Internal.Page`2.ToListAsync(System.Threading.CancellationToken)">
+            <summary>
+            Collect all items from all pages into an array
+            </summary>
+            <param name="cancellationToken">Cancellation token</param>
+            <returns>Array of all items</returns>
+        </member>
+        <member name="T:PayOS.Internal.PaginationExtensions">
+            <summary>
+            Extension methods for creating pagination iterators
+            </summary>
+        </member>
+        <member name="M:PayOS.Internal.PaginationExtensions.CreatePage``2(``1,System.Func{System.Int32,System.Int32,System.Threading.CancellationToken,System.Threading.Tasks.Task{``1}},System.Func{``1,PayOS.Models.V1.Payouts.Pagination},System.Func{``1,System.Collections.Generic.IEnumerable{``0}})">
+            <summary>
+            Creates a page from paginated response
+            </summary>
+            <typeparam name="TItem">The type of items being paginated</typeparam>
+            <typeparam name="TResponse">The type of the paginated response</typeparam>
+            <param name="response">The initial response</param>
+            <param name="fetchPage">Function to fetch a page of data</param>
+            <param name="getPagination">Function to extract pagination info from response</param>
+            <param name="getItems">Function to extract items from response</param>
+            <returns>Page instance</returns>
+        </member>
+        <member name="M:PayOS.Internal.PaginationExtensions.CreateIterator``2(System.Func{System.Int32,System.Int32,System.Threading.CancellationToken,System.Threading.Tasks.Task{``1}},System.Func{``1,PayOS.Models.V1.Payouts.Pagination},System.Func{``1,System.Collections.Generic.IEnumerable{``0}},System.Int32,System.Int32)">
+            <summary>
+            Creates a pagination iterator for paginated responses (legacy support)
+            </summary>
+            <typeparam name="TItem">The type of items being paginated</typeparam>
+            <typeparam name="TResponse">The type of the paginated response</typeparam>
+            <param name="fetchPage">Function to fetch a page of data</param>
+            <param name="getPagination">Function to extract pagination info from response</param>
+            <param name="getItems">Function to extract items from response</param>
+            <param name="pageSize">Number of items per page</param>
+            <param name="startingOffset">Starting offset for pagination</param>
+            <returns>Async enumerable for iteration</returns>
+        </member>
+        <member name="T:PayOS.Models.ApiResponse`1">
+            <summary>
+            Standard API response wrapper
+            </summary>
+            <typeparam name="T">Type of the response data</typeparam>
+        </member>
+        <member name="P:PayOS.Models.ApiResponse`1.Code">
+            <summary>
+            Response code indicating success or error type
+            </summary>
+        </member>
+        <member name="P:PayOS.Models.ApiResponse`1.Desc">
+            <summary>
+            Human-readable description of the response
+            </summary>
+        </member>
+        <member name="P:PayOS.Models.ApiResponse`1.Data">
+            <summary>
+            The actual response data
+            </summary>
+        </member>
+        <member name="P:PayOS.Models.ApiResponse`1.Signature">
+            <summary>
+            Signature for response verification (optional)
+            </summary>
+        </member>
+        <member name="T:PayOS.Models.RequestOptions">
+            <summary>
+            Options for configuring HTTP requests
+            </summary>
+        </member>
+        <member name="P:PayOS.Models.RequestOptions.Query">
+            <summary>
+            Query parameters to include in the request URL
+            </summary>
+        </member>
+        <member name="P:PayOS.Models.RequestOptions.Headers">
+            <summary>
+            Additional HTTP headers to include with the request
+            </summary>
+        </member>
+        <member name="P:PayOS.Models.RequestOptions.MaxRetries">
+            <summary>
+            The maximum number of times that the client will retry a request
+            </summary>
+        </member>
+        <member name="P:PayOS.Models.RequestOptions.TimeoutMs">
+            <summary>
+            The maximum amount of time (in milliseconds) that the client should wait for a response
+            from the server before timing out of a request
+            </summary>
+        </member>
+        <member name="P:PayOS.Models.RequestOptions.Signature">
+            <summary>
+            Signature configuration for request and response validation
+            </summary>
+        </member>
+        <member name="P:PayOS.Models.RequestOptions.CancellationToken">
+            <summary>
+            Cancellation token for the request
+            </summary>
+        </member>
+        <member name="T:PayOS.Models.RequestOptions`1">
+            <summary>
+            Options for configuring HTTP requests with a request body
+            </summary>
+            <typeparam name="T">The type of the request body</typeparam>
+        </member>
+        <member name="P:PayOS.Models.RequestOptions`1.Body">
+            <summary>
+            The request body
+            </summary>
+        </member>
+        <member name="T:PayOS.Models.SignatureOptions">
+            <summary>
+            Signature configuration options for requests and responses
+            </summary>
+        </member>
+        <member name="P:PayOS.Models.SignatureOptions.Request">
+            <summary>
+            Request signature type
+            </summary>
+        </member>
+        <member name="P:PayOS.Models.SignatureOptions.Response">
+            <summary>
+            Response signature type
+            </summary>
+        </member>
+        <member name="T:PayOS.Models.RequestSignatureTypes">
+            <summary>
+            Supported request signature types
+            </summary>
+        </member>
+        <member name="F:PayOS.Models.RequestSignatureTypes.Body">
+            <summary>
+            Add signature to request body
+            </summary>
+        </member>
+        <member name="F:PayOS.Models.RequestSignatureTypes.CreatePaymentLink">
+            <summary>
+            Create payment link specific signature
+            </summary>
+        </member>
+        <member name="F:PayOS.Models.RequestSignatureTypes.Header">
+            <summary>
+            Add signature to request header
+            </summary>
+        </member>
+        <member name="T:PayOS.Models.ResponseSignatureTypes">
+            <summary>
+            Supported response signature types
+            </summary>
+        </member>
+        <member name="F:PayOS.Models.ResponseSignatureTypes.Body">
+            <summary>
+            Verify signature from response body
+            </summary>
+        </member>
+        <member name="F:PayOS.Models.ResponseSignatureTypes.Header">
+            <summary>
+            Verify signature from response header
+            </summary>
+        </member>
+        <member name="T:PayOS.Models.V1.Payouts.Batch.PayoutBatchItem">
+            <summary>
+            Batch payout item
+            </summary>
+        </member>
+        <member name="T:PayOS.Models.V1.Payouts.Batch.PayoutBatchRequest">
+            <summary>
+            Batch payout request
+            </summary>
+        </member>
+        <member name="T:PayOS.Models.V1.Payouts.PayoutTransactionStateConverter">
+            <summary>
+            Custom JSON converter for PayoutTransactionState enum
+            </summary>
+        </member>
+        <member name="T:PayOS.Models.V1.Payouts.PayoutApprovalStateConverter">
+            <summary>
+            Custom JSON converter for PayoutApprovalState enum
+            </summary>
+        </member>
+        <member name="T:PayOS.Models.V1.Payouts.PayoutTransactionState">
+            <summary>
+            Payout transaction state enumeration
+            </summary>
+        </member>
+        <member name="T:PayOS.Models.V1.Payouts.PayoutApprovalState">
+            <summary>
+            Payout approval state enumeration
+            </summary>
+        </member>
+        <member name="T:PayOS.Models.V1.Payouts.PayoutRequest">
+            <summary>
+            Payout request data
+            </summary>
+        </member>
+        <member name="T:PayOS.Models.V1.Payouts.PayoutTransaction">
+            <summary>
+            Payout transaction details
+            </summary>
+        </member>
+        <member name="T:PayOS.Models.V1.Payouts.Payout">
+            <summary>
+            Payout response data
+            </summary>
+        </member>
+        <member name="T:PayOS.Models.V1.Payouts.EstimateCredit">
+            <summary>
+            Estimate credit response
+            </summary>
+        </member>
+        <member name="T:PayOS.Models.V1.Payouts.GetPayoutListParam">
+            <summary>
+            Parameters for getting payout list
+            </summary>
+        </member>
+        <member name="T:PayOS.Models.V1.Payouts.PayoutListResponse">
+            <summary>
+            Payout list response
+            </summary>
+        </member>
+        <member name="T:PayOS.Models.V1.Payouts.Pagination">
+            <summary>
+            Pagination information
+            </summary>
+        </member>
+        <member name="T:PayOS.Models.V1.PayoutsAccount.PayoutAccountInfo">
+            <summary>
+            Payout account information
+            </summary>
+        </member>
+        <member name="T:PayOS.Models.V2.PaymentRequests.Invoices.Invoice">
+            <summary>
+            Invoice information
+            </summary>
+        </member>
+        <member name="T:PayOS.Models.V2.PaymentRequests.Invoices.InvoicesInfo">
+            <summary>
+            Response containing invoices information
+            </summary>
+        </member>
+        <member name="T:PayOS.Models.V2.PaymentRequests.Invoices.FileDownloadResponse">
+            <summary>
+            File download response containing file data and metadata
+            </summary>
+        </member>
+        <member name="P:PayOS.Models.V2.PaymentRequests.Invoices.FileDownloadResponse.Content">
+            <summary>
+            The file content as a stream
+            </summary>
+        </member>
+        <member name="P:PayOS.Models.V2.PaymentRequests.Invoices.FileDownloadResponse.ContentType">
+            <summary>
+            The content type of the file
+            </summary>
+        </member>
+        <member name="P:PayOS.Models.V2.PaymentRequests.Invoices.FileDownloadResponse.FileName">
+            <summary>
+            The original filename
+            </summary>
+        </member>
+        <member name="P:PayOS.Models.V2.PaymentRequests.Invoices.FileDownloadResponse.ContentLength">
+            <summary>
+            The file size in bytes
+            </summary>
+        </member>
+        <member name="M:PayOS.Models.V2.PaymentRequests.Invoices.FileDownloadResponse.SaveToFileAsync(System.String)">
+            <summary>
+            Save the file content to the specified path
+            </summary>
+            <param name="filePath">The path where the file should be saved</param>
+            <returns>The number of bytes written to the file</returns>
+        </member>
+        <member name="M:PayOS.Models.V2.PaymentRequests.Invoices.FileDownloadResponse.SaveToDirectoryAsync(System.String,System.String)">
+            <summary>
+            Save the file content using the original filename or a default name
+            </summary>
+            <param name="directory">The directory where the file should be saved (optional, defaults to current directory)</param>
+            <param name="defaultFileName">Default filename</param>
+            <returns>A tuple containing the full file path and the number of bytes written</returns>
+        </member>
+        <member name="M:PayOS.Models.V2.PaymentRequests.Invoices.FileDownloadResponse.Dispose">
+            <summary>
+            Dispose the content stream
+            </summary>
+        </member>
+        <member name="T:PayOS.Models.V2.PaymentRequests.PaymentLinkStatusConverter">
+            <summary>
+            Custom JSON converter for PaymentLinkStatus enum
+            </summary>
+        </member>
+        <member name="T:PayOS.Models.V2.PaymentRequests.PaymentLinkStatus">
+            <summary>
+            Payment link status enumeration
+            </summary>
+        </member>
+        <member name="T:PayOS.Models.V2.PaymentRequests.TaxPercentage">
+            <summary>
+            Tax percentage enumeration
+            </summary>
+        </member>
+        <member name="T:PayOS.Models.V2.PaymentRequests.PaymentLinkItem">
+            <summary>
+            Payment link item
+            </summary>
+        </member>
+        <member name="T:PayOS.Models.V2.PaymentRequests.InvoiceRequest">
+            <summary>
+            Invoice request details
+            </summary>
+        </member>
+        <member name="T:PayOS.Models.V2.PaymentRequests.CreatePaymentLinkRequest">
+            <summary>
+            Request to create a payment link
+            </summary>
+        </member>
+        <member name="T:PayOS.Models.V2.PaymentRequests.CreatePaymentLinkResponse">
+            <summary>
+            Response from creating a payment link
+            </summary>
+        </member>
+        <member name="T:PayOS.Models.V2.PaymentRequests.PaymentLink">
+            <summary>
+            Payment link information
+            </summary>
+        </member>
+        <member name="T:PayOS.Models.V2.PaymentRequests.PaymentTransaction">
+            <summary>
+            Payment transaction details
+            </summary>
+        </member>
+        <member name="T:PayOS.Models.V2.PaymentRequests.CancelPaymentLinkRequest">
+            <summary>
+            Request to cancel a payment link
+            </summary>
+        </member>
+        <member name="T:PayOS.Models.Webhooks.Webhook">
+            <summary>
+            Webhook data received from PayOS
+            </summary>
+        </member>
+        <member name="T:PayOS.Models.Webhooks.WebhookData">
+            <summary>
+            Webhook data payload
+            </summary>
+        </member>
+        <member name="T:PayOS.Models.Webhooks.ConfirmWebhookRequest">
+            <summary>
+            Request to confirm/register a webhook URL
+            </summary>
+        </member>
+        <member name="T:PayOS.Models.Webhooks.ConfirmWebhookResponse">
+            <summary>
+            Response from confirming a webhook URL
+            </summary>
+        </member>
+        <member name="T:PayOS.PayOSClient">
+            <summary>
+            PayOS API client for interacting with payOS Merchant API
+            </summary>
+        </member>
+        <member name="M:PayOS.PayOSClient.#ctor(PayOS.PayOSOptions)">
+            <summary>
+            Create a new PayOS API client instance
+            </summary>
+            <param name="options">Client configuration options</param>
+        </member>
+        <member name="M:PayOS.PayOSClient.CreateDefaultLogger">
+            <summary>
+            Create a default logger with configured log level
+            </summary>
+        </member>
+        <member name="M:PayOS.PayOSClient.ConfigureHttpClient">
+            <summary>
+            Configure the HttpClient with default settings
+            </summary>
+        </member>
+        <member name="M:PayOS.PayOSClient.GetUserAgent">
+            <summary>
+            Get user agent string
+            </summary>
+        </member>
+        <member name="M:PayOS.PayOSClient.GetAsync``1(System.String,PayOS.Models.RequestOptions{System.Object})">
+            <summary>
+            Make a GET request to the API using RequestOptions
+            </summary>
+        </member>
+        <member name="M:PayOS.PayOSClient.PostAsync``2(System.String,PayOS.Models.RequestOptions{``1})">
+            <summary>
+            Make a POST request to the API using RequestOptions
+            </summary>
+        </member>
+        <member name="M:PayOS.PayOSClient.PutAsync``2(System.String,PayOS.Models.RequestOptions{``1})">
+            <summary>
+            Make a PUT request to the API using RequestOptions
+            </summary>
+        </member>
+        <member name="M:PayOS.PayOSClient.DeleteAsync``2(System.String,PayOS.Models.RequestOptions{``1})">
+            <summary>
+            Make a DELETE request to the API using RequestOptions
+            </summary>
+        </member>
+        <member name="M:PayOS.PayOSClient.DownloadFileAsync(System.String,PayOS.Models.RequestOptions)">
+            <summary>
+            Download a file from the API
+            </summary>
+        </member>
+        <member name="M:PayOS.PayOSClient.ExtractFileNameFromResponse(System.Net.Http.HttpResponseMessage)">
+            <summary>
+            Extract filename from response headers
+            </summary>
+        </member>
+        <member name="M:PayOS.PayOSClient.RequestAsync``2(System.Net.Http.HttpMethod,System.String,PayOS.Models.RequestOptions{``1})">
+            <summary>
+            Make a request to the API with retry logic
+            </summary>
+        </member>
+        <member name="M:PayOS.PayOSClient.ProcessRequestBody(System.Object,PayOS.Models.SignatureOptions)">
+            <summary>
+            Process request body and add signature if needed
+            </summary>
+        </member>
+        <member name="M:PayOS.PayOSClient.ProcessResponseAsync``1(System.Net.Http.HttpResponseMessage,PayOS.Models.SignatureOptions)">
+            <summary>
+            Process HTTP response and handle errors
+            </summary>
+        </member>
+        <member name="M:PayOS.PayOSClient.VerifyResponseSignature``1(PayOS.Models.ApiResponse{``0},System.Net.Http.HttpResponseMessage,System.String)">
+            <summary>
+            Verify response signature
+            </summary>
+        </member>
+        <member name="M:PayOS.PayOSClient.ShouldRetryRequest(System.Net.HttpStatusCode)">
+            <summary>
+            Determine if a request should be retried based on HTTP status code
+            </summary>
+        </member>
+        <member name="M:PayOS.PayOSClient.CalculateRetryDelayAsync(System.Net.Http.HttpResponseMessage,System.Int32,System.Int32)">
+            <summary>
+            Calculate retry delay based on response headers and attempt number
+            </summary>
+        </member>
+        <member name="M:PayOS.PayOSClient.GenerateRequestId">
+            <summary>
+            Generate a unique request ID for logging correlation
+            </summary>
+        </member>
+        <member name="M:PayOS.PayOSClient.BuildUrl(System.String,System.Collections.Generic.Dictionary{System.String,System.Object})">
+            <summary>
+            Build URL with query parameters
+            </summary>
+        </member>
+        <member name="M:PayOS.PayOSClient.Dispose">
+            <summary>
+            Dispose resources
+            </summary>
+        </member>
+        <member name="T:PayOS.PayOSOptions">
+            <summary>
+            Configuration options for PayOS client
+            </summary>
+        </member>
+        <member name="P:PayOS.PayOSOptions.ClientId">
+            <summary>
+            Client ID for PayOS API authentication
+            Defaults to environment variable PAYOS_CLIENT_ID
+            </summary>
+        </member>
+        <member name="P:PayOS.PayOSOptions.ApiKey">
+            <summary>
+            API Key for PayOS API authentication
+            Defaults to environment variable PAYOS_API_KEY
+            </summary>
+        </member>
+        <member name="P:PayOS.PayOSOptions.ChecksumKey">
+            <summary>
+            Checksum Key for signature verification
+            Defaults to environment variable PAYOS_CHECKSUM_KEY
+            </summary>
+        </member>
+        <member name="P:PayOS.PayOSOptions.PartnerCode">
+            <summary>
+            Partner Code for PayOS integration
+            Defaults to environment variable PAYOS_PARTNER_CODE
+            </summary>
+        </member>
+        <member name="P:PayOS.PayOSOptions.BaseUrl">
+            <summary>
+            Base URL for PayOS API
+            Defaults to https://api-merchant.payos.vn
+            </summary>
+        </member>
+        <member name="P:PayOS.PayOSOptions.TimeoutMs">
+            <summary>
+            Request timeout in milliseconds
+            Defaults to 60000ms (60 seconds)
+            </summary>
+        </member>
+        <member name="P:PayOS.PayOSOptions.MaxRetries">
+            <summary>
+            Maximum retry attempts for failed requests
+            Defaults to 2
+            </summary>
+        </member>
+        <member name="P:PayOS.PayOSOptions.Logger">
+            <summary>
+            Logger instance for logging operations
+            If not provided, a default logger will be created based on LogLevel setting
+            </summary>
+        </member>
+        <member name="P:PayOS.PayOSOptions.LogLevel">
+            <summary>
+            Log level for the PayOS client
+            Can be overridden by PAYOS_LOG environment variable
+            Supported values: Trace, Debug, Information, Warning, Error, Critical, None
+            Defaults to Information for better debugging experience
+            </summary>
+        </member>
+        <member name="P:PayOS.PayOSOptions.HttpClient">
+            <summary>
+            Custom HttpClient instance
+            If not provided, a default HttpClient will be created
+            </summary>
+        </member>
+        <member name="P:PayOS.PayOSOptions.DefaultHeaders">
+            <summary>
+            Additional headers to include in all requests
+            </summary>
+        </member>
+        <member name="T:PayOS.Resources.ApiResource">
+            <summary>
+            Base class for API resource services
+            </summary>
+        </member>
+        <member name="M:PayOS.Resources.ApiResource.#ctor(PayOS.PayOSClient)">
+            <summary>
+            Base class for API resource services
+            </summary>
+        </member>
+        <member name="T:PayOS.Resources.V1.Payouts.Batch.Batch">
+            <summary>
+            Batch payout resource for managing batch payout operations
+            </summary>
+        </member>
+        <member name="M:PayOS.Resources.V1.Payouts.Batch.Batch.#ctor(PayOS.PayOSClient)">
+            <summary>
+            Batch payout resource for managing batch payout operations
+            </summary>
+        </member>
+        <member name="M:PayOS.Resources.V1.Payouts.Batch.Batch.CreateAsync(PayOS.Models.V1.Payouts.Batch.PayoutBatchRequest,System.String,PayOS.Models.RequestOptions{PayOS.Models.V1.Payouts.Batch.PayoutBatchRequest})">
+            <summary>
+            Create a batch payout
+            </summary>
+            <param name="payoutData">The details of batch payout to be created</param>
+            <param name="idempotencyKey">A unique key for ensuring idempotency. Use a UUID or other high-entropy string so that retries of the same request are recognized and duplicated payouts are prevented</param>
+            <param name="requestOptions">Request options</param>
+            <returns>A promise that resolves to the newly created Payout object</returns>
+        </member>
+        <member name="T:PayOS.Resources.V1.Payouts.Payouts">
+            <summary>
+            Payouts resource for managing payout operations
+            </summary>
+        </member>
+        <member name="M:PayOS.Resources.V1.Payouts.Payouts.#ctor(PayOS.PayOSClient)">
+            <summary>
+            Payouts resource for managing payout operations
+            </summary>
+        </member>
+        <member name="P:PayOS.Resources.V1.Payouts.Payouts.Batch">
+            <summary>
+            Batch payout operations
+            </summary>
+        </member>
+        <member name="M:PayOS.Resources.V1.Payouts.Payouts.CreateAsync(PayOS.Models.V1.Payouts.PayoutRequest,System.String,PayOS.Models.RequestOptions{PayOS.Models.V1.Payouts.Payout})">
+            <summary>
+            Create a new payout
+            </summary>
+            <param name="payoutData">The details of the payout to be created</param>
+            <param name="idempotencyKey">A unique key for ensuring idempotency. Use a UUID or other high-entropy string so that retries of the same request are recognized and duplicated payouts are prevented</param>
+            <param name="requestOptions">Request options</param>
+            <returns>A promise that resolves to the newly created Payout object</returns>
+        </member>
+        <member name="M:PayOS.Resources.V1.Payouts.Payouts.GetAsync(System.String,PayOS.Models.RequestOptions)">
+            <summary>
+            Retrieves detailed information about a specific payout
+            </summary>
+            <param name="payoutId">The unique identifier of the payout to retrieve</param>
+            <param name="requestOptions">Request options</param>
+            <returns>A promise that resolves to the Payout object containing the payout details</returns>
+        </member>
+        <member name="M:PayOS.Resources.V1.Payouts.Payouts.ListAsync(PayOS.Models.V1.Payouts.GetPayoutListParam,PayOS.Models.RequestOptions)">
+            <summary>
+            Retrieves a paginated list of payouts with optional filtering
+            </summary>
+            <param name="param">Filter parameters with optional limit and starting offset</param>
+            <param name="requestOptions">Request options</param>
+            <returns>A Page object that supports both iteration and manual page navigation</returns>
+        </member>
+        <member name="M:PayOS.Resources.V1.Payouts.Payouts.EstimateCredit(PayOS.Models.V1.Payouts.PayoutRequest,PayOS.Models.RequestOptions)">
+            <summary>
+            Estimate credit of payouts
+            </summary>
+            <param name="payoutData">The details of the payout to be estimated</param>
+            <param name="requestOptions">Request options</param>
+            <returns>Estimate credit result</returns>
+        </member>
+        <member name="M:PayOS.Resources.V1.Payouts.Payouts.EstimateCredit(PayOS.Models.V1.Payouts.Batch.PayoutBatchRequest,PayOS.Models.RequestOptions)">
+            <summary>
+            Estimate credit of payouts
+            </summary>
+            <param name="payoutData">The details of the payout to be estimated</param>
+            <param name="requestOptions">Request options</param>
+            <returns>Estimate credit result</returns>
+        </member>
+        <member name="T:PayOS.Resources.V1.PayoutsAccount.PayoutsAccount">
+            <summary>
+            Payouts account resource for managing payout account operations
+            </summary>
+        </member>
+        <member name="M:PayOS.Resources.V1.PayoutsAccount.PayoutsAccount.#ctor(PayOS.PayOSClient)">
+            <summary>
+            Payouts account resource for managing payout account operations
+            </summary>
+        </member>
+        <member name="M:PayOS.Resources.V1.PayoutsAccount.PayoutsAccount.GetBalanceAsync(PayOS.Models.RequestOptions)">
+            <summary>
+            Retrieves the current payout account balance
+            </summary>
+            <param name="requestOptions">Request options</param>
+            <returns>A promise resolving to a PayoutAccountInfo object containing the current balance and related account details</returns>
+        </member>
+        <member name="T:PayOS.Resources.V2.PaymentRequests.Invoices.Invoices">
+            <summary>
+            Invoices resource for managing payment request invoices
+            </summary>
+        </member>
+        <member name="M:PayOS.Resources.V2.PaymentRequests.Invoices.Invoices.#ctor(PayOS.PayOSClient)">
+            <summary>
+            Invoices resource for managing payment request invoices
+            </summary>
+        </member>
+        <member name="M:PayOS.Resources.V2.PaymentRequests.Invoices.Invoices.GetAsync(System.String,PayOS.Models.RequestOptions)">
+            <summary>
+            Retrieve invoices of a payment link by payment link ID
+            </summary>
+            <param name="paymentLinkId">Payment link ID</param>
+            <param name="requestOptions">Request options</param>
+            <returns>A promise resolving to an InvoicesInfo object containing invoices of the current payment link</returns>
+        </member>
+        <member name="M:PayOS.Resources.V2.PaymentRequests.Invoices.Invoices.GetAsync(System.Int64,PayOS.Models.RequestOptions)">
+            <summary>
+            Retrieve invoices of a payment link by order code
+            </summary>
+            <param name="orderCode">Order code</param>
+            <param name="requestOptions">Request options</param>
+            <returns>A promise resolving to an InvoicesInfo object containing invoices of the current payment link</returns>
+        </member>
+        <member name="M:PayOS.Resources.V2.PaymentRequests.Invoices.Invoices.DownloadAsync(System.String,System.String,PayOS.Models.RequestOptions)">
+            <summary>
+            Download an invoice in PDF format by payment link ID
+            </summary>
+            <param name="invoiceId">Invoice ID</param>
+            <param name="paymentLinkId">Payment link ID</param>
+            <param name="requestOptions">Request options</param>
+            <returns>The invoice file in PDF format</returns>
+        </member>
+        <member name="M:PayOS.Resources.V2.PaymentRequests.Invoices.Invoices.DownloadAsync(System.String,System.Int64,PayOS.Models.RequestOptions)">
+            <summary>
+            Download an invoice in PDF format by order code
+            </summary>
+            <param name="invoiceId">Invoice ID</param>
+            <param name="orderCode">Order code</param>
+            <param name="requestOptions">Request options</param>
+            <returns>The invoice file in PDF format</returns>
+        </member>
+        <member name="T:PayOS.Resources.V2.PaymentRequests.PaymentRequests">
+            <summary>
+            Payment requests resource for managing payment links
+            </summary>
+        </member>
+        <member name="M:PayOS.Resources.V2.PaymentRequests.PaymentRequests.#ctor(PayOS.PayOSClient)">
+            <summary>
+            Payment requests resource for managing payment links
+            </summary>
+        </member>
+        <member name="P:PayOS.Resources.V2.PaymentRequests.PaymentRequests.Invoices">
+            <summary>
+            Invoices resource for managing payment request invoices
+            </summary>
+        </member>
+        <member name="M:PayOS.Resources.V2.PaymentRequests.PaymentRequests.CreateAsync(PayOS.Models.V2.PaymentRequests.CreatePaymentLinkRequest,PayOS.Models.RequestOptions{PayOS.Models.V2.PaymentRequests.CreatePaymentLinkRequest})">
+            <summary>
+            Creates a payment link for the provided order data
+            </summary>
+            <param name="paymentData">The details of payment link to be created</param>
+            <param name="requestOptions">Request options</param>
+            <returns>A promise resolving to a CreatePaymentLinkResponse object containing the payment link detail</returns>
+        </member>
+        <member name="M:PayOS.Resources.V2.PaymentRequests.PaymentRequests.GetAsync(System.String,PayOS.Models.RequestOptions)">
+            <summary>
+            Retrieve payment link information from payment link ID or order code
+            </summary>
+            <param name="idOrOrderCode">The payment link ID or order code</param>
+            <param name="requestOptions">Request options</param>
+            <returns>A promise resolving to a PaymentLink object containing the payment link detail</returns>
+        </member>
+        <member name="M:PayOS.Resources.V2.PaymentRequests.PaymentRequests.GetAsync(System.Int64,PayOS.Models.RequestOptions)">
+            <summary>
+            Retrieve payment link information from order code
+            </summary>
+            <param name="orderCode">The order code</param>
+            <param name="requestOptions">Request options</param>
+            <returns>A promise resolving to a PaymentLink object containing the payment link detail</returns>
+        </member>
+        <member name="M:PayOS.Resources.V2.PaymentRequests.PaymentRequests.CancelAsync(System.String,System.String,PayOS.Models.RequestOptions{PayOS.Models.V2.PaymentRequests.CancelPaymentLinkRequest})">
+            <summary>
+            Cancel a payment link
+            </summary>
+            <param name="idOrOrderCode">The payment link ID or order code</param>
+            <param name="cancellationReason">Reason for cancellation (optional)</param>
+            <param name="requestOptions">Request options</param>
+            <returns>A promise resolving to a PaymentLink object</returns>
+        </member>
+        <member name="M:PayOS.Resources.V2.PaymentRequests.PaymentRequests.CancelAsync(System.Int64,System.String,PayOS.Models.RequestOptions{PayOS.Models.V2.PaymentRequests.CancelPaymentLinkRequest})">
+            <summary>
+            Cancel a payment link by order code
+            </summary>
+            <param name="orderCode">The order code</param>
+            <param name="cancellationReason">Reason for cancellation (optional)</param>
+            <param name="requestOptions">Request options</param>
+            <returns>A promise resolving to a PaymentLink object</returns>
+        </member>
+        <member name="T:PayOS.Resources.Webhooks.Webhooks">
+            <summary>
+            Webhooks resource for managing webhook operations
+            </summary>
+        </member>
+        <member name="M:PayOS.Resources.Webhooks.Webhooks.#ctor(PayOS.PayOSClient)">
+            <summary>
+            Webhooks resource for managing webhook operations
+            </summary>
+        </member>
+        <member name="M:PayOS.Resources.Webhooks.Webhooks.ConfirmAsync(System.String,PayOS.Models.RequestOptions{PayOS.Models.Webhooks.ConfirmWebhookRequest})">
+            <summary>
+            Validate and register a webhook URL with payOS.
+            payOS will test the webhook endpoint by sending a validation request to it.
+            If the webhook responds correctly, it will be registered for payment notifications.
+            </summary>
+            <param name="webhookUrl">Your webhook endpoint URL that will receive payment notifications</param>
+            <param name="requestOptions">Request options</param>
+            <returns>The confirmed webhook URL result</returns>
+            <exception cref="T:PayOS.Exceptions.WebhookException">When webhook URL is invalid or validation fails</exception>
+        </member>
+        <member name="M:PayOS.Resources.Webhooks.Webhooks.VerifyAsync(PayOS.Models.Webhooks.Webhook)">
+            <summary>
+            Verify the webhook data sent from payOS
+            </summary>
+            <param name="webhook">The request body received from payOS</param>
+            <returns>The verified webhook data</returns>
+            <exception cref="T:PayOS.Exceptions.WebhookException">When webhook verification fails</exception>
+        </member>
+    </members>
+</doc>

@@ -46,7 +46,7 @@ namespace AIAssistantService.Plugins
 
             //return value ?? "https://localhost:default/";
 
-            return "https://localhost:44338/";
+            return "https://localhost:44339/";
         }
     }
 }

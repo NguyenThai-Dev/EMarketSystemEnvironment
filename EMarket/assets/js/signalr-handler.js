@@ -1,7 +1,12 @@
 ﻿var SignalRManager = (function () {
     var isInitialized = false;
+    var _paymentSuccessCallback = null;
 
     return {
+        onPaymentSuccess: function (callback) {
+            _paymentSuccessCallback = callback;
+        },
+
         init: function (explicitBranchId) {
             if (isInitialized) return;
 
@@ -25,6 +30,19 @@
                 }
 
                 console.warn("[SIGNALR] ĐÃ NHẬN TIN:", payload);
+
+                if (payload.status === "PAID") {
+                    console.log("💰 Webhook báo: Tiền về!");
+
+                    // Nếu có trang nào đăng ký xử lý (như POS), thì gọi nó
+                    if (typeof _paymentSuccessCallback === 'function') {
+                        _paymentSuccessCallback(payload);
+                        return; // Chạy xong logic riêng thì dừng, không reload table chung
+                    }
+
+                    // Nếu các trang khác (không đăng ký) cũng muốn reload table khi có người thanh toán xong
+                    // thì cứ để nó chạy xuống phần safeReload bên dưới.
+                }
 
                 const safeReload = (selector, label) => {
                     const $el = $(selector);

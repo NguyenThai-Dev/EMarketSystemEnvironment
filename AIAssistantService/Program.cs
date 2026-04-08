@@ -16,6 +16,7 @@ builder.Services.AddCors(options =>
 
 // 2. Cấu hình Key Rotation (Xoay tua API) - Đăng ký Singleton là chính xác
 builder.Services.AddSingleton<IApiKeyProvider, GroqApiKeyProvider>();
+builder.Services.AddSingleton<IPromptService, PromptService>();
 
 // 3. Cấu hình HttpClient cho EMARKET
 builder.Services.AddHttpClient("EMarketClient", client =>

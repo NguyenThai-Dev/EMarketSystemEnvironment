@@ -198,8 +198,8 @@ namespace EMarket.Areas.Admin.Controllers
             {
                 Session["CurrentUser"] = result.User;
 
-                Response.Cookies["UserId"].Value = result.User.UserId.ToString();
-                Response.Cookies["UserId"].Expires = DateTime.Now.AddDays(1);
+                //Response.Cookies["UserId"].Value = result.User.UserId.ToString();
+                //Response.Cookies["UserId"].Expires = DateTime.Now.AddDays(1);
 
                 return Redirect(returnUrl ?? "/Admin/Admin/Index");
             }

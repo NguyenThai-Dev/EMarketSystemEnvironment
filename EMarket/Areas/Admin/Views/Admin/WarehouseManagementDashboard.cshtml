@@ -10,37 +10,32 @@
             <div>
                 <h3 class="fw-bold text-dark display-6" style="font-size: 1.75rem;">
                     <i class="fas fa-warehouse me-2 text-muted opacity-50"></i>Trung Tâm Kho Vận
+                    <span class="badge bg-primary bg-opacity-10 text-primary fs-7 align-middle ms-2 border border-primary border-opacity-25"><i class="fas fa-robot me-1"></i>AI Powered</span>
                 </h3>
-                <span class="text-muted fs-7">Giám sát hiệu suất vận hành theo thời gian thực</span>
+                <span class="text-muted fs-7">Giám sát & Tối ưu vận hành theo thời gian thực</span>
             </div>
         </div>
 
         <div class="card border-0 shadow-sm mb-4">
             <div class="card-body p-2">
                 <div class="row g-2 align-items-center">
-
                     <div class="col-lg-8">
                         <div class="d-flex flex-wrap gap-2 align-items-center">
-
                             <div class="input-group input-group-sm w-auto" style="min-width: 200px;">
                                 <span class="input-group-text bg-light border-0"><i class="fas fa-building text-muted"></i></span>
                                 <select id="branchSelect" class="form-select border-0 bg-light fw-bold" style="cursor: pointer;">
                                     <option value="">-- Tất cả Chi Nhánh --</option>
                                 </select>
                             </div>
-
                             <div class="d-none d-md-block text-muted opacity-25"><i class="fas fa-chevron-right"></i></div>
-
                             <div class="input-group input-group-sm w-auto" style="min-width: 200px;">
                                 <span class="input-group-text bg-light border-0"><i class="fas fa-dolly text-muted"></i></span>
                                 <select id="warehouseSelect" class="form-select border-0 bg-light fw-bold text-dark" style="cursor: pointer;">
                                     <option value="">-- Tất cả Kho --</option>
                                 </select>
                             </div>
-
                         </div>
                     </div>
-
                     <div class="col-lg-4">
                         <div class="d-flex justify-content-lg-end">
                             <div class="input-group input-group-sm w-auto">
@@ -54,64 +49,75 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
 
         <div class="row">
             <div class="col-xl-3 col-sm-6 col-12">
-                <div class="card card-hover gradient-money h-100 shadow-sm">
+                <div class="card card-hover gradient-money h-100 shadow-sm border-0 position-relative overflow-hidden">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
-                                <span class="text-white-50 fw-bold text-uppercase fs-7">Giá trị tồn kho</span>
-                                <h3 id="whTotalValue" class="text-white mt-2 mb-0 fw-bold">0 ₫</h3>
+                                <span class="text-white-50 fw-bold text-uppercase fs-7">Giá trị tồn kho an toàn</span>
+                                <h3 id="whTotalValue" class="text-white mt-1 mb-0 fw-bold">0 ₫</h3>
                             </div>
                             <div class="icon-box bg-white bg-opacity-25 rounded-3 text-center">
                                 <i class="fas fa-coins text-white fs-4 lh-base mt-2"></i>
                             </div>
                         </div>
-                        <div class="mt-3">
+                        <div class="mt-3 d-flex justify-content-between align-items-end">
                             <span class="badge bg-white text-success bg-opacity-75"><i class="fas fa-box"></i> <span id="whTotalSku">0</span> SKUs</span>
+                            <div class="text-end">
+                                <small class="text-white-50 d-block" style="font-size: 0.65rem;">Rủi ro cận date/hết hạn</small>
+                                <span id="whExpiryValue" class="text-white fw-bold fs-7">0 ₫</span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="col-xl-3 col-sm-6 col-12">
-                <div class="card card-hover gradient-task h-100 shadow-sm">
+                <div class="card card-hover gradient-task h-100 shadow-sm border-0">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
                                 <span class="text-white-50 fw-bold text-uppercase fs-7">Đơn chờ xuất</span>
-                                <h3 id="whPendingOrders" class="text-white mt-2 mb-0 fw-bold">0</h3>
+                                <h3 id="whPendingOrders" class="text-white mt-1 mb-0 fw-bold">0</h3>
                             </div>
                             <div class="icon-box bg-white bg-opacity-25 rounded-3 text-center">
                                 <i class="fas fa-truck-loading text-white fs-4 lh-base mt-2"></i>
                             </div>
                         </div>
-                        <div class="mt-3 text-white-50 fs-7">
-                            Cần xử lý ngay trong ngày
+                        <div class="mt-3 d-flex justify-content-between align-items-end">
+                            <div class="text-white-50 fs-7">Cần xử lý ngay</div>
+                            <div class="text-end border-start border-white border-opacity-25 ps-2">
+                                <small class="text-white-50 d-block" style="font-size: 0.65rem;">Vòng quay kho</small>
+                                <span class="badge bg-white text-primary bg-opacity-75" title="Inventory Turnover"><span id="whTurnover">0</span> vòng</span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="col-xl-3 col-sm-6 col-12">
-                <div class="card card-hover gradient-alert h-100 shadow-sm">
+                <div class="card card-hover gradient-alert h-100 shadow-sm border-0">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
-                                <span class="text-white-50 fw-bold text-uppercase fs-7">Sắp hết hàng</span>
-                                <h3 id="whLowStock" class="text-white mt-2 mb-0 fw-bold">0</h3>
+                                <span class="text-white-50 fw-bold text-uppercase fs-7">Hàng sắp hết / Thâm hụt</span>
+                                <h3 id="whLowStock" class="text-white mt-1 mb-0 fw-bold">0</h3>
                             </div>
                             <div class="icon-box bg-white bg-opacity-25 rounded-3 text-center">
                                 <i class="fas fa-exclamation-triangle text-white fs-4 lh-base mt-2"></i>
                             </div>
                         </div>
-                        <div class="mt-3">
-                            <a href="@Url.Action("SupplierDebtAndPayment", "Supplier", new { area = "Admin" })" class="text-white fs-7 text-decoration-underline">Xem danh sách nhập hàng &rarr;</a>
+                        <div class="mt-3 d-flex justify-content-between align-items-end">
+                            <a href="@Url.Action("SupplierDebtAndPayment", "Supplier", new { area = "Admin" })" class="text-white fs-7 text-decoration-underline">Kế hoạch nhập &rarr;</a>
+                            <div class="text-end">
+                                <small class="text-white-50 d-block" style="font-size: 0.65rem;">Hàng bất động (Dead Stock)</small>
+                                <span class="text-white fw-bold fs-7"><i class="fas fa-snowflake me-1"></i><span id="whDeadStock">0</span> SKU</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -119,13 +125,20 @@
 
             <div class="col-xl-3 col-sm-6 col-12">
                 <div class="card border-0 shadow-sm h-100">
-                    <div class="card-body p-2 d-flex align-items-center justify-content-between">
-                        <div class="ps-3">
-                            <span class="text-muted fw-bold text-uppercase fs-7">Sức chứa kho</span>
-                            <h4 class="text-dark mt-1 mb-0 fw-bold" id="whCapacityText">0%</h4>
-                            <small class="text-muted">Trạng thái: <span id="whCapacityStatus" class="fw-bold">Ổn định</span></small>
+                    <div class="card-body p-2 d-flex flex-column justify-content-between">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div class="ps-2 pt-2">
+                                <span class="text-muted fw-bold text-uppercase fs-7">Sức chứa kho</span>
+                                <h4 class="text-dark mt-1 mb-0 fw-bold" id="whCapacityText">0%</h4>
+                            </div>
+                            <div id="capacityChart" style="min-width: 90px; margin-top: -10px;"></div>
                         </div>
-                        <div id="capacityChart" style="min-width: 100px;"></div>
+                        <div class="px-2 pb-1 d-flex justify-content-between align-items-center border-top pt-2">
+                            <small class="text-muted fs-7">Tình trạng: <span id="whCapacityStatus" class="fw-bold">Ổn định</span></small>
+                            <span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25" title="AI Cảnh báo rủi ro cao">
+                                <i class="fas fa-robot me-1"></i><span id="whHighRiskCount">0</span> Rủi ro
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -143,7 +156,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="col-lg-4 d-flex">
                 <div class="card flex-fill w-100 shadow-sm border-0">
                     <div class="card-header bg-white border-0 pt-4 pb-0">
@@ -160,8 +172,8 @@
         <div class="row mt-3">
             <div class="col-lg-8">
                 <div class="card h-100 shadow-sm border-0">
-                    <div class="card-header bg-white border-0 pt-4 pb-0 d-flex justify-content-between align-items-center">
-                        <h5 class="card-title fw-bold">Hoạt động kho gần đây</h5>
+                    <div class="card-header bg-white border-0 pt-4 pb-0">
+                        <h5 class="card-title fw-bold">Lịch sử giao dịch gần đây</h5>
                     </div>
                     <div class="card-body px-0">
                         <div class="table-responsive">
@@ -183,59 +195,122 @@
             </div>
 
             <div class="col-lg-4">
-                <div class="card h-100 border-warning border-2 border-top-0 border-end-0 border-bottom-0 shadow-sm">
-                    <div class="card-header bg-white border-0 pt-4 pb-0">
-                        <div class="d-flex align-items-center">
-                            <div class="bg-warning bg-opacity-10 p-2 rounded-circle me-3">
-                                <i class="fas fa-bell text-warning"></i>
+                <div class="card h-100 border-primary border-2 border-top-0 border-end-0 border-bottom-0 shadow-sm">
+                    <div class="card-header bg-white border-bottom-0 pt-3 pb-0">
+                        <ul class="nav nav-pills nav-justified custom-pills" id="replenishTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active py-2 fw-bold" id="ai-tab" data-bs-toggle="tab" data-bs-target="#ai-advice" type="button" role="tab">
+                                    <i class="fas fa-brain me-1"></i> AI Đề Xuất
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link py-2 fw-bold text-muted" id="low-tab" data-bs-toggle="tab" data-bs-target="#low-stock" type="button" role="tab">
+                                    <i class="fas fa-exclamation-triangle me-1"></i> Dưới định mức
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body p-0 pt-2 custom-scroll" style="max-height: 400px; overflow-y: auto;">
+                        <div class="tab-content" id="replenishTabContent">
+                            <div class="tab-pane fade show active" id="ai-advice" role="tabpanel">
+                                <div class="list-group list-group-flush" id="listAIPurchase"></div>
                             </div>
-                            <div>
-                                <h5 class="card-title fw-bold mb-0">Cần nhập hàng</h5>
-                                <small class="text-danger">Tồn kho dưới mức tối thiểu</small>
+                            <div class="tab-pane fade" id="low-stock" role="tabpanel">
+                                <div class="list-group list-group-flush" id="listLowStock"></div>
                             </div>
                         </div>
                     </div>
-                    <div class="card-body p-0">
-                        <div class="list-group list-group-flush mt-3" id="listLowStock"></div>
-                    </div>
-                    <div class="card-footer bg-white border-0 text-center pb-3">
-                        <button id="directedLink" class="btn btn-outline-warning btn-sm w-100 fw-bold">Tạo phiếu nhập tự động</button>
+                    <div class="card-footer bg-light border-0 text-center pb-3 pt-3">
+                        <button id="directedLink" class="btn btn-primary btn-sm w-100 fw-bold shadow-sm">
+                            <i class="fas fa-plus-circle me-1"></i> Tạo phiếu nhập hàng
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
 
+        <div class="row mt-3">
+            <div class="col-lg-8">
+                <div class="card h-100 shadow-sm border-0 border-warning border-2 border-top-0 border-end-0 border-bottom-0">
+                    <div class="card-header bg-white border-0 pt-4 pb-0 d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center">
+                            <div class="bg-warning bg-opacity-10 p-2 rounded-circle me-3">
+                                <i class="fas fa-calendar-times text-warning"></i>
+                            </div>
+                            <div>
+                                <h5 class="card-title fw-bold mb-0">Hàng cận Date / Hết hạn (FEFO)</h5>
+                                <small class="text-muted">Các lô hàng đã hết hạn hoặc sắp hết hạn trong chu kỳ</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body px-0">
+                        <div class="table-responsive custom-scroll" style="max-height: 450px; overflow-y: auto;">
+                            <table class="table table-hover align-middle mb-0" id="tblExpired">
+                                <thead class="bg-light sticky-top" style="z-index: 1;">
+                                    <tr>
+                                        <th class="ps-4">Sản phẩm</th>
+                                        <th>Lô hàng (Batch)</th>
+                                        <th>Số lượng</th>
+                                        <th>Ngày hết hạn</th>
+                                        <th class="text-end pe-4">Trạng thái</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card h-100 shadow-sm border-0 border-danger border-2 border-top-0 border-end-0 border-bottom-0 gradient-ai-risk">
+                    <div class="card-header bg-transparent border-0 pt-4 pb-0">
+                        <div class="d-flex align-items-center">
+                            <div class="bg-danger bg-opacity-25 p-2 rounded-circle me-3">
+                                <i class="fas fa-radiation text-danger"></i>
+                            </div>
+                            <div>
+                                <h5 class="card-title fw-bold mb-0 text-dark">Phân tích rủi ro (AI)</h5>
+                                <small class="text-muted">Cảnh báo điểm mù tồn kho & hủy hàng</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body p-0 mt-3 custom-scroll" style="max-height: 350px; overflow-y: auto;">
+                        <div class="list-group list-group-flush" id="listAIRisk"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
 @section Styles {
     <style>
-        /* CSS cho thanh Filter mới */
         .form-select:focus {
             box-shadow: none;
             border-color: #dee2e6;
             background-color: #fff;
         }
 
-        /* Tùy chỉnh input group để nhìn liền mạch */
         .input-group-text {
             color: #6c757d;
         }
 
-        /* Giữ nguyên các CSS cũ */
         .gradient-money {
             background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            border: none;
         }
 
         .gradient-task {
             background: linear-gradient(135deg, #ff9966 0%, #ff5e62 100%);
-            border: none;
         }
 
         .gradient-alert {
             background: linear-gradient(135deg, #cb2d3e 0%, #ef473a 100%);
-            border: none;
+        }
+
+        .gradient-ai-risk {
+            background: linear-gradient(180deg, #ffffff 0%, #fff5f5 100%);
         }
 
         .icon-box {
@@ -247,49 +322,31 @@
             font-size: 0.75rem;
         }
 
-        /* 1. Nhập kho hoặc Khách trả hàng (Tăng kho - Màu xanh lá) */
         .badge-in, .badge-return {
             background-color: #d1e7dd;
             color: #0f5132;
             border: 1px solid #badbcc;
         }
 
-        /* 2. Xuất kho hoặc Bán hàng (Giảm kho - Màu đỏ) */
         .badge-out, .badge-sale {
             background-color: #f8d7da;
             color: #842029;
             border: 1px solid #f5c2c7;
         }
 
-        /* 3. Điều chỉnh kho - Kiểm kê/Hao hụt (Thường dùng màu vàng/cam) */
         .badge-adjustment {
             background-color: #fff3cd;
             color: #856404;
             border: 1px solid #ffeeba;
         }
 
-        /* 4. Điều chuyển kho nội bộ (Màu xanh dương hoặc tím) */
         .badge-internal {
             background-color: #cff4fc;
             color: #055160;
             border: 1px solid #b6effb;
         }
 
-        /* Class chung để định dạng badge cho đẹp */
-        .badge-stock {
-            display: inline-block;
-            padding: 0.35em 0.65em;
-            font-size: 0.75em;
-            font-weight: 700;
-            line-height: 1;
-            text-align: center;
-            white-space: nowrap;
-            vertical-align: baseline;
-            border-radius: 50rem; /* Bo tròn hoàn toàn */
-            text-transform: uppercase;
-        }
-
-        .low-stock-item {
+        .low-stock-item, .ai-risk-item {
             transition: background 0.2s;
             border-left: 3px solid transparent;
         }
@@ -298,48 +355,56 @@
                 background-color: #fffcf5;
                 border-left: 3px solid #ffc107;
             }
+
+            .ai-risk-item:hover {
+                background-color: #fff0f0;
+                border-left: 3px solid #dc3545;
+            }
+
+        /* Tùy chỉnh Tab Bootstrap cho đẹp */
+        .custom-pills .nav-link {
+            border-radius: 0;
+            color: #6c757d;
+            border-bottom: 2px solid transparent;
+        }
+
+            .custom-pills .nav-link.active {
+                background: none;
+                color: #0d6efd;
+                border-bottom: 2px solid #0d6efd;
+            }
+
+        .custom-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #ddd;
+            border-radius: 4px;
+        }
     </style>
 }
 
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script>
-        // Global Chart instances
         let capacityChart, movementChart, categoryChart, currentUserBranchId = 0;
 
         $(document).ready(function () {
-
-            // 1. Load Dropdowns trước, sau đó mới load Data
             initDashboard();
 
-            // 2. Bắt sự kiện thay đổi Branch
             $('#branchSelect').on('change', function () {
-                const branchId = $(this).val();
-
-                // Load lại Warehouses theo Branch mới
-                loadDropdowns(branchId, true); // true = chỉ reload warehouse
-
-                // Load lại Dashboard data
+                loadDropdowns($(this).val(), true);
                 loadWarehouseData();
             });
 
-            // 3. Bắt sự kiện thay đổi Warehouse
-            $('#warehouseSelect').on('change', function () {
-                loadWarehouseData();
-            });
-
-            // 4. Bắt sự kiện thay đổi Time Range
-            $('#timeRangeSelect').on('change', function () {
-                loadWarehouseData();
-            });
+            $('#warehouseSelect, #timeRangeSelect').on('change', loadWarehouseData);
 
             $('#directedLink').on('click', function () {
                 window.location.href = '@Url.Action("SupplierDebtAndPayment", "Supplier", new { area = "Admin" })';
             });
-
         });
 
-        // --- INIT FUNCTION ---
         async function initDashboard() {
             await getCurrentUserBranch();
             await loadDropdowns(currentUserBranchId, false);
@@ -348,134 +413,82 @@
 
         async function getCurrentUserBranch() {
             try {
-                const resp = await $.ajax({
-                    url: '/Admin/Login/GetCurrentUser',
-                    type: 'GET'
-                });
-
-                if (resp.success) {
-                    currentUserBranchId = resp.data.BranchId;
-                }
-            } catch (error) {
-                console.error("Lỗi khi lấy thông tin user:", error);
-            }
+                const resp = await $.ajax({ url: '/Admin/Login/GetCurrentUser', type: 'GET' });
+                if (resp.success) currentUserBranchId = resp.data.BranchId;
+            } catch (error) { console.error(error); }
         }
 
-        // --- LOAD DROPDOWNS (BRANCH & WAREHOUSE) ---
         async function loadDropdowns(branchId, onlyWarehouse = false) {
             try {
-                const res = await $.ajax({
-                    url: '/Admin/Admin/LoadDropdowns',
-                    type: 'GET',
-                    data: { branchId: branchId }
-                });
-
-                const branches = res.branches || [];
-                const warehouses = res.warehouses || [];
+                const res = await $.ajax({ url: '/Admin/Admin/LoadDropdowns', type: 'GET', data: { branchId: branchId } });
 
                 if (!onlyWarehouse) {
-                    const $branchSelect = $('#branchSelect');
-                    const currentVal = $branchSelect.val(); 
-
-                    $branchSelect.empty();
-                    $branchSelect.append('<option value="">-- Tất cả Chi Nhánh --</option>');
-
-                    branches.forEach(b => {
-                        $branchSelect.append(`<option value="${b.BranchId}">${b.Name}</option>`);
-                    });
-
-                    if (currentUserBranchId != 0) {
-                        $branchSelect.val(currentUserBranchId);
-                    }
-                    else if (currentVal) {
-                        $branchSelect.val(currentVal);
-                    }
+                    const $branch = $('#branchSelect').empty().append('<option value="">-- Tất cả Chi Nhánh --</option>');
+                    (res.branches || []).forEach(b => $branch.append(`<option value="${b.BranchId}">${b.Name}</option>`));
+                    if (currentUserBranchId != 0) $branch.val(currentUserBranchId);
                 }
 
-                const $whSelect = $('#warehouseSelect');
-                $whSelect.empty();
-                $whSelect.append('<option value="">-- Tất cả Kho --</option>');
-
-                warehouses.forEach(w => {
-                    $whSelect.append(`<option value="${w.WarehouseId}">${w.Name}</option>`);
-                });
-            } catch (err) {
-                console.error("Lỗi load dropdown:", err);
-            }
+                const $wh = $('#warehouseSelect').empty().append('<option value="">-- Tất cả Kho --</option>');
+                (res.warehouses || []).forEach(w => $wh.append(`<option value="${w.WarehouseId}">${w.Name}</option>`));
+            } catch (err) { console.error(err); }
         }
 
-        // --- MAIN DATA LOADING ---
         async function loadWarehouseData() {
             try {
-                // Lấy giá trị từ các bộ lọc
-                const dayBacks = $('#timeRangeSelect').val();
-                const branchId = $('#branchSelect').val();
-                const warehouseId = $('#warehouseSelect').val();
-
                 const res = await $.ajax({
-                    url: '/Admin/Admin/GetWarehouseDashboard',
-                    type: 'GET',
+                    url: '/Admin/Admin/GetWarehouseDashboard', type: 'GET',
                     data: {
-                        dayBacks: dayBacks,
-                        branchId: branchId,      // Truyền thêm branchId
-                        warehouseId: warehouseId // Truyền thêm warehouseId
+                        dayBacks: $('#timeRangeSelect').val(),
+                        branchId: $('#branchSelect').val(),
+                        warehouseId: $('#warehouseSelect').val()
                     }
                 });
 
                 if (!res.success) return;
 
-                const realData = res.data;
+                const data = res.data;
                 const currencyFormatter = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' });
 
-                // Mapping Data
-                const kpi = {
-                    totalValue: currencyFormatter.format(realData.Kpi.TotalInventoryValue),
-                    totalSku: realData.Kpi.TotalSku,
-                    pendingOrders: realData.Kpi.PendingOrders,
-                    lowStock: realData.Kpi.LowStockCount,
-                    capacity: Math.round(realData.Kpi.CapacityPercent)
-                };
+                // Map KPI (Bổ sung các trường mới)
+                renderWhKpi({
+                    totalValue: currencyFormatter.format(data.Kpi.TotalInventoryValue),
+                    expiryValue: currencyFormatter.format(data.Kpi.TotalInventoryExpiryValue),
+                    totalSku: data.Kpi.TotalSku,
+                    pendingOrders: data.Kpi.PendingOrders,
+                    turnover: data.Kpi.InventoryTurnover.toFixed(2),
+                    lowStock: data.Kpi.LowStockCount,
+                    deadStock: data.Kpi.DeadStockCount,
+                    capacity: Math.round(data.Kpi.CapacityPercent),
+                    highRisk: data.Kpi.HighRiskExpiryCount
+                });
 
-                const charts = {
-                    movement: {
-                        labels: realData.Charts.Movement.Labels,
-                        inbound: realData.Charts.Movement.Inbound,
-                        outbound: realData.Charts.Movement.Outbound
-                    },
-                    categories: {
-                        labels: realData.Charts.Categories.Labels,
-                        counts: realData.Charts.Categories.Counts
-                    }
-                };
+                renderMovementChart({ labels: data.Charts.Movement.Labels, inbound: data.Charts.Movement.Inbound, outbound: data.Charts.Movement.Outbound });
+                renderCategoryChart({ labels: data.Charts.Categories.Labels, counts: data.Charts.Categories.Counts });
 
-                const lists = {
-                    movements: realData.Lists.Movements.map(m => ({
-                        product: m.Product, type: m.Type, qty: m.Qty, user: m.User, time: m.Time
-                    })),
-                    lowStock: realData.Lists.LowStock.map(l => ({
-                        name: l.Name, current: l.Current, min: l.Min
-                    }))
-                };
+                renderMovementTable(data.Lists.Movements || []);
+                renderLowStockList(data.Lists.LowStock || []);
+                renderExpiredTable(data.Lists.Expired || []);
 
-                // Render UI
-                renderWhKpi(kpi);
-                renderMovementChart(charts.movement);
-                renderCategoryChart(charts.categories);
-                renderMovementTable(lists.movements);
-                renderLowStockList(lists.lowStock);
+                // Render UI cho AI
+                renderAIPurchaseAdvice(data.Lists.PurchaseAdvice || []);
+                renderAIRiskWarnings(data.Lists.AIWarnings || []);
 
-            } catch (err) {
-                console.error('Error loading warehouse data:', err);
-            }
+            } catch (err) { console.error('Error loading warehouse data:', err); }
         }
 
-        // --- RENDER FUNCTIONS (Same as before) ---
         function renderWhKpi(data) {
             $('#whTotalValue').text(data.totalValue);
+            $('#whExpiryValue').text(data.expiryValue);
             $('#whTotalSku').text(data.totalSku);
+
             $('#whPendingOrders').text(data.pendingOrders);
+            $('#whTurnover').text(data.turnover);
+
             $('#whLowStock').text(data.lowStock);
+            $('#whDeadStock').text(data.deadStock);
+
             $('#whCapacityText').text(data.capacity + '%');
+            $('#whHighRiskCount').text(data.highRisk);
 
             const statusEl = $('#whCapacityStatus');
             statusEl.removeClass('text-danger text-warning text-success');
@@ -483,96 +496,125 @@
             else if (data.capacity > 70) { statusEl.text('Cao').addClass('text-warning'); }
             else { statusEl.text('Tốt').addClass('text-success'); }
 
-            var options = {
-                series: [data.capacity],
-                chart: { height: 120, type: 'radialBar' },
-                plotOptions: {
-                    radialBar: {
-                        hollow: { size: '50%' },
-                        dataLabels: { show: false },
-                        track: { background: '#f2f2f2' }
-                    }
-                },
-                colors: [data.capacity > 85 ? '#dc3545' : '#0d6efd'],
-                stroke: { lineCap: 'round' },
-            };
             if (capacityChart) capacityChart.destroy();
-            capacityChart = new ApexCharts(document.querySelector("#capacityChart"), options);
+            capacityChart = new ApexCharts(document.querySelector("#capacityChart"), {
+                series: [data.capacity], chart: { height: 120, type: 'radialBar' },
+                plotOptions: { radialBar: { hollow: { size: '50%' }, dataLabels: { show: false }, track: { background: '#f2f2f2' } } },
+                colors: [data.capacity > 85 ? '#dc3545' : '#0d6efd'], stroke: { lineCap: 'round' }
+            });
             capacityChart.render();
         }
 
+        // ... (Giữ nguyên renderMovementChart và renderCategoryChart và renderMovementTable) ...
         function renderMovementChart(data) {
-            var options = {
+            if (movementChart) movementChart.destroy();
+            movementChart = new ApexCharts(document.querySelector("#stockMovementChart"), {
                 series: [{ name: 'Nhập kho', type: 'column', data: data.inbound }, { name: 'Xuất kho', type: 'area', data: data.outbound }],
                 chart: { height: 350, type: 'line', toolbar: { show: false } },
-                stroke: { width: [0, 3], curve: 'smooth' },
-                plotOptions: { bar: { columnWidth: '30%', borderRadius: 4 } },
-                colors: ['#0d6efd', '#20c997'],
-                labels: data.labels,
-                xaxis: { type: 'category' },
-                legend: { position: 'top' }
-            };
-            if (movementChart) movementChart.destroy();
-            movementChart = new ApexCharts(document.querySelector("#stockMovementChart"), options);
+                stroke: { width: [0, 3], curve: 'smooth' }, colors: ['#0d6efd', '#20c997'],
+                labels: data.labels, xaxis: { type: 'category' }, legend: { position: 'top' }
+            });
             movementChart.render();
         }
 
         function renderCategoryChart(data) {
-            var options = {
-                series: data.counts,
-                labels: data.labels,
-                chart: { type: 'donut', height: 250 },
-                legend: { position: 'bottom' },
-                dataLabels: { enabled: false },
-                colors: ['#6610f2', '#fd7e14', '#20c997', '#0dcaf0'],
-                plotOptions: { pie: { donut: { size: '60%' } } }
-            };
             if (categoryChart) categoryChart.destroy();
-            categoryChart = new ApexCharts(document.querySelector("#categoryPieChart"), options);
+            categoryChart = new ApexCharts(document.querySelector("#categoryPieChart"), {
+                series: data.counts, labels: data.labels, chart: { type: 'donut', height: 250 },
+                legend: { position: 'bottom' }, dataLabels: { enabled: false }, colors: ['#6610f2', '#fd7e14', '#20c997', '#0dcaf0'],
+            });
             categoryChart.render();
         }
 
         function renderMovementTable(list) {
-            const $tbody = $('#tblMovements tbody');
-            $tbody.empty();
-            if (!list || list.length === 0) { $tbody.append('<tr><td colspan="5" class="text-center text-muted">Không có dữ liệu</td></tr>'); return; }
-            list.forEach(item => {
-                // Cấu hình hiển thị cho từng loại giao dịch
-                const config = {
-                    'SALE': { class: 'badge-out', icon: 'fa-arrow-up', label: 'Xuất bán' },
-                    'RETURN': { class: 'badge-in', icon: 'fa-arrow-down', label: 'Trả hàng' },
-                    'ADJUSTMENT': { class: 'badge-adjustment', icon: 'fa-sync-alt', label: 'Kiểm kê' },
-                    'INTERNAL': { class: 'badge-internal', icon: 'fa-exchange-alt', label: 'Chuyển kho' }
-                };
+            const $tbody = $('#tblMovements tbody').empty();
+            if (list.length === 0) return $tbody.append('<tr><td colspan="5" class="text-center text-muted">Không có giao dịch</td></tr>');
 
-                // Lấy config theo type (mặc định là OUT nếu không khớp)
-                const typeKey = item.type.toUpperCase();
-                const ui = config[typeKey] || { class: 'bg-secondary', icon: 'fa-question', label: item.type };
+            const config = {
+                'SALE': { class: 'badge-out', icon: 'fa-arrow-up', label: 'Xuất bán' },
+                'RETURN': { class: 'badge-in', icon: 'fa-arrow-down', label: 'Trả hàng' },
+                'ADJUSTMENT': { class: 'badge-adjustment', icon: 'fa-sync-alt', label: 'Kiểm kê' },
+                'INTERNAL': { class: 'badge-internal', icon: 'fa-exchange-alt', label: 'Chuyển kho' }
+            };
 
-                let badgeHtml = `<span class="badge ${ui.class} border border-opacity-10">
-                        <i class="fas ${ui.icon} me-1"></i>${ui.label}
-                     </span>`;
-
-                $tbody.append(`
-        <tr>
-            <td class="ps-4 fw-bold">${item.product}</td>
-            <td>${badgeHtml}</td>
-            <td class="fw-bold text-center">${item.qty > 0 ? '+' + item.qty : item.qty}</td>
-            <td class="text-muted small">${item.user}</td>
-            <td class="text-end pe-4 text-muted small">${item.time}</td>
-        </tr>
-    `);
+            list.forEach(i => {
+                const ui = config[i.Type ? i.Type.toUpperCase() : ''] || { class: 'bg-secondary', icon: 'fa-cog', label: i.Type };
+                $tbody.append(`<tr><td class="ps-4 fw-bold">${i.Product}</td><td><span class="badge ${ui.class} border border-opacity-10"><i class="fas ${ui.icon} me-1"></i>${ui.label}</span></td><td class="fw-bold text-center">${i.Qty > 0 ? '+'+i.Qty : i.Qty}</td><td class="text-muted small">${i.User}</td><td class="text-end pe-4 text-muted small">${i.Time}</td></tr>`);
             });
         }
 
         function renderLowStockList(list) {
-            const $div = $('#listLowStock');
-            $div.empty();
-            if (!list || list.length === 0) { $div.append('<div class="text-center text-muted p-3">Tồn kho an toàn</div>'); return; }
-            list.forEach(item => {
-                let percent = Math.min((item.current / item.min) * 100, 100);
-                let barColor = percent < 20 ? 'bg-danger' : 'bg-warning';
-                $div.append(`<div class="list-group-item low-stock-item px-3 py-3 border-0 border-bottom"><div class="d-flex justify-content-between mb-1"><span class="fw-bold text-dark">${item.name}</span><small class="text-danger fw-bold">${item.current} / ${item.min}</small></div><div class="progress" style="height: 6px;"><div class="progress-bar ${barColor}" style="width: ${percent}%"></div></div></div>`);
+            const $div = $('#listLowStock').empty();
+            if (list.length === 0) return $div.append('<div class="text-center text-muted p-3">Tồn kho an toàn</div>');
+            list.forEach(i => {
+                let p = Math.min((i.Current / i.Min) * 100, 100);
+                $div.append(`<div class="list-group-item low-stock-item px-3 py-3 border-0 border-bottom"><div class="d-flex justify-content-between mb-1"><span class="fw-bold text-dark">${i.Name}</span><small class="text-danger fw-bold">${i.Current} / ${i.Min}</small></div><div class="progress" style="height: 6px;"><div class="progress-bar ${p<20?'bg-danger':'bg-warning'}" style="width: ${p}%"></div></div></div>`);
+            });
+        }
+
+        function renderExpiredTable(list) {
+            const $tbody = $('#tblExpired tbody').empty();
+            if (list.length === 0) return $tbody.append('<tr><td colspan="5" class="text-center text-success py-4"><i class="fas fa-check-circle me-2"></i>Kho an toàn, không có hàng cận date!</td></tr>');
+
+            list.forEach(i => {
+                const isExp = i.Status === "Expired";
+                $tbody.append(`<tr><td class="ps-4 fw-bold text-dark">${i.Name}</td><td><span class="badge bg-light text-dark border">${i.LotNumber}</span></td><td class="fw-bold">${i.Qty}</td><td class="text-muted fw-bold">${i.ExpiryDate}</td><td class="text-end pe-4"><span class="badge ${isExp?'bg-danger':'bg-warning text-dark'} border-0 rounded-pill px-3 py-2"><i class="fas ${isExp?'fa-times-circle':'fa-exclamation-circle'} me-1"></i>${isExp?'Đã hết hạn':'Cận date'}</span></td></tr>`);
+            });
+        }
+
+        // --- NEW RENDERS CHO AI ---
+        function renderAIPurchaseAdvice(list) {
+            const $div = $('#listAIPurchase').empty();
+            if (list.length === 0) return $div.append('<div class="text-center text-muted p-4"><i class="fas fa-check-double fs-3 text-success opacity-50 mb-2"></i><br>AI đánh giá kho đang tối ưu, chưa cần nhập thêm.</div>');
+
+            list.forEach(i => {
+                let badgeColor = i.Priority === 'High' ? 'danger' : (i.Priority === 'Normal' ? 'primary' : 'info');
+                let prioText = i.Priority === 'High' ? 'Gấp' : (i.Priority === 'Normal' ? 'Thường' : 'Thấp');
+
+                $div.append(`
+                    <div class="list-group-item px-3 py-3 border-0 border-bottom">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <span class="fw-bold text-dark text-break pe-2">${i.ProductName}</span>
+                            <span class="badge bg-${badgeColor} bg-opacity-10 text-${badgeColor} border border-${badgeColor} border-opacity-25">${prioText}</span>
+                        </div>
+                        <div class="d-flex justify-content-between text-muted fs-7 mb-2">
+                            <span>Đề xuất nhập:</span>
+                            <span class="fw-bold text-dark">${i.SuggestedMinQty} - ${i.SuggestedMaxQty} đơn vị</span>
+                        </div>
+                        <div class="bg-light p-2 rounded-2 fs-7 text-muted border border-dashed">
+                            <i class="fas fa-info-circle text-primary me-1"></i>${i.Reason || 'Dự báo theo chu kỳ tiêu thụ'}
+                        </div>
+                    </div>
+                `);
+            });
+        }
+
+        function renderAIRiskWarnings(list) {
+            const $div = $('#listAIRisk').empty();
+            if (list.length === 0) return $div.append('<div class="text-center text-muted p-4"><i class="fas fa-shield-alt fs-3 text-success opacity-50 mb-2"></i><br>Không phát hiện rủi ro bất thường.</div>');
+
+            list.forEach(i => {
+                // Mapping field từ API trả về (ConfidenceScore hay Confidence)
+                let score = i.ConfidenceScore || i.Confidence || 0;
+                let barColor = score > 90 ? 'bg-danger' : (score > 80 ? 'bg-warning' : 'bg-info');
+
+                $div.append(`
+                    <div class="list-group-item ai-risk-item px-3 py-3 border-0 border-bottom">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span class="fw-bold text-dark">${i.ProductName}</span>
+                            <span class="badge bg-danger text-white rounded-pill">${score}% Risk</span>
+                        </div>
+                        <div class="text-muted fs-7 mb-2 text-truncate" title="${i.RiskReason || 'Cảnh báo rủi ro hết hạn tồn kho'}">
+                            <i class="fas fa-biohazard text-danger me-1"></i>${i.RiskReason || 'Nguy cơ hủy hàng do quá Date'}
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-1 fs-7">
+                            <span class="text-muted">Độ tin cậy AI:</span>
+                        </div>
+                        <div class="progress" style="height: 4px;">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated ${barColor}" style="width: ${score}%"></div>
+                        </div>
+                    </div>
+                `);
             });
         }
     </script>

@@ -1,0 +1,226 @@
+﻿@model List<System.Dynamic.ExpandoObject>
+@{ Layout = null; }
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* TỐI ƯU GIAO DIỆN IN ẤN (PRINT UX) */
+        body {
+            font-family: "Segoe UI", Roboto, Arial, sans-serif;
+            font-size: 10px; /* Chữ nhỏ để chứa được nhiều cột */
+            color: #333;
+            background-color: #fff;
+        }
+
+        h2 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+
+        table {
+            /* Quan trọng: Để cột tự co dãn theo nội dung */
+            table-layout: auto !important;
+            width: 100% !important;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        /* Định dạng chung cho Header và Cell */
+        .table > thead > tr > th {
+            background-color: #212529 !important;
+            color: #fff !important;
+            text-transform: uppercase;
+            font-weight: 700;
+            font-size: 9px;
+            padding: 4px 6px !important;
+            border: 1px solid #333;
+            white-space: normal; /* Cho phép tiêu đề xuống dòng để hẹp cột */
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .table > tbody > tr > td {
+            padding: 3px 6px !important; /* Dư 2 bên một xíu đúng ý bro */
+            vertical-align: middle;
+            border: 1px solid #dee2e6;
+            /* Mặc định ép không cho xuống dòng để cột co lại sát nhất */
+            white-space: nowrap;
+        }
+
+        /* XỬ LÝ RIÊNG CHO CÁC CỘT CẦN DÃN RỘNG */
+        /* Cột 2 (NAME) và Cột cuối (DETAILS) */
+        .table td:nth-child(2),
+        .table th:nth-child(2),
+        .table td:last-child,
+        .table th:last-child {
+            white-space: normal !important; /* Cho phép xuống dòng */
+            word-break: break-word;
+            min-width: 150px; /* Đảm bảo đủ không gian đọc */
+            text-align: left;
+        }
+
+        /* Cấu hình các cột số liệu (Căn giữa cho chuyên nghiệp) */
+        .table td:first-child, /* ID */
+        .table td:nth-child(5), /* CategoryID */
+        .table td:nth-child(9), /* Min */
+        .table td:nth-child(10), /* Max */
+        .table td:nth-child(11) /* Qty */ {
+            text-align: center;
+        }
+
+        /* Style cho khối Detail lồng nhau */
+        .detail-box {
+            padding: 2px 5px !important;
+            margin-bottom: 2px;
+            background-color: #f8f9fa !important;
+            border: 1px solid #eee !important;
+            border-radius: 4px;
+            font-size: 9px;
+            line-height: 1.3;
+        }
+
+        .prop-item {
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        .prop-key {
+            font-weight: 600;
+            color: #555;
+        }
+
+        .prop-val {
+            color: #0d6efd;
+            font-weight: 500;
+        }
+
+        /* THIẾT LẬP TRANG IN */
+        @@media print {
+            @@page {
+                size: A4 landscape;
+                margin: 5mm 10mm; /* Lề trên-dưới 5mm, lề trái-phải 10mm */
+            }
+
+            .no-print {
+                display: none;
+            }
+            /* Đảm bảo màu nền và màu chữ hiển thị đúng khi in */
+            .table-dark {
+                background-color: #212529 !important;
+                color: #fff !important;
+                -webkit-print-color-adjust: exact;
+            }
+
+            .bg-light {
+                background-color: #f8f9fa !important;
+                -webkit-print-color-adjust: exact;
+            }
+
+            .text-primary {
+                color: #0d6efd !important;
+                -webkit-print-color-adjust: exact;
+            }
+        }
+    </style>
+</head>
+<body onload="window.print()">
+    <div class="container-fluid">
+        <div class="text-center mt-3">
+            <h2 class="fw-bold text-uppercase border-bottom pb-2 d-inline-block">@ViewBag.Title</h2>
+            <div class="text-muted small no-print">Ngày xuất bản: @DateTime.Now.ToString("dd/MM/yyyy HH:mm")</div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped align-middle">
+                <thead>
+                    <tr>
+                        @if (Model.Any())
+                        {
+                            var firstRow = (IDictionary<string, object>)Model[0];
+                            foreach (var key in firstRow.Keys)
+                            {
+                                // Sửa tên Header: Thêm dấu cách trước chữ hoa để dễ xuống dòng
+                                string friendlyKey = System.Text.RegularExpressions.Regex.Replace(key, "([a-z])([A-Z])", "$1 $2");
+                                <th>@friendlyKey.ToUpper()</th>
+                            }
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var row in Model)
+                    {
+                        var dict = (IDictionary<string, object>)row;
+                        <tr>
+                            @foreach (var value in dict.Values)
+                            {
+                                <td>
+                                    @if (value == null || string.IsNullOrEmpty(value.ToString()))
+                                    {
+                                        <span class="text-muted">-</span>
+                                    }
+                                    else if (value is IDictionary<string, object> nested)
+                                    {
+                                        @* TRƯỜNG HỢP 1: Object lồng (Cấu hình) *@
+                                        <div class="small">
+                                            @foreach (var item in nested)
+                                            {
+                                                <div class="prop-item">
+                                                    <span class="prop-key">@item.Key:</span>
+                                                    <span class="prop-val">@item.Value</span>
+                                                </div>
+                                            }
+                                        </div>
+                                    }
+                                    else if (value is System.Collections.IEnumerable list && !(value is string))
+                                    {
+                                        @* TRƯỜNG HỢP 2: Mảng lồng (Details) *@
+                                        <div class="d-flex flex-column gap-1">
+                                            @{ int idx = 1; }
+                                            @foreach (var listItem in list)
+                                            {
+                                                if (listItem is IDictionary<string, object> dictItem)
+                                                {
+                                                    <div class="detail-box shadow-none">
+                                                        <span class="fw-bold text-dark me-1">#@idx:</span>
+                                                        @foreach (var prop in dictItem)
+                                                        {
+                                                            <span class="prop-item">
+                                                                <span class="prop-key">@prop.Key:</span>
+                                                                <span class="prop-val">@prop.Value</span>
+                                                            </span>
+                                                        }
+                                                    </div>
+                                                    idx++;
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-light text-dark border fw-normal">@listItem</span>
+                                                }
+                                            }
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        @* TRƯỜNG HỢP 3: Giá trị đơn thuần *@
+                                        @value
+                                    }
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mt-3 text-end text-muted small pe-4 no-print">
+            <em>EMARKET SYSTEM — Quản trị vận hành chuỗi siêu thị</em>
+        </div>
+    </div>
+</body>
+</html>

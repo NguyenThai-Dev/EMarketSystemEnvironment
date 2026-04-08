@@ -95,6 +95,50 @@ namespace EMarket.Modules.SalesModule.Services.Implementations
                 })
                 .ToListAsync();
         }
+        public async Task<List<OrderDTO>> GetFullOrdersByBranchIdAsync(int? branchId, DateTime? fromDate, DateTime? toDate)
+        {
+            // 1. Khởi tạo query
+            var query = _db.Orders.AsNoTracking().AsQueryable();
+
+            // 2. Lọc chi nhánh
+            if (branchId.HasValue && branchId.Value > 0)
+            {
+                query = query.Where(o => o.branch_id == branchId.Value);
+            }
+
+            // 3. Lọc Từ ngày
+            if (fromDate.HasValue)
+            {
+                var fDate = fromDate.Value.Date;
+                query = query.Where(o => o.order_date >= fDate);
+            }
+
+            // 4. Lọc Đến ngày (Logic < ngày hôm sau)
+            if (toDate.HasValue)
+            {
+                var tDate = toDate.Value.Date.AddDays(1);
+                query = query.Where(o => o.order_date < tDate);
+            }
+
+            // 5. Select DTO
+            return await query
+                .OrderByDescending(o => o.order_date) // Nên sắp xếp mới nhất lên đầu
+                .Select(o => new OrderDTO
+                {
+                    OrderId = o.order_id,
+                    OrderDate = o.order_date ?? defaultDate,
+                    TotalAmount = o.total_amount ?? 0,
+                    OrderDetails = o.OrderDetails.Select(od => new OrderDetailDTO
+                    {
+                        ProductId = od.product_id,
+                        Quantity = od.quantity,
+                        UnitPrice = od.unit_price
+                    }).ToList()
+                })
+                .ToListAsync();
+        }
+
+
 
         public async Task<(int total, int filtered, List<OrderDTO> data)> GetOrdersDataTableAsync(
     int draw, int start, int length, int? userId, int? branchId,

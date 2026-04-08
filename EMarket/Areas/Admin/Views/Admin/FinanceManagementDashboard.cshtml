@@ -17,20 +17,17 @@
                     </h3>
                     <ul class="breadcrumb border-0 mb-0 ps-0 bg-transparent">
                         <li class="breadcrumb-item"><a href="/Admin/Dashboard">Dashboard</a></li>
-                        <li class="breadcrumb-item active">Báo cáo Thu Chi</li>
+                        <li class="breadcrumb-item active">Báo cáo Thu Chi & Hiệu quả</li>
                     </ul>
                 </div>
 
                 <div class="col-auto">
                     <div class="d-flex align-items-center bg-white px-3 py-2 rounded-pill shadow-sm border">
-
-                        <!-- Branch -->
                         <div class="d-flex align-items-center pe-3 me-3 border-end">
                             <span class="d-flex align-items-center justify-content-center rounded-circle bg-light me-2"
                                   style="width:28px;height:28px;">
                                 <i class="fas fa-store text-muted small"></i>
                             </span>
-
                             <select id="branchSelect"
                                     class="form-select form-select-sm border-0 shadow-none fw-bold text-dark"
                                     style="min-width:180px; background-color:transparent;">
@@ -38,13 +35,11 @@
                             </select>
                         </div>
 
-                        <!-- Time -->
                         <div class="d-flex align-items-center">
                             <span class="d-flex align-items-center justify-content-center rounded-circle bg-light me-2"
                                   style="width:28px;height:28px;">
                                 <i class="far fa-calendar-alt text-muted small"></i>
                             </span>
-
                             <select id="timeRangeSelect"
                                     class="form-select form-select-sm border-0 shadow-none fw-bold text-primary"
                                     style="min-width:140px; background-color:transparent;">
@@ -53,17 +48,15 @@
                                 <option value="90">Quý này</option>
                             </select>
                         </div>
-
                     </div>
                 </div>
-
             </div>
         </div>
 
         <div class="row g-3">
             <div class="col-lg-3 col-sm-6 col-12 d-flex">
                 <div class="card flex-fill finance-card card-revenue">
-                    <div class="card-body">
+                    <div class="card-body d-flex flex-column justify-content-between">
                         <div class="d-flex align-items-center justify-content-between">
                             <div class="finance-info">
                                 <h6 class="text-white-50">Doanh thu thuần</h6>
@@ -74,7 +67,7 @@
                             </div>
                         </div>
                         <div class="progress mt-3 bg-white-10" style="height: 4px;">
-                            <div class="progress-bar bg-white" style="width: 75%"></div>
+                            <div class="progress-bar bg-white" style="width: 100%"></div>
                         </div>
                     </div>
                 </div>
@@ -82,18 +75,18 @@
 
             <div class="col-lg-3 col-sm-6 col-12 d-flex">
                 <div class="card flex-fill finance-card card-expense">
-                    <div class="card-body">
+                    <div class="card-body d-flex flex-column justify-content-between">
                         <div class="d-flex align-items-center justify-content-between">
                             <div class="finance-info">
-                                <h6 class="text-white-50">Tổng chi phí</h6>
+                                <h6 class="text-white-50">Tổng tiền nhập hàng</h6>
                                 <h3 id="kpiExpense" class="text-white fw-bold mb-0">0 ₫</h3>
                             </div>
                             <div class="finance-icon bg-white-10">
-                                <i class="fas fa-wallet"></i>
+                                <i class="fas fa-boxes"></i>
                             </div>
                         </div>
                         <div class="mt-3 small text-white-50">
-                            <i class="fas fa-info-circle me-1"></i> Gồm nhập & vận hành
+                            <i class="fas fa-info-circle me-1"></i> Giá trị vốn nhập trong kỳ
                         </div>
                     </div>
                 </div>
@@ -101,18 +94,27 @@
 
             <div class="col-lg-3 col-sm-6 col-12 d-flex">
                 <div class="card flex-fill finance-card card-profit">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center justify-content-between">
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <div class="d-flex align-items-center justify-content-between mb-2">
                             <div class="finance-info">
-                                <h6 class="text-white-50">Lợi nhuận gộp</h6>
-                                <h3 id="kpiProfit" class="text-white fw-bold mb-0">0 ₫</h3>
+                                <h6 class="text-white-50">Lợi nhuận thực tế (Net)</h6>
+                                <h3 id="kpiActualProfit" class="text-white fw-bold mb-0">0 ₫</h3>
                             </div>
                             <div class="finance-icon bg-white-10">
                                 <i class="fas fa-hand-holding-usd"></i>
                             </div>
                         </div>
-                        <div class="mt-3">
-                            <span id="kpiMarginBadge" class="badge bg-white text-success rounded-pill px-3">Margin: 0%</span>
+                        <div class="w-100 rounded bg-black bg-opacity-10 p-2 mt-auto">
+                            <div class="d-flex justify-content-between text-white-50 fs-7 mb-1">
+                                <span>Lãi gộp:</span>
+                                <span id="kpiGrossProfit" class="fw-bold text-white">0 ₫</span>
+                            </div>
+                            <div class="d-flex justify-content-between text-white-50 fs-7">
+                                <span>Thất thoát kho:</span>
+                                <span class="fw-bold text-warning" title="Giá trị hàng hóa hết hạn/hỏng">
+                                    -<span id="kpiLossValue">0 ₫</span> (<span id="kpiLossRate">0</span>%)
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -120,14 +122,14 @@
 
             <div class="col-lg-3 col-sm-6 col-12 d-flex">
                 <div class="card flex-fill finance-card card-debt">
-                    <div class="card-body">
+                    <div class="card-body d-flex flex-column justify-content-between">
                         <div class="d-flex align-items-center justify-content-between">
                             <div class="finance-info">
-                                <h6 class="text-white-50">Nợ cần trả</h6>
+                                <h6 class="text-white-50">Nợ cần trả NCC</h6>
                                 <h3 id="kpiDebt" class="text-white fw-bold mb-0">0 ₫</h3>
                             </div>
                             <div class="finance-icon bg-white-10">
-                                <i class="fas fa-exclamation-circle"></i>
+                                <i class="fas fa-file-invoice-dollar"></i>
                             </div>
                         </div>
                         <div class="mt-3">
@@ -140,9 +142,9 @@
 
         <div class="row">
             <div class="col-lg-8 d-flex">
-                <div class="card flex-fill">
-                    <div class="card-header border-0 pb-0">
-                        <h5 class="card-title">Dòng tiền (Thu vs Chi)</h5>
+                <div class="card flex-fill shadow-sm border-0">
+                    <div class="card-header bg-white border-0 pb-0 pt-4">
+                        <h5 class="card-title fw-bold">Dòng tiền kinh doanh (Thu vs Chi)</h5>
                     </div>
                     <div class="card-body">
                         <div id="cashFlowChart" style="min-height: 300px;"></div>
@@ -150,9 +152,9 @@
                 </div>
             </div>
             <div class="col-lg-4 d-flex">
-                <div class="card flex-fill">
-                    <div class="card-header border-0 pb-0">
-                        <h5 class="card-title">Cơ cấu Chi phí</h5>
+                <div class="card flex-fill shadow-sm border-0">
+                    <div class="card-header bg-white border-0 pb-0 pt-4">
+                        <h5 class="card-title fw-bold">Cơ cấu Chi phí & Thất thoát</h5>
                     </div>
                     <div class="card-body d-flex align-items-center justify-content-center">
                         <div id="expensePieChart" class="w-100"></div>
@@ -161,18 +163,18 @@
             </div>
         </div>
 
-        <div class="card">
+        <div class="card shadow-sm border-0">
             <div class="card-body">
-                <div class="table-top">
+                <div class="table-top mb-3">
                     <div class="search-set">
                         <div class="search-path">
-                            <h5 class="card-title mb-0">Giao dịch gần đây</h5>
+                            <h5 class="card-title fw-bold mb-0">Giao dịch thu chi gần đây</h5>
                         </div>
                     </div>
                     <div class="wordset">
                         <ul>
                             <li>
-                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="Xuất Excel">
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="Xuất Excel" style="cursor:pointer">
                                     <img src="~/assets/img/icons/excel.svg" alt="img">
                                 </a>
                             </li>
@@ -181,14 +183,14 @@
                 </div>
 
                 <div class="table-responsive">
-                    <table class="table table-hover mb-0" id="tblTransactions">
-                        <thead>
+                    <table class="table table-hover align-middle mb-0" id="tblTransactions">
+                        <thead class="bg-light">
                             <tr>
-                                <th>Mô tả</th>
-                                <th>Loại</th>
-                                <th>Hình thức</th>
+                                <th class="ps-4">Mã giao dịch</th>
+                                <th>Phân loại</th>
+                                <th>Nghiệp vụ</th>
                                 <th class="text-end">Số tiền</th>
-                                <th class="text-end">Thời gian</th>
+                                <th class="text-end pe-4">Thời gian</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -210,8 +212,7 @@
 
         $(document).ready(function () {
             initFinanceDashboard();
-            $('#branchSelect').change(loadFinanceData);
-            $('#timeRangeSelect').change(loadFinanceData);
+            $('#branchSelect, #timeRangeSelect').change(loadFinanceData);
         });
 
         async function initFinanceDashboard() {
@@ -225,10 +226,7 @@
             const daysBack = $('#timeRangeSelect').val();
 
             try {
-                const res = await $.get('/Admin/Admin/GetFinanceDashboardData', {
-                    branchId,
-                    daysBack
-                });
+                const res = await $.get('/Admin/Admin/GetFinanceDashboardData', { branchId, daysBack });
 
                 if (!res.success || !res.data) return;
 
@@ -242,31 +240,30 @@
             }
         }
 
-        /* ================= KPI ================= */
-
+        /* ================= KPI (Đã map DTO mới) ================= */
         function renderKpi(kpi) {
             const revenue = kpi.TotalRevenue || 0;
-            const expense = kpi.TotalPurchase || 0;
-            const profit = kpi.GrossProfit || 0;
+            const purchase = kpi.TotalPurchase || 0;
+            const grossProfit = kpi.GrossProfit || 0;
             const debt = kpi.SupplierDebt || 0;
 
-            const margin = revenue === 0 ? 0 : (profit / revenue) * 100;
+            // Dữ liệu mới
+            const lossValue = kpi.InventoryLossValue || 0;
+            const actualProfit = kpi.ActualProfit || 0;
+            const lossRate = kpi.LossRate || 0;
 
             $('#kpiRevenue').text(formatter.format(revenue));
-            $('#kpiExpense').text(formatter.format(expense));
-            $('#kpiProfit').text(formatter.format(profit));
+            $('#kpiExpense').text(formatter.format(purchase));
             $('#kpiDebt').text(formatter.format(debt));
 
-            const $badge = $('#kpiMarginBadge');
-            $badge.text(`Margin: ${margin.toFixed(1)}%`)
-                .removeClass('bg-success-soft bg-danger-soft text-success text-danger border-success border-danger')
-                .addClass(margin >= 0
-                    ? 'bg-success-soft text-success border-success'
-                    : 'bg-danger-soft text-danger border-danger');
+            // Bóc tách lợi nhuận
+            $('#kpiActualProfit').text(formatter.format(actualProfit));
+            $('#kpiGrossProfit').text(formatter.format(grossProfit));
+            $('#kpiLossValue').text(formatter.format(lossValue));
+            $('#kpiLossRate').text(lossRate.toFixed(1));
         }
 
         /* ================= MAIN CHART ================= */
-
         function renderMainChart(data) {
             if (!data || !data.length) return;
 
@@ -282,10 +279,9 @@
                 chart: { type: 'area', height: 350, toolbar: { show: false } },
                 dataLabels: { enabled: false },
                 stroke: { curve: 'smooth', width: 2 },
+                colors: ['#38a169', '#ff6b6b'], // Xanh lá cho thu, Đỏ cho chi
                 xaxis: { categories: labels },
-                tooltip: {
-                    y: { formatter: val => formatter.format(val) }
-                }
+                tooltip: { y: { formatter: val => formatter.format(val) } }
             };
 
             if (cashFlowChart) cashFlowChart.destroy();
@@ -293,17 +289,36 @@
             cashFlowChart.render();
         }
 
-        /* ================= PIE ================= */
-
+        /* ================= PIE CHART ================= */
         function renderPieChart(data) {
-            if (!data || !data.length) return;
+            if (!data || !data.length) {
+                $('#expensePieChart').html('<div class="text-muted py-5 text-center">Chưa có dữ liệu chi phí</div>');
+                return;
+            }
+
+            // 1. Tạo một bảng màu đẹp mắt cho các loại chi phí thông thường
+            const defaultColors = ['#0d6efd', '#fd7e14', '#20c997', '#6f42c1', '#0dcaf0', '#ffc107', '#343a40'];
+            let colorIndex = 0;
+
+            // 2. Map qua data để tạo mảng màu tương ứng
+            const dynamicColors = data.map(x => {
+                if (x.Label.includes('Thất thoát')) {
+                    return '#dc3545';
+                } else {
+                    const color = defaultColors[colorIndex % defaultColors.length];
+                    colorIndex++;
+                    return color;
+                }
+            });
 
             const options = {
                 series: data.map(x => x.Value),
                 labels: data.map(x => x.Label),
-                chart: { type: 'donut', height: 300 },
+                chart: { type: 'donut', height: 320 },
                 legend: { position: 'bottom' },
-                dataLabels: { enabled: false }
+                dataLabels: { enabled: false },
+                tooltip: { y: { formatter: val => formatter.format(val) } },
+                colors: dynamicColors // Áp dụng mảng màu đã custom
             };
 
             if (expensePieChart) expensePieChart.destroy();
@@ -312,41 +327,33 @@
         }
 
         /* ================= TRANSACTIONS ================= */
-
         function renderTransactions(list) {
             const $tbody = $('#tblTransactions tbody').empty();
 
             if (!list || !list.length) {
-                $tbody.append(`
-                    <tr>
-                        <td colspan="6" class="text-center py-4 text-muted">
-                            Không có giao dịch gần đây
-                        </td>
-                    </tr>`);
+                $tbody.append(`<tr><td colspan="5" class="text-center py-4 text-muted">Không có giao dịch gần đây</td></tr>`);
                 return;
             }
 
             list.forEach(x => {
-                const isIn = x.Status === 'IN';
-                const badgeClass = isIn ? 'bg-success-soft text-success' : 'bg-danger-soft text-danger';
+                const isIn = x.Status === 'IN' || x.Status === 'Completed'; // Tùy logic DB của bro
+                const badgeClass = isIn ? 'bg-success bg-opacity-10 text-success border border-success border-opacity-25'
+                    : 'bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25';
                 const sign = isIn ? '+' : '-';
 
                 $tbody.append(`
-                    <tr>
-                        <td class="ps-4 fw-bold">${x.OrderId}</td>
-                        <td><span class="badge ${badgeClass}">${isIn ? 'Thu' : 'Chi'}</span></td>
-                        <td class="small text-muted">${isIn ? 'Sale' : 'Purchase'}</td>
-                        <td class="text-end fw-bold">${sign}${formatter.format(x.TotalAmount)}</td>
-                        <td class="text-end pe-4 small text-muted">
-                           ${formatDateTime(x.OrderDate)}
-                        </td>
-                    </tr>
-                `);
+                        <tr>
+                            <td class="ps-4 fw-bold text-dark">${x.OrderId}</td>
+                            <td><span class="badge ${badgeClass}">${isIn ? 'Phiếu Thu' : 'Phiếu Chi'}</span></td>
+                            <td class="small text-muted">${isIn ? 'Bán hàng' : 'Nhập hàng/Chi phí'}</td>
+                            <td class="text-end fw-bold ${isIn ? 'text-success' : 'text-danger'}">${sign}${formatter.format(x.TotalAmount)}</td>
+                            <td class="text-end pe-4 small text-muted">${formatDateTime(x.OrderDate)}</td>
+                        </tr>
+                    `);
             });
         }
 
         /* ================= HELPERS ================= */
-
         async function getCurrentUserBranch() {
             try {
                 const res = await $.get('/Admin/Login/GetCurrentUser');
@@ -356,50 +363,32 @@
 
         function formatDateTime(dateStr) {
             if (!dateStr) return '__';
-
             var d = null;
-
-            // Case 1: .NET JSON Date: /Date(1764435600000)/
             if (typeof dateStr === 'string' && dateStr.indexOf('/Date(') === 0) {
                 var ticks = parseInt(dateStr.replace(/[^0-9]/g, ''), 10);
-                if (!isNaN(ticks)) {
-                    d = new Date(ticks);
-                }
-            }
-            // Case 2: ISO / normal date string
-            else {
-                d = new Date(dateStr);
-            }
+                if (!isNaN(ticks)) d = new Date(ticks);
+            } else { d = new Date(dateStr); }
 
             if (!d || isNaN(d.getTime())) return '__';
-
             var dd = ('0' + d.getDate()).slice(-2);
             var mm = ('0' + (d.getMonth() + 1)).slice(-2);
             var yyyy = d.getFullYear();
-
             var hh = ('0' + d.getHours()).slice(-2);
             var mi = ('0' + d.getMinutes()).slice(-2);
 
-            return dd + '/' + mm + '/' + yyyy + ' ' + hh + ':' + mi;
+            return `${dd}/${mm}/${yyyy} ${hh}:${mi}`;
         }
 
         async function loadDropdowns(branchId) {
             try {
                 const res = await $.get('/Admin/Admin/LoadDropdowns', { branchId });
-                const $select = $('#branchSelect').empty()
-                    .append('<option value="">-- Tất cả Chi Nhánh --</option>');
-
-                (res.branches || []).forEach(b =>
-                    $select.append(`<option value="${b.BranchId}">${b.Name}</option>`));
-
+                const $select = $('#branchSelect').empty().append('<option value="">-- Tất cả Chi Nhánh --</option>');
+                (res.branches || []).forEach(b => $select.append(`<option value="${b.BranchId}">${b.Name}</option>`));
                 if (currentUserBranchId) $select.val(currentUserBranchId);
-            } catch (e) {
-                console.error('Load dropdown failed', e);
-            }
+            } catch (e) { console.error('Load dropdown failed', e); }
         }
     </script>
 }
-
 
 @section Styles {
     <style>
@@ -410,18 +399,19 @@
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
 
             .finance-card:hover {
-                transform: translateY(-8px);
-                box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+                transform: translateY(-5px);
+                box-shadow: 0 12px 25px rgba(0,0,0,0.15);
             }
 
         /* Các bộ màu Gradient sang trọng */
         .card-revenue {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
         }
-        /* Tím xanh */
+        /* Xanh dương sáng */
         .card-expense {
             background: linear-gradient(135deg, #ff6b6b 0%, #ee5253 100%);
         }
@@ -436,14 +426,15 @@
         /* Cam hoàng hôn */
 
         .finance-icon {
-            width: 50px;
-            height: 50px;
+            width: 48px;
+            height: 48px;
             border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 22px;
+            font-size: 20px;
             color: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
         .bg-white-10 {
@@ -453,7 +444,7 @@
         .finance-info h6 {
             font-size: 0.8rem;
             letter-spacing: 0.5px;
-            margin-bottom: 8px;
+            margin-bottom: 5px;
             text-transform: uppercase;
         }
 
@@ -467,17 +458,9 @@
             margin-bottom: 2px;
         }
 
-        /* Làm sạch Select2 của DreamPOS để khớp với header mới */
         .select2-container--default .select2-selection--single {
             border: none !important;
             background-color: transparent !important;
-        }
-
-        /* Hiệu ứng bóng mờ cho Card Chart */
-        .card.flex-fill {
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-            border: 1px solid rgba(0,0,0,0.05);
-            border-radius: 15px;
         }
     </style>
 }

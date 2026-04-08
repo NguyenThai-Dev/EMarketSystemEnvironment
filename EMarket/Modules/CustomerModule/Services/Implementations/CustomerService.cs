@@ -173,7 +173,7 @@ namespace EMarket.Modules.CustomerModule.Services.Implementations
             {
                 try
                 {
-                    string userFolder = HttpContext.Current.Server.MapPath($"~/Uploads/Users/{entity.customer_id}");
+                    string userFolder = HttpContext.Current.Server.MapPath($"~/Uploads/Customers/{entity.customer_id}");
                     Directory.CreateDirectory(userFolder);
 
                     // Xóa avatar cũ nếu có

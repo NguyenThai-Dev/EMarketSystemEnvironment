@@ -30,25 +30,26 @@
                             <a class="btn btn-searchset"><img src="~/assets/img/icons/search-white.svg" alt="img" /></a>
                         </div>
                     </div>
-                    <div class="wordset">
-                        <ul>
-                            <li>
-                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf">
-                                    <img src="~/assets/img/icons/pdf.svg" alt="img" />
-                                </a>
-                            </li>
-                            <li>
-                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel">
-                                    <img src="~/assets/img/icons/excel.svg" alt="img" />
-                                </a>
-                            </li>
-                            <li>
-                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="print">
-                                    <img src="~/assets/img/icons/printer.svg" alt="img" />
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
+                    @*<div class="wordset">
+            <ul>
+                <li>
+                    <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf">
+                        <img src="~/assets/img/icons/pdf.svg" alt="img" />
+                    </a>
+                </li>
+                <li>
+                    <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel">
+                        <img src="~/assets/img/icons/excel.svg" alt="img" />
+                    </a>
+                </li>
+                <li>
+                    <a data-bs-toggle="tooltip" data-bs-placement="top" title="print">
+                        <img src="~/assets/img/icons/printer.svg" alt="img" />
+                    </a>
+                </li>
+            </ul>
+        </div>*@
+                    @Html.Partial("~/Areas/Admin/Views/Partial/_ExportButtons.cshtml", "tblProducts")
                 </div>
 
                 <div class="card mb-0" id="filter_inputs">
@@ -449,13 +450,8 @@
             });
         }
 
-        //function defaultImage(img, id) {
-        //    if (!img) return '/assets/img/product/product1.jpg';
-        //    return img.startsWith('/') ? img : '/Uploads/Products/' + id + '/' + img;
-        //}
-
         function defaultImage(img) {
-            return img ? img : '/assets/img/product/product1.jpg';
+            return img ? img : '/assets/img/EMarket_Logo_Icon.png'; 
         }
 
         function formatChildRow(row) {

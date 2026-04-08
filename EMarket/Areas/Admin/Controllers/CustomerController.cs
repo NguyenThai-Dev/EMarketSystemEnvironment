@@ -7,7 +7,6 @@ using EMarket.Modules.CustomerModule.Services.Interfaces;
 
 namespace EMarket.Areas.Admin.Controllers
 {
-    [AllowAnonymous]
     public class CustomerController : Controller
     {
         private readonly ICustomerService _customerService;

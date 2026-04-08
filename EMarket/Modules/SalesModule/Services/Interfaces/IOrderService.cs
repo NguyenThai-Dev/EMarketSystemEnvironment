@@ -8,6 +8,7 @@ namespace EMarket.Modules.SalesModule.Services.Interfaces
     public interface IOrderService
     {
         Task<List<OrderDTO>> GetAllOrdersAsync();
+        Task<List<OrderDTO>> GetFullOrdersByBranchIdAsync(int? branchId, DateTime? fromDate, DateTime? toDate);
         Task<List<OrderDTO>> GetOrdersByBranchIdAsync(int? branchId, DateTime? fromDate, DateTime? toDate);
         Task<OrderDTO> GetOrderByIdAsync(int orderId);
 

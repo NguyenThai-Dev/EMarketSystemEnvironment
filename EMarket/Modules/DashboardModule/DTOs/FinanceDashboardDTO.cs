@@ -17,6 +17,19 @@ namespace EMarket.Modules.DashboardModule.DTOs
         public decimal TotalPurchase { get; set; }
         public decimal GrossProfit { get; set; }
         public decimal SupplierDebt { get; set; }
+
+        //Thất thoát hàng tồn kho
+        public decimal InventoryLossValue { get; set; }
+
+
+
+        // Thuộc tính tính toán: Lợi nhuận sau khi trừ hàng hỏng
+        public decimal ActualProfit => GrossProfit - InventoryLossValue;
+
+        // Tỷ lệ thất thoát trên lợi nhuận (%)
+        public double LossRate => GrossProfit > 0
+            ? (double)(InventoryLossValue / GrossProfit) * 100
+            : 0;
     }
 
     public class FinanceDailyTrendDTO

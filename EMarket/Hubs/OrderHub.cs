@@ -99,5 +99,10 @@ namespace EMarket.Hubs
             Debug.WriteLine($"---> Console Test: Đã bắn tín hiệu test cho Branch {branchId} và Admin");
             Clients.Caller.orderChanged(new { message = $"Đã trigger tới group {branchGroupName}" });
         }
+
+        public async Task ListenForPayment(string orderCode)
+        {
+            await Groups.Add(Context.ConnectionId, "PAYMENT_" + orderCode);
+        }
     }
 }

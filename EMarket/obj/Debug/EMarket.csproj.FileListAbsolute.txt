@@ -220,3 +220,17 @@ D:\Bai_Tap_Cac_Mon\Nghien_Cuu_Khoa_Hoc\EMarket\obj\Debug\EMarket.csproj.CoreComp
 D:\Bai_Tap_Cac_Mon\Nghien_Cuu_Khoa_Hoc\EMarket\obj\Debug\EMarket.csproj.Up2Date
 D:\Bai_Tap_Cac_Mon\Nghien_Cuu_Khoa_Hoc\EMarket\obj\Debug\EMarket.dll
 D:\Bai_Tap_Cac_Mon\Nghien_Cuu_Khoa_Hoc\EMarket\obj\Debug\EMarket.pdb
+D:\Bai_Tap_Cac_Mon\Nghien_Cuu_Khoa_Hoc\EMarket\bin\Microsoft.Extensions.Configuration.Abstractions.dll
+D:\Bai_Tap_Cac_Mon\Nghien_Cuu_Khoa_Hoc\EMarket\bin\Microsoft.Extensions.Configuration.Binder.dll
+D:\Bai_Tap_Cac_Mon\Nghien_Cuu_Khoa_Hoc\EMarket\bin\Microsoft.Extensions.Configuration.dll
+D:\Bai_Tap_Cac_Mon\Nghien_Cuu_Khoa_Hoc\EMarket\bin\Microsoft.Extensions.DependencyInjection.dll
+D:\Bai_Tap_Cac_Mon\Nghien_Cuu_Khoa_Hoc\EMarket\bin\Microsoft.Extensions.Http.dll
+D:\Bai_Tap_Cac_Mon\Nghien_Cuu_Khoa_Hoc\EMarket\bin\Microsoft.Extensions.Logging.dll
+D:\Bai_Tap_Cac_Mon\Nghien_Cuu_Khoa_Hoc\EMarket\bin\PayOS.dll
+D:\Bai_Tap_Cac_Mon\Nghien_Cuu_Khoa_Hoc\EMarket\bin\Microsoft.Extensions.Configuration.xml
+D:\Bai_Tap_Cac_Mon\Nghien_Cuu_Khoa_Hoc\EMarket\bin\Microsoft.Extensions.Configuration.Abstractions.xml
+D:\Bai_Tap_Cac_Mon\Nghien_Cuu_Khoa_Hoc\EMarket\bin\Microsoft.Extensions.Configuration.Binder.xml
+D:\Bai_Tap_Cac_Mon\Nghien_Cuu_Khoa_Hoc\EMarket\bin\Microsoft.Extensions.DependencyInjection.xml
+D:\Bai_Tap_Cac_Mon\Nghien_Cuu_Khoa_Hoc\EMarket\bin\Microsoft.Extensions.Http.xml
+D:\Bai_Tap_Cac_Mon\Nghien_Cuu_Khoa_Hoc\EMarket\bin\Microsoft.Extensions.Logging.xml
+D:\Bai_Tap_Cac_Mon\Nghien_Cuu_Khoa_Hoc\EMarket\bin\PayOS.xml

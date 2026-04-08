@@ -1,7 +1,12 @@
-﻿using System;
+﻿using EMarket.Hubs;
+using EMarket.Modules.SalesModule.DTOs;
+using EMarket.Modules.SalesModule.Services.Interfaces;
+using Microsoft.AspNet.SignalR;
+using PayOS.Models.Webhooks;
+using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Web.Http;
-using EMarket.Modules.SalesModule.Services.Interfaces;
 
 namespace EMarket.ApiControllers.Admin
 {
@@ -122,5 +127,112 @@ namespace EMarket.ApiControllers.Admin
         }
 
         #endregion
+
+
+        [HttpPost]
+        [Route("payment/create-qr")]
+        public async Task<IHttpActionResult> CreateQR([FromBody] CreateQrRequestDTO request)
+        {
+            if (request == null || request.Amount <= 0)
+                return BadRequest("Dữ liệu không hợp lệ.");
+
+            var result = await _paymentService.CreatePayOSLinkAsync(request);
+
+            if (!result.Success)
+                return BadRequest(result.Message);
+
+            return Ok(result);
+        }
+
+        [HttpPost]
+        [Route("payment/webhook")]
+        public async Task<IHttpActionResult> WebhookHandler([FromBody] Newtonsoft.Json.Linq.JObject rawJson)
+        {
+            try
+            {
+                var serializer = new Newtonsoft.Json.JsonSerializer
+                {
+                    ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver()
+                };
+
+                // Convert JObject sang class Webhook của thư viện với định dạng chuẩn
+                var webhookBody = rawJson.ToObject<PayOS.Models.Webhooks.Webhook>(serializer);
+
+                var verifiedData = await _paymentService.VerifyPayOSWebhookAsync(webhookBody);
+                
+                if (verifiedData.Code == "00")
+                {
+                    var hubContext = GlobalHost.ConnectionManager.GetHubContext<OrderHub>();
+                    var groupName = "PAYMENT_" + verifiedData.OrderCode;
+
+                    // Payload phải khớp với những gì frontend file JS đang lắng nghe
+                    var payload = new
+                    {
+                        orderId = verifiedData.OrderCode,
+                        status = "PAID",
+                        serverTime = DateTime.Now.ToString("HH:mm:ss"),
+                        isTest = false,
+                        message = "Khách hàng đã thanh toán thành công!"
+                    };
+
+                    hubContext.Clients.Group(groupName).orderChanged(payload);
+                    System.Diagnostics.Debug.WriteLine($"[WEBHOOK] Đã bắn SignalR tới group {groupName}");
+
+                    return Ok(new { success = true });
+                }
+
+                return Ok(new { success = false, message = "Giao dịch không thành công" });
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[WEBHOOK ERROR] {ex.Message}");
+
+                return Ok(new { success = false, message = "Xác thực Webhook thất bại" });
+            }
+        }
+
+
+        //[HttpPost]
+        //[Route("payment/webhook")]
+        //public async Task<IHttpActionResult> WebhookHandler([FromBody] Webhook webhookBody)
+        //{
+        //    try
+        //    {
+        //        // 1. Lấy dữ liệu (Service đã được sửa ở trên để không quăng Exception nữa)
+        //        var verifiedData = await _paymentService.VerifyPayOSWebhookAsync(webhookBody);
+
+        //        // 2. Kiểm tra mã thành công (PayOS trả về "00" trong data hoặc code tổng)
+        //        if (webhookBody.Code == "00" || (verifiedData != null && verifiedData.Code == "00"))
+        //        {
+        //            var hubContext = GlobalHost.ConnectionManager.GetHubContext<OrderHub>();
+
+        //            // QUAN TRỌNG: Phải dùng đúng OrderCode để bắn vào Group
+        //            string groupName = "PAYMENT_" + verifiedData.OrderCode.ToString();
+
+        //            var payload = new
+        //            {
+        //                orderId = verifiedData.OrderCode,
+        //                status = "PAID",
+        //                message = "Thanh toán thành công!",
+        //                serverTime = DateTime.Now.ToString("HH:mm:ss")
+        //            };
+
+        //            hubContext.Clients.Group(groupName).orderChanged(payload);
+
+        //            Debug.WriteLine($"[SIGNALR] Đã nổ Ting Ting cho Group: {groupName}");
+        //            return Ok(new { success = true });
+        //        }
+
+        //        return Ok(new { success = false });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Debug.WriteLine($"[FATAL ERROR] {ex.Message}");
+        //        return Ok(new { success = false }); // Luôn trả về 200 để PayOS không bắn lại liên tục
+        //    }
+        //}
+
+
+
     }
 }

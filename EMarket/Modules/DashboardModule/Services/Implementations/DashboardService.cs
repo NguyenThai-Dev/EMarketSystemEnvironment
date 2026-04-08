@@ -1,4 +1,19 @@
-﻿using System;
+﻿using Dapper;
+using EMarket.Forecast.Services.Interfaces;
+using EMarket.Models;
+using EMarket.Modules.CustomerModule.Services.Interfaces;
+using EMarket.Modules.DashboardModule.DTOs;
+using EMarket.Modules.DashboardModule.Servcie.Interfaces;
+using EMarket.Modules.InventoryModule.DTOs;
+using EMarket.Modules.InventoryModule.Services.Interfaces;
+using EMarket.Modules.ProductModule.Services.Interfaces;
+using EMarket.Modules.SalesModule.Services.Interfaces;
+using EMarket.Modules.UserModule.Services.Interfaces;
+using Microsoft.Ajax.Utilities;
+using Microsoft.Extensions.Caching.Memory;
+using SimpleInjector;
+using SimpleInjector.Lifestyles;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -6,24 +21,11 @@ using System.Data.Entity;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
-using Dapper;
-using EMarket.Models; // Đảm bảo namespace đúng với project của bro
-using EMarket.Modules.CustomerModule.Services.Interfaces;
-using EMarket.Modules.DashboardModule.DTOs;
-using EMarket.Modules.DashboardModule.Servcie.Interfaces;
-using EMarket.Modules.InventoryModule.Services.Interfaces;
-using EMarket.Modules.ProductModule.Services.Interfaces;
-using EMarket.Modules.SalesModule.Services.Interfaces;
-using EMarket.Modules.UserModule.Services.Interfaces;
-using Microsoft.Extensions.Caching.Memory;
-using SimpleInjector;
-using SimpleInjector.Lifestyles;
 
 namespace EMarket.Modules.DashboardModule.Services.Implementations
 {
     public class DashboardService : IDashboardService
     {
-        // Các Dependencies giữ nguyên
         private readonly IOrderService _orderService;
         private readonly IPurchaseService _purchaseService;
         private readonly IInventoryService _inventoryService;
@@ -34,6 +36,7 @@ namespace EMarket.Modules.DashboardModule.Services.Implementations
         private readonly ICustomerService _customerService;
         private readonly IUserService _userService;
         private readonly IMemoryCache _cache;
+        private readonly IAIService _aiService;
         private readonly EMarket_DBEntities _db;
         private readonly string _connStr;
         private readonly Container _container;
@@ -65,7 +68,6 @@ namespace EMarket.Modules.DashboardModule.Services.Implementations
             _container = container;
             _db = eMarket_DBEntities;
 
-            // Lấy connection string chuẩn
             _connStr = ConfigurationManager.ConnectionStrings["EMarket_Connections"].ConnectionString;
         }
 
@@ -118,26 +120,62 @@ namespace EMarket.Modules.DashboardModule.Services.Implementations
         // 4. OVERVIEW ORCHESTRATOR
         public async Task<DashboardOverviewDTO> GetOverviewAsync(int? branchId, DateTime fromDate, DateTime toDate, string groupBy)
         {
-            // Bây giờ các hàm con đều dùng kết nối riêng (New SqlConnection), 
-            // nên việc chạy song song (Parallel) ở đây là AN TOÀN TUYỆT ĐỐI.
+            // 1. Ép tất cả chạy song song hoàn toàn trên các luồng (Thread) riêng biệt bằng Task.Run
+            var trendAndSalesTask = Task.Run(async () => await GetTrendAndSalesInternalAsync(branchId, fromDate, toDate, groupBy));
+            var inventorySummaryTask = Task.Run(async () => await GetSummaryAsync(branchId));
+            var stockChartTask = Task.Run(async () => await GetStockChartAsync(branchId));
+            var branchPerformanceTask = Task.Run(async () => await GetBranchPerformanceAsync(branchId, fromDate, toDate));
 
-            var trendAndSalesTask = GetTrendAndSalesInternalAsync(branchId, fromDate, toDate, groupBy);
-            var inventorySummaryTask = GetSummaryAsync(branchId);
-            var stockChartTask = GetStockChartAsync(branchId);
-            var branchPerformanceTask = GetBranchPerformanceAsync(branchId, fromDate, toDate);
+            // =====================================================================
+            // TASK 5 (MỚI): Tính hàng thất thoát trực tiếp bằng Dapper (Không cần sửa SP)
+            // =====================================================================
+            var inventoryLossTask = Task.Run(async () =>
+            {
+                using (var conn = new SqlConnection(_connStr))
+                {
+                    // Câu Query join trực tiếp để tìm hàng số lượng > 0 và đã quá hạn
+                    string sql = @"
+                SELECT ISNULL(SUM(CAST(i.quantity AS DECIMAL(18,2)) * ISNULL(pl.cost_price, 0)), 0)
+                FROM Inventory i
+                INNER JOIN ProductLots pl ON i.lot_id = pl.lot_id
+                INNER JOIN Warehouses w ON i.warehouse_id = w.warehouse_id
+                WHERE i.quantity > 0 
+                  AND pl.expiry_date < GETDATE()
+                  AND (@BranchId IS NULL OR w.branch_id = @BranchId);
+                ";
 
-            // Chờ tất cả xong mà không sợ "connection is connecting"
-            await Task.WhenAll(trendAndSalesTask, inventorySummaryTask, stockChartTask, branchPerformanceTask);
+                    await conn.OpenAsync();
+                    return await conn.ExecuteScalarAsync<decimal>(sql, new { BranchId = branchId });
+                }
+            });
 
-            // Ghép dữ liệu
+            // 2. Gom tất cả lại và chờ chạy xong cùng một lúc (Tốc độ bàn thờ)
+            await Task.WhenAll(
+                trendAndSalesTask,
+                inventorySummaryTask,
+                stockChartTask,
+                branchPerformanceTask,
+                inventoryLossTask
+            );
+
+            // 3. Lắp ráp dữ liệu trả về cho Frontend
             var overviewData = trendAndSalesTask.Result;
             var inventoryData = inventorySummaryTask.Result;
 
+            // Map dữ liệu từ Task Summary (Task 2)
             overviewData.Summary.TotalProducts = inventoryData.TotalProducts;
             overviewData.Summary.LowStockProducts = inventoryData.LowStockProducts;
             overviewData.Summary.TotalWarehouses = inventoryData.TotalWarehouses;
             overviewData.Summary.TotalInventoryQuantity = inventoryData.TotalInventoryQuantity;
 
+            // Map dữ liệu tăng trưởng (Nếu có từ SP cũ)
+            overviewData.Summary.SalesGrowthPercent = inventoryData.SalesGrowthPercent;
+            overviewData.Summary.PurchaseGrowthPercent = inventoryData.PurchaseGrowthPercent;
+
+            // Gán dữ liệu Thất thoát từ Task 5 (Mới)
+            overviewData.Summary.InventoryLossValue = inventoryLossTask.Result;
+
+            // Gán các mảng biểu đồ và chi nhánh
             overviewData.StockChart = stockChartTask.Result;
             overviewData.BranchPerformance = branchPerformanceTask.Result;
 
@@ -431,6 +469,7 @@ namespace EMarket.Modules.DashboardModule.Services.Implementations
                         .GroupBy(i => i.ProductLot.Product)
                         .Select(g => new
                         {
+                            ProductId = g.Key.product_id,
                             ProductName = g.Key.name,
                             CategoryName = g.Key.ProductCategory.name, // Giả sử có Navigation Property Category
                             TotalQty = g.Sum(i => i.quantity),
@@ -440,15 +479,84 @@ namespace EMarket.Modules.DashboardModule.Services.Implementations
                         })
                         .ToListAsync();
 
+                    var warningDate = DateTime.Now.AddDays(daysBack);
+
+                    var productOutOfExpiry = await query
+                        .Where(i => i.ProductLot.expiry_date <= warningDate)
+                        .GroupBy(i => i.ProductLot.Product)
+                        .Select(g => new
+                        {
+                            ProductName = g.Key.name,
+                            TotalQty = g.Sum(i => i.quantity),
+                            Price = g.Key.price,
+                        })
+                        .ToListAsync();
+                    var totalInventoryExpiryValue = productOutOfExpiry.Sum(y => y.TotalQty * (y.Price ?? 0)) ?? 0;
+
+                    var orders = await _orderService.GetFullOrdersByBranchIdAsync(branchId, fromDate, today);
+
+                    var sellingPriceStats = orders
+                        .SelectMany(o => o.OrderDetails)
+                        .GroupBy(od => od.ProductId)
+                        .Select(g => new {
+                            ProductId = g.Key,
+                            TotalSold = g.Sum(od => od.Quantity),
+                            SellingPrice = g.Average(od => od.UnitPrice)
+                        })
+                        .ToList();
+
+                    var totalInvValueNow = await query.SumAsync(i => (decimal?)i.quantity * (i.ProductLot.cost_price ?? 0)) ?? 0; ;
+
+                    var movementStats = await db.StockMovements.AsNoTracking()
+                         .Where(m => m.movement_date >= fromDate && m.movement_date <= today)
+                         .Where(m => (!warehouseId.HasValue || m.warehouse_id == warehouseId))
+                         .GroupBy(m => m.quantity > 0 ? "IN" : "OUT")
+                         .Select(g => new {
+                             Type = g.Key,
+                             TotalValue = g.Sum(m => Math.Abs((decimal)m.quantity) * (m.Product.price ?? 0))
+                         })
+                         .ToListAsync();
+
+                    var totalImportVal = movementStats.FirstOrDefault(x => x.Type == "IN")?.TotalValue ?? 0;
+                    var totalExportVal = movementStats.FirstOrDefault(x => x.Type == "OUT")?.TotalValue ?? 0;
+                    // 3. Tính Giá trị tồn kho đầu kỳ (Mô phỏng ngược lại)
+                    var totalInvValueBeginning = totalInvValueNow - totalImportVal + totalExportVal;
+
+                    // 4. Tính Tồn kho bình quân
+                    var averageInventory = (totalInvValueNow + totalInvValueBeginning) / 2;
+
+                    // Tính COGS (Giá vốn hàng bán)
+                    var totalCOGS = (decimal)sellingPriceStats.Sum(s => {
+                        var cost = productStats.FirstOrDefault(p => p.ProductId == s.ProductId)?.Price ?? 0;
+                        return (double)s.TotalSold * (double)cost;
+                    });
+
+                    var highRiskCount = await db.AI_InventoryWarning.AsNoTracking()
+                        .Where(w => (!branchId.HasValue || w.branch_id == branchId)
+                                 && w.warning_type == "EXPIRY_RISK"
+                                 && w.confidence_score > 80) // Chỉ lấy những cảnh báo AI tin cậy trên 80%
+                        .Select(w => w.product_id)
+                        .Distinct() // Đếm số lượng đầu sản phẩm (SKU) bị rủi ro
+                        .CountAsync();
+
+                    var warehouseCapacity = 500000;
+                    var totalCurrentQty = productStats.Sum(x => x.TotalQty) ?? 0;
+                    double rawCapacity = warehouseCapacity > 0
+    ? (double)totalCurrentQty / warehouseCapacity * 100
+    : 0;
+
                     // 1.1 Tính KPI Tồn kho
                     var kpi = new WarehouseKpi
                     {
-                        TotalInventoryValue = productStats.Sum(x => x.TotalQty * (x.Price ?? 0)) ?? 0,
+                        TotalInventoryExpiryValue = totalInventoryExpiryValue,
+                        TotalInventoryValue = totalInvValueNow - totalInventoryExpiryValue,
                         TotalSku = productStats.Count,
                         LowStockCount = productStats.Count(x => x.TotalQty <= x.MinStock),
-                        CapacityPercent = productStats.Sum(x => x.MaxStock) > 0
-                            ? (double)productStats.Sum(x => x.TotalQty) / productStats.Sum(x => x.MaxStock) * 100 ?? 0
-                            : 0
+                        OutOfExpiryCount = productOutOfExpiry.Count,
+                        CapacityPercent = Math.Min(rawCapacity, 100.0),
+                        InventoryTurnover = averageInventory > 0 ? (double)(totalCOGS / averageInventory): 0,
+                        DeadStockCount = productStats.Count(p => p.TotalQty > 0 && !sellingPriceStats.Any(s => s.ProductId == p.ProductId)),
+                        HighRiskExpiryCount = highRiskCount
                     };
 
                     // 1.2 List Low Stock (Lọc từ data đã lấy, không cần query lại)
@@ -460,7 +568,8 @@ namespace EMarket.Modules.DashboardModule.Services.Implementations
                         {
                             Name = x.ProductName,
                             Current = (int)x.TotalQty,
-                            Min = x.MinStock ?? 0
+                            Min = x.MinStock ?? 0,
+
                         })
                         .ToList();
 
@@ -537,15 +646,126 @@ namespace EMarket.Modules.DashboardModule.Services.Implementations
                     var db = _container.GetInstance<EMarket_DBEntities>();
                     // Đếm đơn Processing (Có thể lọc theo Branch nếu cần thiết)
                     return await db.Orders.AsNoTracking()
-                        .CountAsync(o => o.status == "Processing"
+                        .CountAsync(o => o.status == "Pending"
                                     && (!branchId.HasValue || o.branch_id == branchId));
                 }
             });
 
             // =================================================================================
+            // TASK 4: HÀNG HẾT HẠN / CẬN DATE 
+            // =================================================================================
+            var expiredTask = Task.Run(async () =>
+            {
+                using (AsyncScopedLifestyle.BeginScope(_container))
+                {
+                    var db = _container.GetInstance<EMarket_DBEntities>();
+                    var now = DateTime.Now.Date;
+
+                    // "Thời gian tương ứng": Lấy hàng đã hết hạn HOẶC sẽ hết hạn trong 30 ngày tới
+                    var warningDate = now.AddDays(daysBack);
+
+                    var expiredQuery = db.Inventories.AsNoTracking()
+                        .Where(i => i.quantity > 0 // Chỉ quan tâm hàng còn tồn trong kho
+                                 && i.ProductLot.expiry_date <= warningDate // Lấy cả hết hạn và cận date
+                                 && (!warehouseId.HasValue || i.warehouse_id == warehouseId)
+                                 && (!branchId.HasValue || i.Warehouse.branch_id == branchId));
+
+                    var expiredList = await expiredQuery
+                        .OrderBy(i => i.ProductLot.expiry_date) // Cái nào rủi ro nhất lên đầu
+                        .Take(50) // Lấy top 10 để show dashboard
+                        .Select(i => new
+                        {
+                            Name = i.ProductLot.Product.name,
+                            LotNumber = i.ProductLot.batch_code,
+                            Qty = i.quantity,
+                            ExpiryDate = i.ProductLot.expiry_date
+                        })
+                        .ToListAsync();
+
+                    // Map sang DTO và xử lý logic Status
+                    return expiredList.Select(x => new ExpiredItem
+                    {
+                        Name = x.Name,
+                        LotNumber = x.LotNumber ?? "N/A",
+                        Qty = (int)x.Qty,
+                        ExpiryDate = x.ExpiryDate.ToString("dd/MM/yyyy"), 
+                        Status = x.ExpiryDate < now ? "Expired" : "Expiring Soon"
+                    }).ToList();
+                }
+            });
+
+            // =================================================================================
+            // TASK 5: DỰ BÁO AI NHẬP HÀNG
+            // =================================================================================
+            var aiForeastCastTask = Task.Run(async () =>
+            {
+                using (var conn = new SqlConnection(_connStr))
+                {
+                    await conn.OpenAsync();
+
+                    string sql = @"
+                        SELECT TOP 20
+                            p.name AS ProductName, 
+                            r.recommended_min AS SuggestedMinQty, 
+                            r.recommended_max AS SuggestedMaxQty,
+                            r.reason AS Reason,
+                            r.confidence_level AS Priority,
+                            r.created_at AS ForecastDate
+                        FROM AI_Purchase_Recommendation r
+                        INNER JOIN Products p ON r.product_id = p.product_id
+                        WHERE (@branchId IS NULL OR r.branch_id = @branchId)
+                          AND (@warehouseId IS NULL OR r.warehouse_id = @warehouseId)
+                        ORDER BY 
+                            CASE 
+                                WHEN r.confidence_level = 'High' THEN 3 
+                                WHEN r.confidence_level = 'Normal' THEN 2 
+                                ELSE 1 
+                            END DESC;
+                        ";
+
+                    var forecastList = (await conn.QueryAsync<PurchaseRecommendationItem>(sql, new
+                    {
+                        branchId,
+                        warehouseId
+                    })).ToList();
+
+                    return forecastList;
+                }
+            });
+
+            // =================================================================================
+            // TASK 5: DỰ BÁO AI TỒN KHO RỦI RO HẾT HẠN
+            // =================================================================================
+            var aiInventoryRiskTask = Task.Run(async () =>
+            {
+                using (var conn = new SqlConnection(_connStr))
+                {
+                    await conn.OpenAsync();
+                    string sql = @"
+                        SELECT TOP 20
+                            p.name AS ProductName, 
+                            w.current_stock AS CurrentStock,
+                            w.days_to_exhaust AS DaysToExhaust,
+                            w.risk_reason AS RiskReason,
+                            w.confidence_score AS Confidence
+                        FROM AI_InventoryWarning w
+                        INNER JOIN Products p ON w.product_id = p.product_id
+                        WHERE w.warning_type = 'EXPIRY_RISK'
+                          AND w.confidence_score > 80
+                          AND (@branchId IS NULL OR w.branch_id = @branchId)
+                        ORDER BY w.confidence_score DESC;
+                        ";
+                    var riskList = (await conn.QueryAsync<AIWarningItem>(sql, new
+                    {
+                        branchId
+                    })).ToList();
+                    return riskList;
+                }
+            });
+            // =================================================================================
             // TỔNG HỢP KẾT QUẢ (WAIT ALL)
             // =================================================================================
-            await Task.WhenAll(inventoryTask, movementTask, orderTask);
+            await Task.WhenAll(inventoryTask, movementTask, orderTask, expiredTask, aiForeastCastTask, aiInventoryRiskTask);
 
             // Mapping Data vào ViewModel
             var invResult = inventoryTask.Result;
@@ -557,6 +777,8 @@ namespace EMarket.Modules.DashboardModule.Services.Implementations
 
             // 2. Fill Low Stock List
             model.Lists.LowStock = invResult.LowStock;
+            model.Lists.AIWarnings = aiInventoryRiskTask.Result;
+            model.Lists.PurchaseAdvice = aiForeastCastTask.Result;
 
             // 3. Fill Category Chart
             foreach (var cat in invResult.Categories)
@@ -592,8 +814,13 @@ namespace EMarket.Modules.DashboardModule.Services.Implementations
                 model.Charts.Movement.Outbound.Add(Math.Abs((int)(dataPoint?.Outbound ?? 0)));
             }
 
+            model.Lists.Expired = expiredTask.Result;
+
             return model;
         }
+
+
+        // Nâng cấp quản lsy thêm hết hạn hàng hóa và chi phí khấu trừ hàng hóa hết hạn.
 
         #endregion
 
@@ -625,12 +852,20 @@ namespace EMarket.Modules.DashboardModule.Services.Implementations
                         .Where(sd => !branchId.HasValue || sd.PurchaseOrder.Warehouse.branch_id == branchId)
                         .SumAsync(sd => (decimal?)sd.unpaid_amount) ?? 0;
 
+                    var inventoryLoss = await db.Inventories
+                        .Where(i => i.quantity > 0
+                                    && i.ProductLot.expiry_date < DateTime.Now
+                                    && (!branchId.HasValue || i.Warehouse.branch_id == branchId))
+                        .SumAsync(i => (decimal?)i.quantity * (i.ProductLot.cost_price ?? 0)) ?? 0;
+
+
                     return new FinanceKpiDTO
                     {
                         TotalRevenue = revenue,
                         TotalPurchase = purchase,
                         GrossProfit = revenue - purchase,
-                        SupplierDebt = debt
+                        SupplierDebt = debt,
+                        InventoryLossValue = inventoryLoss
                     };
                 }
             });
@@ -679,15 +914,42 @@ namespace EMarket.Modules.DashboardModule.Services.Implementations
                 using (AsyncScopedLifestyle.BeginScope(_container))
                 {
                     var db = _container.GetInstance<EMarket_DBEntities>();
-                    return await db.Expenses
+                    var expenseList = await db.Expenses
                         .Where(e => e.expense_date >= fromDate && (!branchId.HasValue || e.branch_id == branchId))
-                        .GroupBy(e => new { e.category_id, e.ExpenseCategory.name })
-                        .Select(g => new FinanceExpensePieDTO
+                        .GroupBy(e => e.category_id)
+                        .Select(g => new
                         {
-                            Label = g.Key.name,
-                            Value = g.Sum(e => e.amount)
+                            CategoryName = g.FirstOrDefault().ExpenseCategory.name, // Lấy tên category từ 1 record bất kỳ trong nhóm
+                            TotalAmount = g.Sum(e => e.amount)
                         })
                         .ToListAsync();
+
+                   var inventoryLossList = await db.Inventories
+                        .Where(i => i.quantity > 0
+                                    && i.ProductLot.expiry_date < DateTime.Now
+                                    && (!branchId.HasValue || i.Warehouse.branch_id == branchId))
+                        .GroupBy(i => "Inventory Loss") 
+                        .Select(g => new
+                        {
+                            TotalAmount = g.Sum(i => (decimal?)i.quantity * (i.ProductLot.cost_price ?? 0)) ?? 0
+                        })
+                        .ToListAsync();
+                    // Kết hợp 2 nguồn chi phí lại
+                    var combined = expenseList.Select(e => new FinanceExpensePieDTO
+                    {
+                        Label = e.CategoryName,
+                        Value = e.TotalAmount
+                    }).ToList();
+                    // Thêm chi phí thất thoát hàng tồn kho vào danh sách (nếu có)
+                    if (inventoryLossList.Any() && inventoryLossList.First().TotalAmount > 0)
+                    {
+                        combined.Add(new FinanceExpensePieDTO
+                        {
+                            Label = "Thất thoát hàng hóa chưa khấu trừ",
+                            Value = inventoryLossList.First().TotalAmount
+                         });
+                     }
+                    return combined;
                 }
             });
 

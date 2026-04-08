@@ -1279,6 +1279,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/signalr.js/2.4.3/jquery.signalR.min.js"></script>
     <script src="~/assets/js/signalr-handler.js"></script>
     <script src="~/signalr/hubs"></script>
+    <script src="~/assets/js/POS_PaymentHub.js"></script>
 
     <script>
         window.currentSignalRConnectionId = "";
@@ -2651,7 +2652,7 @@
                     dropdown.innerHTML = products.map((p, index) => {
                         const stockQty = p.Quantity || 0;
                         const priceVal = p.Price || 0;
-                        const imgUrl = p.Image || '/assets/img/product/no-image.png';
+                        const imgUrl = p.Image || '/assets/img/EMarket_Logo.png';
 
                         const stockClass = stockQty > 10 ? 'in-stock' : (stockQty > 0 ? 'low-stock' : 'out-stock');
                         const stockText = stockQty > 0 ? `Còn ${stockQty}` : 'Hết hàng';
@@ -3169,7 +3170,7 @@
                     }, 300);
                 },
 
-                setMethod: (method) => {
+                setMethod: async (method) => {
                     state.paymentMethod = method;
                     const totalAmount = Util.parseNumber(document.getElementById('lblTotalPay').textContent);
 
@@ -3194,29 +3195,59 @@
                     else if (method === 'transfer') {
                         document.getElementById('cashArea').classList.add('d-none');
                         document.getElementById('otherMethodArea').classList.remove('d-none');
-
-                        // --- TẠO VIETQR ---
                         const qrContainer = document.getElementById('qrContainer');
 
-                        // Nội dung chuyển khoản: Tạm thời dùng timestamp hoặc mã tạm.
-                        // Chuẩn nhất là dùng OrderId, nhưng lúc này chưa tạo Order nên dùng "POS + Time"
-                        const content = `POS ${Date.now().toString().slice(-6)}`;
-                        if (!BANK_INFO.BANK_ID || !BANK_INFO.ACCOUNT_NO) {
-                            document.getElementById('qrContainer').innerHTML = `
-                                                                <div class="alert alert-danger">
-                                                                    Chưa cấu hình tài khoản nhận tiền trong hệ thống!
-                                                                </div>`;
-                            return;
-                        }
-                        // Link VietQR QuickLink
-                        // Format: https://img.vietqr.io/image/<BANK_ID>-<ACCOUNT_NO>-<TEMPLATE>.png?amount=<AMOUNT>&addInfo=<CONTENT>
-                        const qrUrl = `https://img.vietqr.io/image/${BANK_INFO.BANK_ID}-${BANK_INFO.ACCOUNT_NO}-${BANK_INFO.TEMPLATE}.png?amount=${totalAmount}&addInfo=${content}&accountName=${encodeURIComponent(BANK_INFO.ACCOUNT_NAME)}`;
+                        Util.showLoading('Đang khởi tạo mã thanh toán PayOS...');
 
-                        qrContainer.innerHTML = `
-                                                                <img src="${qrUrl}" alt="QR Code" class="img-fluid rounded border shadow-sm" style="max-height: 250px;">
-                                                                <div class="mt-2 fw-bold text-primary">${Util.formatMoney(totalAmount)}</div>
-                                                                <small class="text-muted d-block">Nội dung: <strong>${content}</strong></small>
-                                                            `;
+                        try {
+                            const requestData = {
+                                Amount: totalAmount,
+                                Description: "Chuyen khoan POS" 
+                            };
+
+                            const response = await API.post('/api/admin/sales/payment/create-qr', requestData);
+                            Util.hideLoading();
+
+                            if (response && response.Success) {
+                                // response.QrCode là chuỗi text chuẩn VietQR do PayOS trả về
+                                // Mẹo: Dùng API gen ảnh QR từ chuỗi này để vẽ thẳng ra màn hình POS
+                                const qrImageUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(response.QrCode)}`;
+
+                                qrContainer.innerHTML = `
+                <div class="text-center">
+                    <img src="${qrImageUrl}" alt="PayOS QR" class="img-fluid rounded border shadow-sm" style="max-height: 250px;">
+                    <div class="mt-2 fw-bold text-primary">${Util.formatMoney(totalAmount)}</div>
+                    <small class="text-muted d-block">Mã giao dịch: <strong>${response.OrderCode}</strong></small>
+                    <small class="text-info d-block mt-2">
+                        <i class="fa fa-spinner fa-spin"></i> Đang chờ khách hàng quét mã...
+                    </small>
+                </div>
+            `;
+
+                                // QUAN TRỌNG: Gọi Hub để join vào room chờ riêng biệt cho đơn này
+                                if ($.connection.hub.state === $.signalR.connectionState.connected) {
+                                    var orderHub = $.connection.orderHub;
+
+                                    // Gọi hàm ListenForPayment trong C#
+                                    orderHub.server.listenForPayment(response.OrderCode.toString())
+                                        .done(function () {
+                                            console.log(`[SignalR] Đã chui vào phòng chờ: PAYMENT_${response.OrderCode}`);
+                                        })
+                                        .fail(function (err) {
+                                            console.error("[SignalR] Lỗi join phòng thanh toán:", err);
+                                        });
+                                } else {
+                                    console.warn("[SignalR] Mất kết nối, không thể nhận Webhook realtime!");
+                                }
+
+                            } else {
+                                qrContainer.innerHTML = `<div class="alert alert-danger">${response.Message || 'Lỗi từ máy chủ thanh toán'}</div>`;
+                            }
+                        } catch (error) {
+                            Util.hideLoading();
+                            console.error("Lỗi gọi API PayOS:", error);
+                            qrContainer.innerHTML = `<div class="alert alert-danger">Lỗi kết nối đến cổng thanh toán.</div>`;
+                        }
                     }
                     else {
                         // Các phương thức khác (Thẻ...)
