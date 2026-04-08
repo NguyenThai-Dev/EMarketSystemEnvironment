@@ -1,10 +1,6 @@
-Listed directory Nghien_Cuu_Khoa_Hoc
-Searched for "PythonModel"
-
-Dưới đây là tài liệu kỹ thuật chuyên sâu (Technical Documentation) của EMarket Ecosystem, được biên soạn theo tiêu chuẩn học thuật và kiến trúc phần mềm cấp cao.
-
-```markdown
 # EMarket Ecosystem - Enterprise Architecture & Technical Specification
+
+Hệ sinh thái EMarket là một nền tảng quản trị doanh nghiệp lai (Hybrid ERP), kết hợp sức mạnh vận hành ổn định của .NET Framework 4.8.1 và khả năng phân tích thông minh của .NET 8. Hệ thống không chỉ dừng lại ở việc quản lý giao dịch bán lẻ đa chi nhánh mà còn tiến xa hơn với bộ não AI tích hợp, cho phép truy vấn dữ liệu bằng ngôn ngữ tự nhiên (NL2SQL) và dự báo tồn kho thông qua Machine Learning (XGBoost). Đây là minh chứng cho việc hiện đại hóa hệ thống Legacy bằng kiến trúc phân tán hiện đại.
 
 Tài liệu này cung cấp cái nhìn chuyên sâu về kiến trúc tổng thể, mô hình kỹ thuật, chiến lược triển khai và các hạt nhân nghiệp vụ cốt lõi của EMarket Ecosystem. Hệ thống được thiết kế dưới dạng một nền tảng ERP phân tán lai (Hybrid Distributed ERP) nhằm tối ưu hóa vòng đời sản phẩm, phân tích dữ liệu bán lẻ theo thời gian thực và tự động hóa thao tác thông qua Trí tuệ Nhân tạo.
 
@@ -106,4 +102,3 @@ Phần này mô tả tiến trình khởi động lại toàn bộ Hệ sinh th�
 2.  Đăng nhập vào màn hình giao dịch EMarket, tạo các hóa đơn hoặc luân chuyển kho hàng. Hệ thống Database dùng chung sẽ lập tức ghi chú lại hành vi.
 3.  Truy cập vào công cụ Chat từ AIAssistantService, đưa ra các truy vấn về hệ thống thống kê như "*Sản phẩm nào đã vượt quá hạn mức FEFO trong tháng này?*". 
 4.  Cả 2 nền tảng ngay lúc này sẽ hoạt động đồng bộ, chia sẻ cấu hình, dữ liệu và tương tác liên tục cho thấy một giải pháp ERP toàn diện đã triển khai thành công.
-```
