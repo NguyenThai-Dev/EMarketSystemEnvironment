@@ -465,6 +465,28 @@
         transform: scale(0.95);
     }
 
+    .badge {
+        color: #fff !important; 
+        padding: 0.5em 0.8em;
+        font-weight: 500;
+        border-radius: 4px; 
+        text-transform: uppercase; 
+        font-size: 0.75rem;
+    }
+
+    .badge-critical {
+        background-color: #d90429 !important;
+        box-shadow: 0 0 8px rgba(217, 4, 41, 0.4); 
+    }
+
+    .badge-high {
+        background-color: #f48c06 !important; 
+    }
+
+    .badge-normal {
+        background-color: #2a9d8f !important;
+    }
+
     .text-danger {
         color: var(--danger) !important;
         font-weight: 700;
@@ -647,13 +669,13 @@
 
         function loadProductList() {
             const today = new Date();
-            const lastMonth = new Date();
-            lastMonth.setMonth(today.getMonth() - 1);
+            const nextMonth = new Date();
+            nextMonth.setMonth(today.getMonth() + 1);
 
             const formatDate = (date) => date.toISOString().split('T')[0];
 
-            $("#startDate").val(formatDate(lastMonth));
-            $("#endDate").val(formatDate(today));
+            $("#startDate").val(formatDate(today));
+            $("#endDate").val(formatDate(nextMonth));
 
             var branchId = $('#ddlBranch').val() || 1;
             $.get('/Admin/AIAnalysis/GetSystemData', { branchId: branchId }).done(function (res) {
@@ -1091,7 +1113,7 @@
                         data.forEach(x => {
                             let confidencePercent = Math.round(x.ConfidenceScore * 100);
                             let color = confidencePercent > 80 ? 'bg-success' : (confidencePercent > 50 ? 'bg-warning' : 'bg-danger');
-                            let badgeClass = x.PriorityLevel === 'URGENT' ? 'badge-danger' : (x.PriorityLevel === 'HIGH' ? 'badge-warning' : 'badge-info');
+                            let badgeClass = x.PriorityLevel === 'CRITICAL' ? 'badge-critical' : (x.PriorityLevel === 'HIGH' ? 'badge-high' : 'badge-normal');
 
                             tbody += `<tr>
                                 <td><b>${x.ProductName}</b></td>

@@ -1,14 +1,17 @@
-﻿--- [AI INSIGHTS DOMAIN - ƯU TIÊN CAO NHẤT] ---
-* [GOAL]: Dữ liệu phân tích nâng cao từ Machine Learning.
-* [MANDATORY RULE]: Nếu câu hỏi chứa 'ngày tới', 'nguy cơ', 'cháy hàng', BẮT BUỘC phải dùng bảng bên dưới. KHÔNG được tự tính toán (min_stock - quantity).
+﻿### BẢNG DỮ LIỆU PHÂN TÍCH & DỰ BÁO AI (AI ANALYTICS)
+[LƯU Ý: Miền này chứa kết quả tính toán từ máy học, dùng cho câu hỏi "về tương lai" hoặc "xu hướng"]
 
-1. AI_SalesForecast(product_id, branch_id, forecast_date, predicted_qty, confidence_score)
-   -- [DESC]: Dự đoán số lượng bán trong tương lai (Next 7-30 days).
+1. Bảng: `AI_SalesForecast` (Dự báo doanh số tương lai)
+   - Cột: `product_id`, `branch_id`, `forecast_date`, `predicted_qty` (Số lượng dự kiến bán), `confidence_score`
 
-2. AI_InventoryWarning(product_id, days_to_exhaust, warning_type, risk_reason)
-   -- [DESC]: Cảnh báo rủi ro kho. 'days_to_exhaust': Số ngày còn lại trước khi hết hàng.
-   -- [LOGIC]: 'Hết hàng trong X ngày tới' nghĩa là: WHERE days_to_exhaust <= X.
-   -- [PATH]: AI_InventoryWarning -> Products (qua product_id).
+2. Bảng: `AI_Product_Insight` (Phân tích hiệu suất sản phẩm)
+   - Cột: `product_id`, `qty_sold`, `growth_percent` (% tăng trưởng), `contribution_percent` (% đóng góp doanh thu), `insight_level` (top_performer, underperformer)
 
-3. AI_ReplenishmentAdvice(product_id, branch_id, suggested_qty, priority_level)
-   -- [DESC]: Gợi ý nhập hàng. Priority: 'High', 'Medium', 'Low'.
+3. Bảng: `AI_ReplenishmentAdvice` (Lời khuyên nhập hàng)
+   - Cột: `product_id`, `current_stock`, `expected_demand`, `suggest_qty` (Số lượng khuyên nhập), `reason` (Lý do khuyên nhập)
+
+4. Bảng: `AI_Anomaly_Category` (Cảnh báo bất thường)
+   - Cột: `category_id`, `actual_qty`, `forecast_qty`, `deviation_percent` (% lệch), `anomaly_type` (spike, drop)
+
+📌 QUY TẮC TRUY VẤN:
+- Khi người dùng hỏi "Sắp tới bán được bao nhiêu?", "Cần nhập thêm gì không?", "Tại sao hàng này bán chậm?" -> Ưu tiên dùng các bảng AI này thay vì bảng Sales gốc.

@@ -3,63 +3,40 @@
   "WorkspaceRootPath": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\areas\\admin\\views\\product\\productlist.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:areas\\admin\\views\\product\\productlist.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\areas\\admin\\views\\purchaseorder\\purchaseorderlist.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:areas\\admin\\views\\purchaseorder\\purchaseorderlist.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|d:\\bai_tap_cac_mon\\nghien_cuu_khoa_hoc\\emarket\\web.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
-      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:web.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\duong\\AppData\\Roaming\\Microsoft\\UserSecrets\\91f90293-9db4-4560-b25c-fd47f4668ea3\\secrets.xml||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|d:\\bai_tap_cac_mon\\nghien_cuu_khoa_hoc\\emarket\\areas\\admin\\views\\aianalysis\\_aichatbox.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:areas\\admin\\views\\aianalysis\\_aichatbox.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\areas\\admin\\controllers\\partialcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:areas\\admin\\controllers\\partialcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\areas\\admin\\views\\partial\\_exportbuttons.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:areas\\admin\\views\\partial\\_exportbuttons.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\areas\\admin\\views\\warehouse\\warehouselist.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:areas\\admin\\views\\warehouse\\warehouselist.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\areas\\admin\\views\\branch\\branchlist.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:areas\\admin\\views\\branch\\branchlist.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|d:\\bai_tap_cac_mon\\nghien_cuu_khoa_hoc\\emarket\\forecast\\services\\implementations\\aiservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:forecast\\services\\implementations\\aiservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\areas\\admin\\views\\supplier\\supplierlist.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:areas\\admin\\views\\supplier\\supplierlist.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\areas\\admin\\views\\warehouse\\stockhistory.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:areas\\admin\\views\\warehouse\\stockhistory.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\areas\\admin\\views\\login\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:areas\\admin\\views\\login\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\areas\\admin\\views\\quotation\\quotationmanagement.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:areas\\admin\\views\\quotation\\quotationmanagement.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\startup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:startup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\areas\\admin\\views\\expense\\expensemanagement.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:areas\\admin\\views\\expense\\expensemanagement.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\web.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:web.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\areas\\admin\\views\\purchaseorder\\purchaseorderlist.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:areas\\admin\\views\\purchaseorder\\purchaseorderlist.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\areas\\admin\\controllers\\logincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:areas\\admin\\controllers\\logincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\areas\\admin\\views\\promotion\\promotionmanagement.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:areas\\admin\\views\\promotion\\promotionmanagement.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\assets\\js\\login.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:assets\\js\\login.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\areas\\admin\\views\\product\\productcategorylist.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:areas\\admin\\views\\product\\productcategorylist.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\global.asax.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:global.asax.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -69,7 +46,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 298,
-          "SelectedChildIndex": 16,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Bookmark",
@@ -81,186 +58,114 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "secrets.xml",
-              "DocumentMoniker": "C:\\Users\\duong\\AppData\\Roaming\\Microsoft\\UserSecrets\\91f90293-9db4-4560-b25c-fd47f4668ea3\\secrets.xml",
-              "ToolTip": "C:\\Users\\duong\\AppData\\Roaming\\Microsoft\\UserSecrets\\91f90293-9db4-4560-b25c-fd47f4668ea3\\secrets.xml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAACUAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003576|",
-              "WhenOpened": "2026-04-08T05:59:18.182Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Web.config",
-              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Web.config",
-              "RelativeDocumentMoniker": "Web.config",
-              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Web.config",
-              "RelativeToolTip": "Web.config",
-              "ViewState": "AgIAAMoAAAAAAAAAAAAAANkAAAAiAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000601|",
-              "WhenOpened": "2026-04-08T05:57:28.587Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "_AIChatBox.cshtml",
-              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\AIAnalysis\\_AIChatBox.cshtml",
-              "RelativeDocumentMoniker": "Areas\\Admin\\Views\\AIAnalysis\\_AIChatBox.cshtml",
-              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\AIAnalysis\\_AIChatBox.cshtml",
-              "RelativeToolTip": "Areas\\Admin\\Views\\AIAnalysis\\_AIChatBox.cshtml",
-              "ViewState": "AgIAAG8DAAAAAAAAAAAAAIkDAAAXAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-04-08T05:37:17.424Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "PartialController.cs",
-              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Controllers\\PartialController.cs",
-              "RelativeDocumentMoniker": "Areas\\Admin\\Controllers\\PartialController.cs",
-              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Controllers\\PartialController.cs",
-              "RelativeToolTip": "Areas\\Admin\\Controllers\\PartialController.cs",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAAABAAAAAXAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-08T04:29:48.673Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "WarehouseList.cshtml",
-              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\Warehouse\\WarehouseList.cshtml",
-              "RelativeDocumentMoniker": "Areas\\Admin\\Views\\Warehouse\\WarehouseList.cshtml",
-              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\Warehouse\\WarehouseList.cshtml",
-              "RelativeToolTip": "Areas\\Admin\\Views\\Warehouse\\WarehouseList.cshtml",
-              "ViewState": "AgIAACEAAAAAAAAAAAAAACMAAABlAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-04-08T04:27:36.191Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "BranchList.cshtml",
-              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\Branch\\BranchList.cshtml",
-              "RelativeDocumentMoniker": "Areas\\Admin\\Views\\Branch\\BranchList.cshtml",
-              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\Branch\\BranchList.cshtml",
-              "RelativeToolTip": "Areas\\Admin\\Views\\Branch\\BranchList.cshtml",
-              "ViewState": "AgIAABIAAAAAAAAAAAAAAB4AAABjAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-04-08T04:27:09.588Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "SupplierList.cshtml",
-              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\Supplier\\SupplierList.cshtml",
-              "RelativeDocumentMoniker": "Areas\\Admin\\Views\\Supplier\\SupplierList.cshtml",
-              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\Supplier\\SupplierList.cshtml",
-              "RelativeToolTip": "Areas\\Admin\\Views\\Supplier\\SupplierList.cshtml",
-              "ViewState": "AgIAABUAAAAAAAAAAAAAAB4AAABkAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-04-08T04:26:24.217Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "StockHistory.cshtml",
-              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\Warehouse\\StockHistory.cshtml",
-              "RelativeDocumentMoniker": "Areas\\Admin\\Views\\Warehouse\\StockHistory.cshtml",
-              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\Warehouse\\StockHistory.cshtml",
-              "RelativeToolTip": "Areas\\Admin\\Views\\Warehouse\\StockHistory.cshtml",
-              "ViewState": "AgIAAB4AAAAAAAAAAAAAACcAAABgAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-04-08T04:24:32.824Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "QuotationManagement.cshtml",
-              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\Quotation\\QuotationManagement.cshtml",
-              "RelativeDocumentMoniker": "Areas\\Admin\\Views\\Quotation\\QuotationManagement.cshtml",
-              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\Quotation\\QuotationManagement.cshtml",
-              "RelativeToolTip": "Areas\\Admin\\Views\\Quotation\\QuotationManagement.cshtml",
-              "ViewState": "AgIAABsAAAAAAAAAAAAAACYAAABkAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-04-08T04:23:20.111Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "_ExportButtons.cshtml",
-              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\Partial\\_ExportButtons.cshtml",
-              "RelativeDocumentMoniker": "Areas\\Admin\\Views\\Partial\\_ExportButtons.cshtml",
-              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\Partial\\_ExportButtons.cshtml",
-              "RelativeToolTip": "Areas\\Admin\\Views\\Partial\\_ExportButtons.cshtml",
-              "ViewState": "AgIAAB4AAAAAAAAAAAAAADYAAAAJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-04-08T04:21:14.35Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 11,
-              "Title": "ExpenseManagement.cshtml",
-              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\Expense\\ExpenseManagement.cshtml",
-              "RelativeDocumentMoniker": "Areas\\Admin\\Views\\Expense\\ExpenseManagement.cshtml",
-              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\Expense\\ExpenseManagement.cshtml",
-              "RelativeToolTip": "Areas\\Admin\\Views\\Expense\\ExpenseManagement.cshtml",
-              "ViewState": "AgIAABgAAAAAAAAAAAAAACcAAABiAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-04-08T04:20:10.507Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 0,
               "Title": "PurchaseOrderList.cshtml",
               "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\PurchaseOrder\\PurchaseOrderList.cshtml",
               "RelativeDocumentMoniker": "Areas\\Admin\\Views\\PurchaseOrder\\PurchaseOrderList.cshtml",
               "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\PurchaseOrder\\PurchaseOrderList.cshtml",
               "RelativeToolTip": "Areas\\Admin\\Views\\PurchaseOrder\\PurchaseOrderList.cshtml",
-              "ViewState": "AgIAABgAAAAAAAAAAAAAACAAAAAWAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-04-08T04:18:53.59Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 13,
-              "Title": "PromotionManagement.cshtml",
-              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\Promotion\\PromotionManagement.cshtml",
-              "RelativeDocumentMoniker": "Areas\\Admin\\Views\\Promotion\\PromotionManagement.cshtml",
-              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\Promotion\\PromotionManagement.cshtml",
-              "RelativeToolTip": "Areas\\Admin\\Views\\Promotion\\PromotionManagement.cshtml",
-              "ViewState": "AgIAABIAAAAAAAAAAAAAACMAAABlAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-04-08T04:17:37.038Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 14,
-              "Title": "ProductCategoryList.cshtml",
-              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\Product\\ProductCategoryList.cshtml",
-              "RelativeDocumentMoniker": "Areas\\Admin\\Views\\Product\\ProductCategoryList.cshtml",
-              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\Product\\ProductCategoryList.cshtml",
-              "RelativeToolTip": "Areas\\Admin\\Views\\Product\\ProductCategoryList.cshtml",
-              "ViewState": "AgIAABIAAAAAAAAAAAAAACkAAAAuAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-04-08T04:15:42.288Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "ProductList.cshtml",
-              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\Product\\ProductList.cshtml",
-              "RelativeDocumentMoniker": "Areas\\Admin\\Views\\Product\\ProductList.cshtml",
-              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\Product\\ProductList.cshtml",
-              "RelativeToolTip": "Areas\\Admin\\Views\\Product\\ProductList.cshtml",
-              "ViewState": "AgIAAIkBAAAAAAAAAAAQwLICAAAnAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-04-08T01:51:49.412Z",
+              "WhenOpened": "2026-04-11T03:37:58.502Z",
               "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "SupplierList.cshtml",
+              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\Supplier\\SupplierList.cshtml",
+              "RelativeDocumentMoniker": "Areas\\Admin\\Views\\Supplier\\SupplierList.cshtml",
+              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\Supplier\\SupplierList.cshtml",
+              "RelativeToolTip": "Areas\\Admin\\Views\\Supplier\\SupplierList.cshtml",
+              "ViewState": "AgIAAMkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-11T00:44:23.124Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "AIService.cs",
+              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Forecast\\Services\\Implementations\\AIService.cs",
+              "RelativeDocumentMoniker": "Forecast\\Services\\Implementations\\AIService.cs",
+              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Forecast\\Services\\Implementations\\AIService.cs",
+              "RelativeToolTip": "Forecast\\Services\\Implementations\\AIService.cs",
+              "ViewState": "AgIAAIcAAAAAAAAAAAAmwJgAAABeAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-11T00:40:10.431Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Login.cshtml",
+              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\Login\\Login.cshtml",
+              "RelativeDocumentMoniker": "Areas\\Admin\\Views\\Login\\Login.cshtml",
+              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\Login\\Login.cshtml",
+              "RelativeToolTip": "Areas\\Admin\\Views\\Login\\Login.cshtml",
+              "ViewState": "AgIAAFEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-11T00:37:33.13Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Startup.cs",
+              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Startup.cs",
+              "RelativeDocumentMoniker": "Startup.cs",
+              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Startup.cs",
+              "RelativeToolTip": "Startup.cs",
+              "ViewState": "AgIAAB4AAAAAAAAAAAAIwDMAAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-11T00:35:54.982Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Web.config",
+              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Web.config",
+              "RelativeDocumentMoniker": "Web.config",
+              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Web.config",
+              "RelativeToolTip": "Web.config",
+              "ViewState": "AgIAABEAAAAAAAAAAADwvyAAAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000601|",
+              "WhenOpened": "2026-04-11T00:35:42.718Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "login.js",
+              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\assets\\js\\login.js",
+              "RelativeDocumentMoniker": "assets\\js\\login.js",
+              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\assets\\js\\login.js",
+              "RelativeToolTip": "assets\\js\\login.js",
+              "ViewState": "AgIAALoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2026-04-11T00:34:29.97Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Global.asax.cs",
+              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Global.asax.cs",
+              "RelativeDocumentMoniker": "Global.asax.cs",
+              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Global.asax.cs",
+              "RelativeToolTip": "Global.asax.cs",
+              "ViewState": "AgIAABMAAAAAAAAAAAAmwIgAAAAtAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-11T00:32:55.135Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "LoginController.cs",
+              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Controllers\\LoginController.cs",
+              "RelativeDocumentMoniker": "Areas\\Admin\\Controllers\\LoginController.cs",
+              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Controllers\\LoginController.cs",
+              "RelativeToolTip": "Areas\\Admin\\Controllers\\LoginController.cs",
+              "ViewState": "AgIAALUAAAAAAAAAAAA2wL0AAABnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-11T00:30:00.317Z"
             }
           ]
         },

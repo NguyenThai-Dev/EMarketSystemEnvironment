@@ -25,7 +25,7 @@ namespace AIAssistantService
             {
                 using var conn = new SqlConnection(_connectionString);
                 var history = await conn.QueryAsync<dynamic>(
-                    @"SELECT TOP 6 [Role], [Content] 
+                    @"SELECT TOP 10 [Role], [Content] 
                   FROM AI_ChatLog 
                   WHERE SessionId = @sid 
                   ORDER BY CreatedAt DESC",
@@ -98,7 +98,7 @@ namespace AIAssistantService
                 using var conn = new SqlConnection(_connectionString);
                 // Dùng LIKE đơn giản hoặc sau này nâng cấp lên Vector Search
                 var lessons = await conn.QueryAsync<string>(@"
-                    SELECT TOP 3 
+                    SELECT TOP 10 
                     ('Lỗi cũ: ' + ErrorMessage + ' -> Giải pháp: ' + CorrectedSQL)
                     FROM AI_Query_Learning
                     WHERE @p LIKE '%' + UserPrompt + '%' AND IsSuccess = 1

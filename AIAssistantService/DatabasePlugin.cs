@@ -21,10 +21,14 @@ namespace AIAssistantService.Plugins
             Console.WriteLine($"[AI SQL EXECUTE]: {sql}");
 
             // Basic Security check
-            if (string.IsNullOrWhiteSpace(sql) ||
-                !sql.TrimStart().StartsWith("SELECT", StringComparison.OrdinalIgnoreCase))
+            // Sửa dòng 24 lại như sau:
+            var trimmedSql = sql.TrimStart();
+            bool isSafe = trimmedSql.StartsWith("SELECT", StringComparison.OrdinalIgnoreCase) ||
+                          trimmedSql.StartsWith("WITH", StringComparison.OrdinalIgnoreCase);
+
+            if (string.IsNullOrWhiteSpace(sql) || !isSafe)
             {
-                throw new ArgumentException("Chỉ cho phép câu lệnh SELECT để đảm bảo an toàn.");
+                throw new ArgumentException("Chỉ cho phép câu lệnh SELECT hoặc WITH để đảm bảo an toàn.");
             }
 
             // KHÔNG dùng try-catch ở đây. Hãy để lỗi "nổ" ra ngoài 

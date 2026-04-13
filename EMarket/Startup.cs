@@ -28,6 +28,7 @@ namespace EMarket
             System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
             var clientID = System.Configuration.ConfigurationManager.AppSettings["ClientID"];
             var clientSecret = System.Configuration.ConfigurationManager.AppSettings["ClientSecret"];
+
             // Cho phép ứng dụng sử dụng Cookie để lưu thông tin người dùng đăng nhập
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
@@ -46,6 +47,13 @@ namespace EMarket
                 ClientSecret = clientSecret,
                 CallbackPath = new PathString("/signin-google"),
                 Provider = new GoogleOAuth2AuthenticationProvider()
+                {
+                    OnApplyRedirect = context =>
+                    {
+                        var redirectUri = context.RedirectUri + "&prompt=select_account";
+                        context.Response.Redirect(redirectUri);
+                    }
+                }
             });
 
 
