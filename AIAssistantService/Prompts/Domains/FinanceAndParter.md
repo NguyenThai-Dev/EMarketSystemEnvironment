@@ -16,7 +16,7 @@
 
 5. Bảng: `Expenses` (Chi phí vận hành - Điện, nước, lương...)
    - Cột: `expense_id` (PK), `branch_id`, `category_id`, `amount`, `expense_date`, `status`
-   - Filter Rule: Chỉ tính chi phí khi `status = 'approved'`.
+   - Filter Rule: Chỉ tính chi phí khi `status = 'Approved'`.
 
 6. Bảng: `ExpenseCategories` (Loại chi phí)
    - Cột: `category_id` (PK), `name` (Tên loại chi phí)

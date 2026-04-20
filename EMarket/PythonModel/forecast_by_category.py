@@ -138,7 +138,7 @@ def train_and_dispatch_xgb(data_tuple):
         avg_daily_sell = expected_30d / 30
         days_to_sell_out = int(curr_stock / avg_daily_sell) if avg_daily_sell > 0 else 999
         
-        # 1. Luồng Nhập hàng (Replenishment Advice - V3.1)
+        # 1. Luồng Nhập hàng (Replenishment Advice)
         # Tính mức tồn kho mục tiêu (Target Stock) = 1.2 lần nhu cầu 30 ngày (đệm an toàn 20%)
         # Luôn đảm bảo Target Stock không được nhỏ hơn min_stock của sản phẩm
         target_stock = max(min_stock, int(expected_30d * 1.2))
@@ -213,12 +213,12 @@ def train_and_dispatch_xgb(data_tuple):
 # =========================================================
 def main():
     start_time = time.time()
-    print("💎 [EMARKET V8.0] AI Forecast Engine (Poisson Stochastic) Starting...")
+    print("[EMARKET V8.0] AI Forecast Engine (Poisson Stochastic) Starting...")
     
     with engine.connect() as conn:
         df_all = pd.read_sql("SELECT * FROM v_AI_Master_Input_XGB WITH (NOLOCK)", conn)
     
-    print(f"📦 Loaded {len(df_all)} rows. Grouping by SKU and Branch...")
+    print(f"Loaded {len(df_all)} rows. Grouping by SKU and Branch...")
 
     tasks = []
     for (pid, branch_id), df_group in df_all.groupby(['product_id', 'branch_id']):
@@ -238,7 +238,7 @@ def main():
             if r[2]: warnings_list.append(r[2]) 
             if r[3]: forecasts_list.extend(r[3]) 
 
-    print(f"💾 Saving: {len(advices)} Advices | {len(warnings_list)} Warnings | {len(forecasts_list)} Forecasts...")
+    print(f"Saving: {len(advices)} Advices | {len(warnings_list)} Warnings | {len(forecasts_list)} Forecasts...")
     
     with engine.begin() as conn:
         conn.execute(text("TRUNCATE TABLE AI_ReplenishmentAdvice"))

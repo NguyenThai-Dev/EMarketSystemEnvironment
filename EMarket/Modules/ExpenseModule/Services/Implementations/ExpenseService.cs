@@ -233,18 +233,91 @@ namespace EMarket.Modules.ExpenseModule.Services.Implementations
             return true;
         }
 
+        public async Task<List<ExpenseCategoryDTO>> GetActiveExpenseCategoriesAsync()
+        {
+            return await _db.ExpenseCategories
+                .AsNoTracking()
+                .Where(c => c.is_active == true)
+                .OrderBy(c => c.name)
+                .Select(c => new ExpenseCategoryDTO
+                {
+                    CategoryId = c.category_id,
+                    Name = c.name
+                })
+                .ToListAsync();
+        }
+
         public async Task<List<ExpenseCategoryDTO>> GetAllExpenseCategoriesAsync()
         {
-            var categories = await _db.ExpenseCategories
+            return await _db.ExpenseCategories
                 .AsNoTracking()
                 .OrderBy(c => c.name)
+                .Select(c => new ExpenseCategoryDTO
+                {
+                    CategoryId = c.category_id,
+                    Name = c.name,
+                    Description = c.description,
+                    IsActive = c.is_active
+                })
                 .ToListAsync();
-            return categories.Select(c => new ExpenseCategoryDTO
+        }
+
+        public async Task<ExpenseCategoryDTO> GetExpenseCategoryByIdAsync(int categoryId)
+        {
+            var expenseCategory = await _db.ExpenseCategories
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.category_id == categoryId);
+            if (expenseCategory == null) return null;
+            return new ExpenseCategoryDTO
             {
-                CategoryId = c.category_id,
-                Name = c.name
-            }).ToList();
+                CategoryId = expenseCategory.category_id,
+                Name = expenseCategory.name,
+                Description = expenseCategory.description,
+                IsActive = expenseCategory.is_active
+            };
+        }
+
+        public async Task<bool> CreateExpenseCategoryAsync(ExpenseCategoryDTO dto)
+        {
+            try
+            {
+                var entity = new ExpenseCategory
+                {
+                    name = dto.Name,
+                    description = dto.Description,
+                    is_active = dto.IsActive ?? false
+                };
+                _db.ExpenseCategories.Add(entity);
+                await _db.SaveChangesAsync();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> UpdateExpenseCategoryAsync(ExpenseCategoryDTO dto)
+        {
+            var entity = await _db.ExpenseCategories.FindAsync(dto.CategoryId);
+            if (entity == null) return false;
+            entity.name = dto.Name;
+            entity.description = dto.Description;
+            entity.is_active = dto.IsActive ?? false;
+            await _db.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> DeleteExpenseCategoryAsync(int categoryId)
+        {
+            var entity = await _db.ExpenseCategories.FindAsync(categoryId);
+            if (entity == null) return false;
+            var hasExpenses = await _db.Expenses.AnyAsync(e => e.category_id == categoryId);
+            if (hasExpenses)
+                throw new InvalidOperationException("Không thể xoá loại chi phí đang có phiếu chi sử dụng.");
+            _db.ExpenseCategories.Remove(entity);
+            await _db.SaveChangesAsync();
+            return true;
         }
     }
-
 }

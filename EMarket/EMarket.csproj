@@ -16575,6 +16575,7 @@
     <Content Include="Areas\Admin\Views\Promotion\PromotionManagement.cshtml" />
     <Content Include="Areas\Admin\Views\Partial\_ExportButtons.cshtml" />
     <Content Include="Areas\Admin\Views\Partial\_PrintTemplate.cshtml" />
+    <Content Include="Areas\Admin\Views\Expense\ExpenseCategoryManagement.cshtml" />
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.1.js" />
     <Content Include="Scripts\jquery-3.7.1.min.js" />
@@ -16615,6 +16616,7 @@
     <Folder Include="Uploads\SupplierPayments\" />
     <Folder Include="Uploads\Users\" />
     <Folder Include="Views\Admin\" />
+    <Folder Include="Web\" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

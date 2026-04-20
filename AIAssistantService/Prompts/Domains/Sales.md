@@ -3,7 +3,7 @@
 
 1. Bảng: `Orders` (Hóa đơn bán hàng)
    - Cột: `order_id` (PK), `customer_id` (FK), `branch_id`, `order_date`, `status`, `total_amount`
-   - Filter Rule: Chỉ tính doanh thu khi `status = 'completed'`.
+   - Filter Rule: Chỉ tính doanh thu khi `status = 'Paid'`.
 
 2. Bảng: `OrderDetails` (Chi tiết hóa đơn - số lượng bán)
    - Cột: `order_detail_id` (PK), `order_id` (FK), `product_id` (FK), `quantity` (Số lượng bán), `unit_price`, `discount`

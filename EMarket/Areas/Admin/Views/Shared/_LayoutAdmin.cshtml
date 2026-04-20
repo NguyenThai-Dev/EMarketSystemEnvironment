@@ -225,6 +225,11 @@
                                 </a>
                                 <ul>
                                     <li><a href="@Url.Action("ExpenseManagement", "Expense", new { area = "Admin" })">Danh sách chi phí</a></li>
+
+                                    @if (IsAdmin())
+                                    {
+                                        <li><a href="@Url.Action("ExpenseCategoryManagement", "Expense", new { area = "Admin" })">Danh mục chi phí</a></li>
+                                    }
                                 </ul>
                             </li>
                         }

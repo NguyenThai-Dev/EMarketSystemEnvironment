@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using DocumentFormat.OpenXml.Office2010.ExcelAc;
 using EMarket.Filters;
 using EMarket.Modules.ExpenseModule.DTOs;
 using EMarket.Modules.ExpenseModule.Services.Interfaces;
@@ -25,8 +26,14 @@ namespace EMarket.Areas.Admin.Controllers
         [EMarketAuthorize(Module = "ReportModule")]
         public async Task<ActionResult> ExpenseManagement()
         {
-            ViewBag.Categories = new SelectList(await _expenseService.GetAllExpenseCategoriesAsync(), "CategoryId", "Name");
+            ViewBag.Categories = new SelectList(await _expenseService.GetActiveExpenseCategoriesAsync(), "CategoryId", "Name");
             ViewBag.Branches = new SelectList(await _branchService.GetAllBranchesAsync(), "BranchId", "Name");
+            return View();
+        }
+
+        [EMarketAuthorize(Module = "ReportModule")]
+        public async Task<ActionResult> ExpenseCategoryManagement()
+        {
             return View();
         }
 
@@ -37,7 +44,7 @@ namespace EMarket.Areas.Admin.Controllers
             try
             {
                 var data = await _expenseService.GetExpensesAsync(branchId, categoryId, fromDate, toDate, status);
-                return Json(new { data = data }); // Trả về { data: [...] } đúng chuẩn DataTable
+                return Json(new { data = data }); 
             }
             catch (Exception ex)
             {
@@ -45,7 +52,6 @@ namespace EMarket.Areas.Admin.Controllers
             }
         }
 
-        // 3. TẠO MỚI (AJAX + FormData)
         [HttpPost]
         [ValidateAntiForgeryToken]
         [EMarketAuthorize(Module = "ReportModule")]
@@ -74,7 +80,6 @@ namespace EMarket.Areas.Admin.Controllers
             }
         }
 
-        // 4. DUYỆT / XÓA
         [HttpPost]
         [ValidateAntiForgeryToken]
         [EMarketAuthorize(Module = "ReportModule")]
@@ -114,6 +119,80 @@ namespace EMarket.Areas.Admin.Controllers
         {
             var success = await _expenseService.DeleteExpenseAsync(id);
             return Json(new { success, message = success ? "Đã xóa." : "Không thể xóa." });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> getAllExpenseCategory()
+        {
+            try
+            {
+                var categories = await _expenseService.GetAllExpenseCategoriesAsync();
+                return Json(new { success = true, data = categories });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Lỗi hệ thống: " + ex.Message });
+            }
+        }
+        [HttpGet]
+        public async Task<ActionResult> GetExpenseCategoryById(int id)
+        {
+            try
+            {
+                var expense = await _expenseService.GetExpenseByIdAsync(id);
+                if (expense == null)
+                    return Json(new { success = false, message = "Không tìm thấy chi phí." }, JsonRequestBehavior.AllowGet);
+                return Json(new { success = true, data = expense }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Lỗi hệ thống: " + ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [EMarketAuthorize(Module = "ReportModule")]
+        public async Task<ActionResult> CreateOrUpdateCategory(ExpenseCategoryDTO dto)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(dto.Name))
+                    return Json(new { success = false, message = "Tên danh mục không được để trống." });
+                bool success;
+
+                if (dto.CategoryId > 0)
+                {
+                    success = await _expenseService.UpdateExpenseCategoryAsync(dto);
+                    return Json(new { success, message = success ? "Cập nhật danh mục thành công!" : "Lỗi cập nhật." });
+                }
+                else
+                {
+                    success = await _expenseService.CreateExpenseCategoryAsync(dto);
+                    return Json(new { success, message = success ? "Tạo danh mục thành công!" : "Lỗi tạo mới." });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Lỗi hệ thống: " + ex.Message });
+            }
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [EMarketAuthorize(Module = "ReportModule")]
+
+        public async Task<ActionResult> DeleteCategory(int id)
+        {
+            try
+            {
+                var success = await _expenseService.DeleteExpenseCategoryAsync(id);
+                return Json(new { success, message = success ? "Đã xóa danh mục." : "Không thể xóa danh mục." });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Lỗi hệ thống: " + ex.Message });
+            }
         }
 
         #region Helpers

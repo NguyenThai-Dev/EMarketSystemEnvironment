@@ -715,7 +715,7 @@
             let payIcon = 'fa-clock';
             let payLabel = 'Chưa thanh toán';
 
-            if (payStatus.toLowerCase() === 'completed') {
+            if (payStatus.toLowerCase() === 'completed' || payStatus.toLowerCase() === 'paid') {
                 payClass = 'payment-success';
                 payIcon = 'fa-check-circle';
                 payLabel = 'Đã thanh toán';

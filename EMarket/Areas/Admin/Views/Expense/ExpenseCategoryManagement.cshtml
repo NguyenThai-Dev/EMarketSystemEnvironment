@@ -1,0 +1,297 @@
+﻿@{
+    ViewBag.Title = "Danh mục chi phí";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="page-wrapper">
+    <div class="content">
+
+        <div class="page-header">
+            <div class="page-title">
+                <h4>Danh mục chi phí</h4>
+                <h6>Quản lý phân loại các khoản chi vận hành</h6>
+            </div>
+            <div class="page-btn">
+                <button class="btn btn-added" id="btnAddCategory">
+                    <img src="~/assets/img/icons/plus.svg" class="me-1" alt="add" />
+                    Thêm danh mục
+                </button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <div class="table-top">
+                    <div class="search-set">
+                        <div class="search-input">
+                            <a class="btn btn-searchset"><img src="~/assets/img/icons/search-white.svg" alt="img" /></a>
+                        </div>
+                    </div>
+                    @Html.Partial("~/Areas/Admin/Views/Partial/_ExportButtons.cshtml", "tblCategories")
+                </div>
+
+                <div class="table-responsive">
+                    <table id="tblCategories" class="table datanew w-100">
+                        <thead>
+                            <tr>
+                                <th><label class="checkboxs"><input type="checkbox" id="select-all" /><span class="checkmarks"></span></label></th>
+                                <th>Tên danh mục</th>
+                                <th>Mô tả</th>
+                                <th>Trạng thái</th>
+                                <th style="width:120px;">Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalCategoryInput" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">Thêm danh mục chi phí</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="CategoryId" value="0" />
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group mb-3">
+                            <label>Tên danh mục <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="CatName" placeholder="Nhập tên chi phí..." />
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="form-group mb-3">
+                            <label>Mô tả</label>
+                            <textarea class="form-control" id="CatDesc" rows="3" placeholder="Ghi chú thêm..."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="form-group mb-0">
+                            <label class="d-block mb-2">Trạng thái</label>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="CatIsActive" checked>
+                                <label class="form-check-label" for="CatIsActive">Kích hoạt</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <button class="btn btn-primary" id="btnSaveCategory">Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        let tblCategories;
+        // Chú ý: Đổi tên Controller 'Expense' cho đúng với routing của bro
+        const baseUrl = '/Expense';
+
+        $(function () {
+            // -- 1. INIT DATATABLE --
+            if ($.fn.DataTable.isDataTable('#tblCategories')) {
+                $('#tblCategories').DataTable().clear().destroy();
+            }
+
+            $.extend(true, $.fn.dataTable.defaults, {
+                dom: 't<"bottom_controls"lp>',
+                language: {
+                    search: "",
+                    searchPlaceholder: "Tìm kiếm...",
+                    emptyTable: "Không có dữ liệu.",
+                    info: "",
+                    infoEmpty: "",
+                    infoFiltered: "",
+                },
+            });
+
+            tblCategories = $('#tblCategories').DataTable({
+                processing: true,
+                serverSide: false,
+                responsive: true,
+                searching: true, // Bật search ở client side vì API trả nguyên list
+                ajax: {
+                    url: `${baseUrl}/getAllExpenseCategory`,
+                    type: 'POST', // Đổi thành POST vì API của bro dùng [HttpPost]
+                    dataSrc: function (json) {
+                        if (json.success) return json.data;
+                        console.error("Lỗi:", json.message);
+                        return [];
+                    }
+                },
+                columns: [
+                    {
+                        data: null,
+                        orderable: false,
+                        className: 'text-center dt-checkbox-col',
+                        render: function (data, type, row) {
+                            return `<label class="checkboxs">
+                                        <input type="checkbox" class="row-select" data-id="${row.CategoryId}" />
+                                        <span class="checkmarks"></span>
+                                    </label>`;
+                        }
+                    },
+                    {
+                        data: 'Name',
+                        render: d => `<span class="fw-semibold">${d}</span>`
+                    },
+                    {
+                        data: 'Description',
+                        render: d => d ? d : '-'
+                    },
+                    {
+                        data: 'IsActive',
+                        render: d => d === true
+                            ? `<span class="badges bg-lightgreen">Hoạt động</span>`
+                            : `<span class="badges bg-lightred">Khóa</span>`
+                    },
+                    {
+                        data: null,
+                        orderable: false,
+                        render: d => {
+                            // Truyền nguyên cục object vào data-obj để dùng lại khi bấm nút sửa
+                            const editBtn = `
+                                <a href="javascript:void(0)" class="me-3 btn-edit" title="Edit" data-obj='${JSON.stringify(d)}'>
+                                    <img src="/assets/img/icons/edit.svg" alt="edit" />
+                                </a>`;
+
+                            const deleteBtn = `
+                                <a href="javascript:void(0)" class="btn-delete" title="Delete" data-id="${d.CategoryId}">
+                                    <img src="/assets/img/icons/delete.svg" alt="delete" />
+                                </a>`;
+
+                            return editBtn + deleteBtn;
+                        }
+                    }
+                ],
+                order: [[1, 'asc']],
+                drawCallback: function () {
+                    $('#tblCategories_filter input').attr('id', 'txtSearch');
+                }
+            });
+
+            // Trigger tìm kiếm client side
+            $(document).on("keyup", "#txtSearch", function () {
+                clearTimeout(window.searchTimer);
+                window.searchTimer = setTimeout(() => tblCategories.search($(this).val()).draw(), 400);
+            });
+
+            // -- 2. QUẢN LÝ SỰ KIỆN --
+
+            // Bấm thêm mới
+            $('#btnAddCategory').click(() => {
+                resetInputModal();
+                $('#modalTitle').text('Thêm danh mục chi phí');
+                $('#modalCategoryInput').modal('show');
+            });
+
+            // Bấm sửa (Lấy data trực tiếp từ dòng, không gọi lại GetExpenseCategoryById cho nhẹ)
+            $(document).on('click', '.btn-edit', function () {
+                const data = $(this).data('obj');
+
+                $('#CategoryId').val(data.CategoryId);
+                $('#CatName').val(data.Name);
+                $('#CatDesc').val(data.Description);
+                $('#CatIsActive').prop('checked', data.IsActive === true);
+
+                $('#modalTitle').text('Cập nhật danh mục');
+                $('#modalCategoryInput').modal('show');
+            });
+
+            // Lưu dữ liệu
+            $('#btnSaveCategory').click(async function () {
+                const isEdit = Number($('#CategoryId').val() || 0) !== 0;
+
+                const dto = {
+                    CategoryId: Number($('#CategoryId').val() || 0),
+                    Name: $('#CatName').val().trim(),
+                    Description: $('#CatDesc').val().trim(),
+                    IsActive: $('#CatIsActive').is(':checked')
+                };
+
+                if (!dto.Name) {
+                    Swal.fire('Lỗi nhập liệu!', 'Tên danh mục không được để trống.', 'warning');
+                    return;
+                }
+
+                try {
+                    const res = await $.post(`${baseUrl}/CreateOrUpdateCategory`, dto);
+                    if (res.success) {
+                        $('#modalCategoryInput').modal('hide');
+                        tblCategories.ajax.reload(null, false); // Reload nhưng giữ nguyên trang hiện tại
+
+                        Swal.fire({
+                            title: 'Thành công!',
+                            text: res.message,
+                            icon: 'success',
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                    } else {
+                        Swal.fire('Thất bại!', res.message, 'error');
+                    }
+                } catch (err) {
+                    Swal.fire('Lỗi', 'Mất kết nối đến máy chủ.', 'error');
+                }
+            });
+
+            // Bấm Xóa
+            $(document).on('click', '.btn-delete', function () {
+                const id = $(this).data('id');
+
+                Swal.fire({
+                    title: 'Xóa danh mục?',
+                    text: "Hành động này không thể hoàn tác!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#dc3545',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Có, xóa ngay!',
+                    cancelButtonText: 'Hủy'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.post(`${baseUrl}/DeleteCategory`, { id: id }, function (res) {
+                            if (res.success) {
+                                tblCategories.ajax.reload(null, false);
+                                Swal.fire('Đã xóa!', res.message, 'success');
+                            } else {
+                                Swal.fire('Lỗi!', res.message, 'error');
+                            }
+                        }).fail(() => {
+                            Swal.fire('Lỗi', 'Không thể gọi API xóa.', 'error');
+                        });
+                    }
+                });
+            });
+        });
+
+        // Đặt lại form về ban đầu
+        function resetInputModal() {
+            $('#CategoryId').val(0);
+            $('#CatName').val('');
+            $('#CatDesc').val('');
+            $('#CatIsActive').prop('checked', true); // Mặc định mở
+        }
+    </script>
+}
+
+@section Styles{
+    <style>
+        table.dataTable td {
+            white-space: normal !important;
+            vertical-align: middle;
+        }
+    </style>
+}

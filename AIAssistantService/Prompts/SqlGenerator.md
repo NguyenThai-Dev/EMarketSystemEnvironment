@@ -133,12 +133,12 @@ VII. TỐI ƯU LOGIC (LOGIC OPTIMIZATION - NEW V3)
     WITH CurrentPeriod AS (
     SELECT SUM([total_amount]) AS today_total 
     FROM [dbo].[Orders] WITH(NOLOCK) 
-    WHERE CAST([order_date] AS date) = CAST(GETDATE() AS date) AND [status] = 'completed'
+    WHERE CAST([order_date] AS date) = CAST(GETDATE() AS date) AND [status] = 'Completed'
 ),
 PreviousPeriod AS (
     SELECT SUM([total_amount]) AS last_week_total 
     FROM [dbo].[Orders] WITH(NOLOCK) 
-    WHERE CAST([order_date] AS date) = CAST(DATEADD(day, -7, GETDATE()) AS date) AND [status] = 'completed'
+    WHERE CAST([order_date] AS date) = CAST(DATEADD(day, -7, GETDATE()) AS date) AND [status] = 'Completed'
 )
 SELECT 
     [c].[today_total], 

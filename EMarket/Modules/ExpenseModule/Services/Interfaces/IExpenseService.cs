@@ -25,6 +25,11 @@ namespace EMarket.Modules.ExpenseModule.Services.Interfaces
     );
         Task<bool> DeleteExpenseAsync(int id);
 
+        Task<List<ExpenseCategoryDTO>> GetActiveExpenseCategoriesAsync();
         Task<List<ExpenseCategoryDTO>> GetAllExpenseCategoriesAsync();
+        Task<ExpenseCategoryDTO> GetExpenseCategoryByIdAsync(int categoryId);
+        Task<bool> CreateExpenseCategoryAsync(ExpenseCategoryDTO dto);
+        Task<bool> UpdateExpenseCategoryAsync(ExpenseCategoryDTO dto);
+        Task<bool> DeleteExpenseCategoryAsync(int categoryId);
     }
 }
