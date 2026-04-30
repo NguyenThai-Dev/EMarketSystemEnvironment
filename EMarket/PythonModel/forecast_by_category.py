@@ -1,4 +1,5 @@
 import os
+import sys
 import pandas as pd
 import numpy as np
 import xgboost as xgb
@@ -6,25 +7,29 @@ import urllib
 import time
 import warnings
 from sqlalchemy import create_engine, text
-from multiprocessing import Pool, set_start_method
-from sklearn.metrics import r2_score
+from sqlalchemy.types import NVARCHAR
 from datetime import timedelta, datetime 
 
 # Tắt cảnh báo pandas cho sạch log
 warnings.filterwarnings('ignore')
 
+def _nvarchar_dtype(df):
+    """Tự động ép tất cả cột string sang NVARCHAR(500) để tránh lỗi tiếng Việt."""
+    return {col: NVARCHAR(500) for col in df.select_dtypes(include=['object']).columns}
+
 # =========================================================
-# 1. KẾT NỐI DATABASE
+# 1. KẾT NỐI DATABASE (Chỉ tạo engine khi gọi từ main)
 # =========================================================
-params = urllib.parse.quote_plus(
-    "Driver={ODBC Driver 17 for SQL Server};"
-    "Server=127.0.0.1,1433;"
-    "Database=EMarket_DB;"
-    "UID=root_admin;"
-    "PWD=SqlConnections2026!;"
-    "TrustServerCertificate=yes;"
-)
-engine = create_engine(f"mssql+pyodbc:///?odbc_connect={params}", pool_size=20, max_overflow=0)
+def _create_engine():
+    params = urllib.parse.quote_plus(
+        "Driver={ODBC Driver 17 for SQL Server};"
+        "Server=127.0.0.1,1433;"
+        "Database=EMarket_DB;"
+        "UID=root_admin;"
+        "PWD=SqlConnections2026!;"
+        "TrustServerCertificate=yes;"
+    )
+    return create_engine(f"mssql+pyodbc:///?odbc_connect={params}", pool_size=5, max_overflow=0)
 
 # =========================================================
 # 2. HÀM XỬ LÝ CHÍNH: XGBOOST POISSON MODEL
@@ -202,60 +207,267 @@ def train_and_dispatch_xgb(data_tuple):
                 'risk_reason': f"Slow moving: Stock covers {days_to_sell_out} days."
             }
 
-        return ("RESULT", res_advice, res_warning, future_forecasts)
+        return ("RESULT", res_advice, res_warning, future_forecasts, expected_30d, avg_daily_sell)
 
     except Exception as e:
         print(f"[LỖI] Branch {branch_id} - SKU {pid}: {str(e)}")
         return None
 
 # =========================================================
-# 3. MANAGER (QUẢN LÝ TIẾN TRÌNH)
+# 3. [LUỒNG 4 - MỚI] PHÂN TÍCH RỦI RO TÀI CHÍNH THEO LÔ
+#    (FEFO Simulation + Provisioning Value)
+# =========================================================
+def analyze_lot_financial_risk(df_lots, forecast_map):
+    """
+    Mô phỏng FEFO thực thụ: "Ăn" hàng theo thứ tự hết hạn,
+    tính toán giá trị thiệt hại tài chính cho từng lô.
+
+    Args:
+        df_lots: DataFrame từ v_AI_Lot_Financial_Risk_Input
+        forecast_map: dict { (branch_id, product_id): { 'demand_30d', 'daily_avg' } }
+
+    Returns:
+        List[dict]: Kết quả phân tích từng lô
+    """
+    if df_lots.empty:
+        print("[LOT RISK] Không có dữ liệu lô hàng từ v_AI_Lot_Financial_Risk_Input.")
+        return []
+
+    lot_risks = []
+    now = datetime.now()
+
+    # Nhóm các lô theo (branch, product), sắp xếp FEFO
+    grouped = df_lots.groupby(['branch_id', 'product_id'])
+
+    for (branch_id, product_id), group in grouped:
+        # Sắp xếp FEFO: Lô hết hạn sớm nhất lên đầu
+        lots_sorted = group.sort_values('expiry_date').reset_index(drop=True)
+        product_name = lots_sorted['name'].iloc[0]
+
+        # Lấy dự báo từ XGBoost (nếu không có -> fallback = 0)
+        forecast_info = forecast_map.get((branch_id, product_id), {'demand_30d': 0, 'daily_avg': 0})
+        daily_avg = forecast_info['daily_avg']
+
+        # Biến theo dõi lượng dự báo còn lại (mô phỏng FEFO tiêu thụ)
+        remaining_demand = forecast_info['demand_30d']
+
+        for _, lot in lots_sorted.iterrows():
+            lot_qty = lot['quantity']
+            cost_price = lot['cost_price']
+            expiry_date = lot['expiry_date']
+            days_to_expiry = (expiry_date - now).days
+
+            # =====================================================
+            # THUẬT TOÁN FEFO SIMULATION (Lõi nâng cấp)
+            # =====================================================
+            # Bước 1: Tính sức mua tối đa của thị trường
+            #          cho đến khi lô này hết hạn
+            if days_to_expiry <= 0:
+                # Lô đã hết hạn -> Rủi ro 100%
+                max_market_capacity = 0
+            else:
+                max_market_capacity = daily_avg * days_to_expiry
+
+            # Bước 2: Lượng thực tế lô này được "ăn" bởi nhu cầu FEFO
+            #          (Lô trước ăn trước, lô sau ăn phần còn lại)
+            fefo_consumed = min(lot_qty, remaining_demand)
+
+            # Bước 3: Lượng rủi ro = phần không bán được trước hạn
+            #          So sánh tồn lô vs sức mua thực tế cho đến ngày hết hạn
+            risk_qty = max(0, lot_qty - max_market_capacity)
+
+            # Bước 4: Giá trị thiệt hại tài chính (Provision Value)
+            provision_value = round(risk_qty * cost_price, 0)
+
+            # Bước 5: Phân loại trạng thái lô
+            if days_to_expiry <= 0:
+                lot_status = 'EXPIRED'
+                recommendation = 'Tiêu hủy / Thanh lý ngay'
+            elif risk_qty >= lot_qty * 0.8:
+                lot_status = 'DANGER'
+                recommendation = 'Khuyến mãi flash sale / Đẩy hàng gấp'
+            elif risk_qty > 0:
+                lot_status = 'WARNING'
+                recommendation = 'Giảm giá nhẹ / Ưu tiên xuất trước'
+            else:
+                lot_status = 'SAFE'
+                recommendation = 'Bình thường'
+
+            lot_risks.append({
+                'branch_id': branch_id,
+                'product_id': product_id,
+                'product_name': product_name,
+                'lot_id': lot['lot_id'],
+                'quantity': int(lot_qty),
+                'days_to_expiry': days_to_expiry,
+                'cost_price': float(cost_price),
+                'risk_qty': int(risk_qty),
+                'provision_value': float(provision_value),
+                'lot_status': lot_status,
+                'recommendation': recommendation,
+                'confidence_score': round(forecast_info.get('confidence', 75.0), 2)
+            })
+
+            # Cập nhật lượng demand còn lại cho lô tiếp theo
+            remaining_demand = max(0, remaining_demand - fefo_consumed)
+
+    return lot_risks
+
+# =========================================================
+# 4. MANAGER (QUẢN LÝ TIẾN TRÌNH)
 # =========================================================
 def main():
     start_time = time.time()
-    print("[EMARKET V8.0] AI Forecast Engine (Poisson Stochastic) Starting...")
-    
-    with engine.connect() as conn:
-        df_all = pd.read_sql("SELECT * FROM v_AI_Master_Input_XGB WITH (NOLOCK)", conn)
-    
-    print(f"Loaded {len(df_all)} rows. Grouping by SKU and Branch...")
+    print("=" * 60)
+    print("[EMARKET V9.0] AI Forecast Engine (NCKH Edition)")
+    print("  Modules: XGBoost Poisson | FEFO Simulation | Financial Risk")
+    print("  Mode: Sequential (Windows-safe)")
+    print("=" * 60)
+    sys.stdout.flush()
 
+    # Tạo engine trong main() để tránh subprocess spawn lại
+    engine = _create_engine()
+    
+    # -------------------------------------------------------
+    # PHASE 1: Load dữ liệu từ 2 SQL Views
+    # -------------------------------------------------------
+    try:
+        with engine.connect() as conn:
+            df_all = pd.read_sql("SELECT * FROM v_AI_Master_Input_XGB WITH (NOLOCK)", conn)
+            df_lots = pd.read_sql("SELECT * FROM v_AI_Lot_Financial_Risk_Input WITH (NOLOCK)", conn)
+    except Exception as e:
+        print(f"[PHASE 1][LỖI] Không thể kết nối DB hoặc đọc view: {e}")
+        sys.stdout.flush()
+        return
+    
+    print(f"[PHASE 1] Loaded {len(df_all)} training rows + {len(df_lots)} lot rows.")
+    sys.stdout.flush()
+
+    if df_all.empty:
+        print("[PHASE 1] Không có dữ liệu training. Dừng pipeline.")
+        sys.stdout.flush()
+        return
+
+    # -------------------------------------------------------
+    # PHASE 2: Huấn luyện XGBoost & Dự báo 30 ngày (Sequential - Windows Safe)
+    # -------------------------------------------------------
     tasks = []
     for (pid, branch_id), df_group in df_all.groupby(['product_id', 'branch_id']):
         m_stock = df_group['min_stock'].iloc[0] if 'min_stock' in df_group.columns else 5
         tasks.append((pid, branch_id, df_group, m_stock))
 
-    print(f"Processing {len(tasks)} combinations on {os.cpu_count()} cores...")
+    print(f"[PHASE 2] Training {len(tasks)} models (sequential)...")
+    sys.stdout.flush()
 
-    with Pool(processes=os.cpu_count()) as pool:
-        results = pool.map(train_and_dispatch_xgb, tasks)
+    # Chạy tuần tự thay vì Pool.map để tránh deadlock trên Windows
+    results = []
+    for i, task in enumerate(tasks):
+        try:
+            r = train_and_dispatch_xgb(task)
+            results.append(r)
+        except Exception as e:
+            print(f"[PHASE 2][LỖI] Task {i}: {e}")
+            results.append(None)
+        
+        # In tiến trình mỗi 50 model
+        if (i + 1) % 50 == 0:
+            print(f"[PHASE 2] ... đã xong {i + 1}/{len(tasks)} models")
+            sys.stdout.flush()
 
     advices, warnings_list, forecasts_list = [], [], []
+    # Tạo bản đồ dự báo để Phase 3 sử dụng
+    forecast_map = {}  # { (branch_id, product_id): { demand_30d, daily_avg, confidence } }
 
     for r in results:
         if r and r[0] == "RESULT":
-            if r[1]: advices.append(r[1])       
-            if r[2]: warnings_list.append(r[2]) 
-            if r[3]: forecasts_list.extend(r[3]) 
+            _, res_advice, res_warning, future_forecasts, expected_30d, avg_daily = r
+            if res_advice: advices.append(res_advice)       
+            if res_warning: warnings_list.append(res_warning) 
+            if future_forecasts: 
+                forecasts_list.extend(future_forecasts)
+                # Ghi vào forecast_map cho Phase 3
+                bid = future_forecasts[0]['branch_id']
+                pid = future_forecasts[0]['product_id']
+                conf = future_forecasts[0]['confidence_score']
+                forecast_map[(bid, pid)] = {
+                    'demand_30d': expected_30d,
+                    'daily_avg': avg_daily,
+                    'confidence': conf
+                }
 
-    print(f"Saving: {len(advices)} Advices | {len(warnings_list)} Warnings | {len(forecasts_list)} Forecasts...")
+    print(f"[PHASE 2] Results: {len(advices)} Advices | {len(warnings_list)} Warnings | {len(forecasts_list)} Forecasts")
+    sys.stdout.flush()
+
+    # -------------------------------------------------------
+    # PHASE 3: Phân tích rủi ro tài chính theo Lô (FEFO)
+    # -------------------------------------------------------
+    print(f"[PHASE 3] Analyzing {len(df_lots)} lots for financial risk (FEFO Simulation)...")
+    sys.stdout.flush()
+    lot_risks = analyze_lot_financial_risk(df_lots, forecast_map)
+
+    # Thống kê nhanh
+    if lot_risks:
+        df_risk_summary = pd.DataFrame(lot_risks)
+        total_provision = df_risk_summary['provision_value'].sum()
+        danger_count = len(df_risk_summary[df_risk_summary['lot_status'].isin(['DANGER', 'EXPIRED'])])
+        warning_count = len(df_risk_summary[df_risk_summary['lot_status'] == 'WARNING'])
+        safe_count = len(df_risk_summary[df_risk_summary['lot_status'] == 'SAFE'])
+        print(f"[PHASE 3] Lot Analysis: {danger_count} DANGER | {warning_count} WARNING | {safe_count} SAFE")
+        print(f"[PHASE 3] >> TỔNG TRÍCH LẬP DỰ PHÒNG: {total_provision:,.0f} VNĐ")
+    else:
+        print("[PHASE 3] Không có dữ liệu lô hàng để phân tích.")
+    sys.stdout.flush()
+
+    # -------------------------------------------------------
+    # PHASE 4: Ghi kết quả vào Database (4 bảng)
+    # -------------------------------------------------------
+    print(f"[PHASE 4] Saving to database...")
+    sys.stdout.flush()
     
-    with engine.begin() as conn:
-        conn.execute(text("TRUNCATE TABLE AI_ReplenishmentAdvice"))
-        conn.execute(text("TRUNCATE TABLE AI_InventoryWarning"))
-        conn.execute(text("TRUNCATE TABLE AI_SalesForecast"))
-        
-        if advices:
-            pd.DataFrame(advices).to_sql('AI_ReplenishmentAdvice', conn, if_exists='append', index=False)
-        if warnings_list:
-            pd.DataFrame(warnings_list).to_sql('AI_InventoryWarning', conn, if_exists='append', index=False)
-        if forecasts_list:
-            df_forecast = pd.DataFrame(forecasts_list)
-            df_forecast.to_sql('AI_SalesForecast', conn, if_exists='append', index=False, chunksize=5000)
+    try:
+        with engine.begin() as conn:
+            # Xóa dữ liệu cũ (4 bảng)
+            conn.execute(text("TRUNCATE TABLE AI_ReplenishmentAdvice"))
+            conn.execute(text("TRUNCATE TABLE AI_InventoryWarning"))
+            conn.execute(text("TRUNCATE TABLE AI_SalesForecast"))
+            conn.execute(text("""
+                IF OBJECT_ID('AI_LotFinancialRisk', 'U') IS NOT NULL 
+                    TRUNCATE TABLE AI_LotFinancialRisk
+            """))
+            
+            # --- Luồng 1: Forecast ---
+            if forecasts_list:
+                df_forecast = pd.DataFrame(forecasts_list)
+                df_forecast.to_sql('AI_SalesForecast', conn, if_exists='append', index=False, chunksize=5000, dtype=_nvarchar_dtype(df_forecast))
+                
+            # --- Luồng 2: Replenishment Advice ---
+            if advices:
+                df_adv = pd.DataFrame(advices)
+                df_adv.to_sql('AI_ReplenishmentAdvice', conn, if_exists='append', index=False, dtype=_nvarchar_dtype(df_adv))
+                
+            # --- Luồng 3: Inventory Warning ---
+            if warnings_list:
+                df_warn = pd.DataFrame(warnings_list)
+                df_warn.to_sql('AI_InventoryWarning', conn, if_exists='append', index=False, dtype=_nvarchar_dtype(df_warn))
+                
+            # --- Luồng 4 [MỚI]: Lot Financial Risk ---
+            if lot_risks:
+                df_lot = pd.DataFrame(lot_risks)
+                df_lot.to_sql('AI_LotFinancialRisk', conn, if_exists='append', index=False, dtype=_nvarchar_dtype(df_lot))
+    except Exception as e:
+        print(f"[PHASE 4][LỖI] Ghi DB thất bại: {e}")
+        sys.stdout.flush()
+        return
 
-    print(f"✨ DONE! Total Time: {round(time.time()-start_time, 2)}s")
+    elapsed = round(time.time() - start_time, 2)
+    print("=" * 60)
+    print(f"PIPELINE HOÀN TẤT! Tổng thời gian: {elapsed}s")
+    print(f"Forecasts:    {len(forecasts_list)} records")
+    print(f"Advices:      {len(advices)} records")
+    print(f"Warnings:     {len(warnings_list)} records")
+    print(f"Lot Risks:    {len(lot_risks)} records")
+    print("=" * 60)
+    sys.stdout.flush()
 
 if __name__ == "__main__":
-    try: set_start_method('spawn', force=True)
-    except: pass
     main()

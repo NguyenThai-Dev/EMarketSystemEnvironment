@@ -1,15 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Runtime.Caching;
-using System.Threading.Tasks;
-using System.Transactions;
-using System.Web;
-using ClosedXML.Excel;
+﻿using ClosedXML.Excel;
+using Dapper;
 using EMarket.Events.Class;
 using EMarket.Models;
 using EMarket.Modules.InventoryModule.DTOs;
@@ -19,6 +9,20 @@ using EMarket.Modules.ProductModule.Services.Interfaces;
 using EMarket.Modules.SalesModule.Services.Interfaces;
 using EMarket.Modules.UserModule.DTOs;
 using EMarket.Modules.UserModule.Services.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Data.Entity;
+using System.Data.SqlClient;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Net.Http;
+using System.Runtime.Caching;
+using System.Text;
+using System.Threading.Tasks;
+using System.Transactions;
+using System.Web;
 
 namespace EMarket.Modules.ProductModule.Services.Implementations
 {
@@ -31,6 +35,7 @@ namespace EMarket.Modules.ProductModule.Services.Implementations
         private readonly IProductLotService _productLotService;
         private readonly IPromotionService _promotionService;
         private readonly DateTime defaultDate = new DateTime(2000, 1, 1);
+        private readonly string _connectionString;
 
         public ProductService(EMarket_DBEntities db, IInventoryService inventoryService, IBranchService branchService, IWarehouseService warehouseService, IProductLotService productLotService, IPromotionService promotionService)
         {
@@ -40,6 +45,9 @@ namespace EMarket.Modules.ProductModule.Services.Implementations
             _warehouseService = warehouseService;
             _productLotService = productLotService;
             _promotionService = promotionService;
+            _connectionString = ConfigurationManager
+          .ConnectionStrings["EMarket_Connections_AdminManager"]
+          .ConnectionString;
         }
 
         public async Task<List<ProductDTO>> GetAllProductAsync()
@@ -188,6 +196,178 @@ namespace EMarket.Modules.ProductModule.Services.Implementations
             catch (Exception ex)
             {
                 throw new ApplicationException("Lỗi khi lấy dữ liệu sản phẩm hỗn hợp.", ex);
+            }
+        }
+
+        public async Task<List<object>> GetFilteredInactiveProductAsync(string keyword, int? categoryId, int? branchId, int? supplierId, int? warehouseId)
+        {
+            try
+            {
+                var sqlBuilder = new StringBuilder(@"
+            SELECT 
+                -- Thông tin Product (Bảng cha)
+                p.product_id AS ProductId, 
+                p.name AS Name, 
+                p.barcode AS Barcode, 
+                c.name AS CategoryName, 
+                p.category_id AS CategoryId, 
+                s.name AS SupplierName, 
+                p.description AS Description, 
+                p.price AS Price, 
+                p.unit AS Unit, 
+                p.image AS Image, 
+                p.min_stock AS MinStock, 
+                p.max_stock AS MaxStock,
+
+                -- Thông tin Detail (Bảng con - Dùng SplitOn ở đây)
+                inv.warehouse_id AS WarehouseId,
+                w.name AS WarehouseName,
+                b.name AS BranchName,
+                l.expiry_date AS ExpiryDate,
+                inv.quantity AS Quantity,
+                l.batch_code AS BatchCode
+            FROM Products p
+            LEFT JOIN ProductCategories c ON p.category_id = c.category_id
+            LEFT JOIN Suppliers s ON p.supplier_id = s.supplier_id
+            LEFT JOIN ProductLots l ON p.product_id = l.product_id
+            LEFT JOIN Inventory inv ON l.lot_id = inv.lot_id
+            LEFT JOIN Warehouses w ON inv.warehouse_id = w.warehouse_id
+            LEFT JOIN Warehouses ws ON ws.warehouse_id = inv.warehouse_id
+            LEFT JOIN Branches b ON b.branch_id = ws.branch_id
+            WHERE p.min_stock = 0 AND p.max_stock = 0
+        ");
+
+                var parameters = new DynamicParameters();
+
+                if (!string.IsNullOrWhiteSpace(keyword))
+                {
+                    sqlBuilder.Append(" AND (p.name LIKE @Keyword OR p.barcode LIKE @Keyword)");
+                    parameters.Add("Keyword", $"%{keyword.Trim()}%");
+                }
+
+                if (categoryId.HasValue)
+                {
+                    sqlBuilder.Append(" AND p.category_id = @CategoryId");
+                    parameters.Add("CategoryId", categoryId.Value);
+                }
+
+                if (supplierId.HasValue)
+                {
+                    sqlBuilder.Append(" AND p.supplier_id = @SupplierId");
+                    parameters.Add("SupplierId", supplierId.Value);
+                }
+
+                if (warehouseId.HasValue)
+                {
+                    sqlBuilder.Append(" AND inv.warehouse_id = @WarehouseId");
+                    parameters.Add("WarehouseId", warehouseId.Value);
+                }
+
+                if (branchId.HasValue)
+                {
+                    sqlBuilder.Append(" AND ws.branch_id = @BranchId");
+                    parameters.Add("BranchId", branchId.Value);
+                }
+
+                sqlBuilder.Append(" ORDER BY p.product_id DESC");
+
+                var productDictionary = new Dictionary<int, dynamic>();
+
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    await connection.OpenAsync();
+
+                    await connection.QueryAsync<dynamic, dynamic, dynamic>(
+                        sqlBuilder.ToString(),
+                        (product, detail) =>
+                        {
+                            int currentProductId = product.ProductId;
+
+                            if (!productDictionary.TryGetValue(currentProductId, out var currentProduct))
+                            {
+                                currentProduct = product;
+                                currentProduct.Quantity = 0m; // Khởi tạo tổng số lượng
+                                currentProduct.Details = new List<object>(); // Khởi tạo mảng chứa chi tiết
+                                productDictionary.Add(currentProductId, currentProduct);
+                            }
+
+                            // Nếu có dữ liệu Inventory (tránh null do LEFT JOIN)
+                            if (detail != null && detail.WarehouseId != null)
+                            {
+                                currentProduct.Quantity += (decimal)(detail.Quantity ?? 0);
+                                currentProduct.Details.Add(new
+                                {
+                                    WarehouseId = detail.WarehouseId,
+                                    BranchName = detail.BranchName,
+                                    ExpiryDate = detail.ExpiryDate,
+                                    Quantity = detail.Quantity,
+                                    WarehouseName = detail.WarehouseName,
+                                    BatchCode = detail.BatchCode
+                                });
+                            }
+
+                            return currentProduct;
+                        },
+                        parameters,
+                        splitOn: "WarehouseId"
+                    );
+                }
+
+                // 4. Định dạng lại kết quả trả về giống hệt EF Core
+                var result = productDictionary.Values.Select(p => new
+                {
+                    p.ProductId,
+                    p.Name,
+                    p.Barcode,
+                    p.CategoryName,
+                    p.CategoryId,
+                    p.SupplierName,
+                    p.Description,
+                    p.Price,
+                    p.Unit,
+                    p.Image,
+                    p.MinStock,
+                    p.MaxStock,
+                    Quantity = p.Quantity,
+                    Details = p.Details
+                }).Cast<object>().ToList();
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Lỗi khi lấy dữ liệu sản phẩm Inactive bằng Dapper.", ex);
+            }
+        }
+
+        public async Task<bool> ActiveProductAsync(int productId, int minStock, int maxStock)
+        {
+            try
+            {
+                string sql = @"
+            UPDATE Products 
+            SET min_stock = @MinStock, 
+                max_stock = @MaxStock
+            WHERE product_id = @ProductId;
+        ";
+
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    await connection.OpenAsync();
+
+                    int rowsAffected = await connection.ExecuteAsync(sql, new
+                    {
+                        ProductId = productId,
+                        MinStock = minStock,
+                        MaxStock = maxStock
+                    });
+
+                    return rowsAffected > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"Lỗi khi kích hoạt sản phẩm có ID {productId}.", ex);
             }
         }
 

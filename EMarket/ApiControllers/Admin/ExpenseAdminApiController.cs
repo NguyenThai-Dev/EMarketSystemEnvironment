@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using System.Web.Http;
 using EMarket.Modules.ExpenseModule.Services.Interfaces;
@@ -6,7 +6,7 @@ using EMarket.Modules.ExpenseModule.Services.Interfaces;
 namespace EMarket.ApiControllers.Admin
 {
     /// <summary>
-    /// API dành cho việc đọc dữ liệu chi phí (Expense) trong hệ thống quản trị.
+    /// Read-only API for Expense and Expense Category data.
     /// </summary>
     [RoutePrefix("api/admin/expense")]
     public class ExpenseAdminApiController : ApiController
@@ -23,13 +23,8 @@ namespace EMarket.ApiControllers.Admin
         // ======================================================
 
         /// <summary>
-        /// Lấy danh sách chi phí với các bộ lọc tùy chọn: chi nhánh, danh mục, ngày, trạng thái.
+        /// Lấy danh sách chi phí với bộ lọc: chi nhánh, danh mục, ngày, trạng thái.
         /// </summary>
-        /// <param name="branchId">ID chi nhánh.</param>
-        /// <param name="categoryId">ID danh mục chi phí.</param>
-        /// <param name="fromDate">Ngày bắt đầu.</param>
-        /// <param name="toDate">Ngày kết thúc.</param>
-        /// <param name="status">Trạng thái: pending | approved | rejected | paid.</param>
         [HttpGet]
         [Route("list")]
         public async Task<IHttpActionResult> GetExpenses(
@@ -39,50 +34,65 @@ namespace EMarket.ApiControllers.Admin
             DateTime? toDate = null,
             string status = null)
         {
-            var data = await _expenseService.GetExpensesAsync(
-                branchId,
-                categoryId,
-                fromDate,
-                toDate,
-                status);
-
+            var data = await _expenseService.GetExpensesAsync(branchId, categoryId, fromDate, toDate, status);
             return Ok(data);
         }
 
         #endregion
-
 
         // ======================================================
         #region Expense Detail
         // ======================================================
 
         /// <summary>
-        /// Lấy thông tin chi tiết một khoản chi phí.
+        /// Lấy thông tin chi tiết một khoản chi phí theo ID.
         /// </summary>
-        /// <param name="id">ID chi phí.</param>
         [HttpGet]
         [Route("{id:int}")]
         public async Task<IHttpActionResult> GetExpenseDetail(int id)
         {
             var data = await _expenseService.GetExpenseByIdAsync(id);
+            if (data == null) return NotFound();
             return Ok(data);
         }
 
         #endregion
-
 
         // ======================================================
         #region Expense Categories
         // ======================================================
 
         /// <summary>
-        /// Lấy danh sách tất cả danh mục chi phí.
+        /// Lấy toàn bộ danh mục chi phí (bao gồm cả Active và Inactive).
         /// </summary>
         [HttpGet]
         [Route("categories")]
-        public async Task<IHttpActionResult> GetExpenseCategories()
+        public async Task<IHttpActionResult> GetAllExpenseCategories()
         {
             var data = await _expenseService.GetAllExpenseCategoriesAsync();
+            return Ok(data);
+        }
+
+        /// <summary>
+        /// Lấy chỉ các danh mục chi phí đang hoạt động (Active).
+        /// </summary>
+        [HttpGet]
+        [Route("categories/active")]
+        public async Task<IHttpActionResult> GetActiveExpenseCategories()
+        {
+            var data = await _expenseService.GetActiveExpenseCategoriesAsync();
+            return Ok(data);
+        }
+
+        /// <summary>
+        /// Lấy chi tiết một danh mục chi phí theo ID.
+        /// </summary>
+        [HttpGet]
+        [Route("categories/{categoryId:int}")]
+        public async Task<IHttpActionResult> GetExpenseCategoryById(int categoryId)
+        {
+            var data = await _expenseService.GetExpenseCategoryByIdAsync(categoryId);
+            if (data == null) return NotFound();
             return Ok(data);
         }
 

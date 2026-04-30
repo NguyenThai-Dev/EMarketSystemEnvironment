@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Threading.Tasks;
 using System.Web.Mvc;
@@ -12,7 +12,6 @@ namespace EMarket.Areas.Admin.Controllers
         private readonly IAIService _aiService;
         private readonly IUserContext _userContext;
 
-        // Constructor Injection (Đảm bảo bạn đã cấu hình Unity/Autofac)
         public AIAnalysisController(IAIService aiService, IUserContext userContext)
         {
             _aiService = aiService;
@@ -20,7 +19,7 @@ namespace EMarket.Areas.Admin.Controllers
         }
 
         // GET: Admin/AIAnalysis
-        public ActionResult Index()
+        public ActionResult ProductAnalystic()
         {
             return View();
         }
@@ -174,6 +173,34 @@ namespace EMarket.Areas.Admin.Controllers
             var data = await _aiService.GetProductHistoryAsync(productId, branchId, fromDate, toDate);
 
             return Json(new { success = true, data }, JsonRequestBehavior.AllowGet);
+        }
+
+        // [NÂNG CẤP NCKH] Lấy dữ liệu phân tích rủi ro tài chính theo Lô (FEFO Simulation)
+        [HttpGet]
+        public async Task<JsonResult> GetLotFinancialRisk(int branchId = 1)
+        {
+            try
+            {
+                var data = await _aiService.GetLotFinancialRiskAsync(branchId);
+                return Json(new
+                {
+                    success = true,
+                    summary = new
+                    {
+                        data.TotalProvisionValue,
+                        data.TotalRiskLots,
+                        data.DangerCount,
+                        data.WarningCount,
+                        data.SafeCount
+                    },
+                    data = data.Details,
+                    generatedAt = DateTime.Now.ToString("dd/MM/yyyy HH:mm")
+                }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message }, JsonRequestBehavior.AllowGet);
+            }
         }
     }
 }

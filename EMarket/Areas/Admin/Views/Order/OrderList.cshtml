@@ -1,4 +1,4 @@
-﻿@using EMarket.Modules.UserModule.Services.Interfaces
+@using EMarket.Modules.UserModule.Services.Interfaces
 @{
     ViewBag.Title = "OrderList";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
@@ -459,13 +459,13 @@
                             const avatarChar = data ? data.charAt(0).toUpperCase() : 'K';
                             return `
                     <div class="d-flex align-items-center">
-                        <div class="avatar-xs me-2 bg-soft-primary text-primary rounded-circle"
-                             style="width:30px; height:30px; display:flex; align-items:center; justify-content:center; font-weight:bold; background:#e0f2f1; color:#00695c;">
+                        <div class="avatar-xs me-2 shadow-sm rounded-circle d-flex align-items-center justify-content-center"
+                             style="width:35px; height:35px; font-weight:bold; background:#e0f2f1; color:#00695c; font-size: 1.1rem;">
                             ${avatarChar}
                         </div>
                         <div class="d-flex flex-column">
-                            <span class="fw-medium">${data}</span>
-                            ${row.CustomerPhone ? `<small class="text-muted">${row.CustomerPhone}</small>` : ''}
+                            <span class="fw-bold text-dark" style="font-size: 0.9rem;">${data}</span>
+                            ${row.CustomerPhone ? `<small class="text-muted"><i class="fas fa-phone-alt me-1" style="font-size:0.7em;"></i>${row.CustomerPhone}</small>` : ''}
                         </div>
                     </div>
                 `;
@@ -518,8 +518,40 @@
                     },
                     {
                         data: 'Status',
-                        render: d =>
-                            `<span class="badges ${getStatusBadgeClass(d)}">${d || ''}</span>`
+                        width: '180px',
+                        render: function(d) {
+                            if (!d) return '';
+                            const status = d.toLowerCase();
+                            if (status === 'cancelled') {
+                                return `<div class="text-center"><span class="badge bg-soft-danger text-danger border border-danger rounded-pill px-3 py-1"><i class="fas fa-times-circle me-1"></i> Đã hủy</span></div>`;
+                            }
+                            
+                            let step1 = 'text-muted'; let step2 = 'text-muted'; let step3 = 'text-muted'; let step4 = 'text-muted';
+                            let bar1 = 'bg-light'; let bar2 = 'bg-light'; let bar3 = 'bg-light';
+                            
+                            if (status === 'pending') {
+                                step1 = 'text-primary fw-bold';
+                            } else if (status === 'processing') {
+                                step1 = 'text-success'; bar1 = 'bg-success'; step2 = 'text-primary fw-bold';
+                            } else if (status === 'shipped') {
+                                step1 = 'text-success'; bar1 = 'bg-success'; step2 = 'text-success'; bar2 = 'bg-success'; step3 = 'text-primary fw-bold';
+                            } else if (status === 'completed') {
+                                step1 = 'text-success'; bar1 = 'bg-success'; step2 = 'text-success'; bar2 = 'bg-success'; step3 = 'text-success'; bar3 = 'bg-success'; step4 = 'text-success fw-bold';
+                            }
+                            
+                            return `
+                                <div class="d-flex align-items-center justify-content-between" style="width: 100%; min-width: 140px; font-size: 0.85rem;">
+                                    <div class="text-center" title="Chờ xử lý"><i class="fas fa-file-invoice ${step1}"></i></div>
+                                    <div class="flex-grow-1 mx-1" style="height: 2px;"><div class="w-100 h-100 ${bar1}"></div></div>
+                                    <div class="text-center" title="Đang xử lý"><i class="fas fa-box-open ${step2}"></i></div>
+                                    <div class="flex-grow-1 mx-1" style="height: 2px;"><div class="w-100 h-100 ${bar2}"></div></div>
+                                    <div class="text-center" title="Đang giao"><i class="fas fa-shipping-fast ${step3}"></i></div>
+                                    <div class="flex-grow-1 mx-1" style="height: 2px;"><div class="w-100 h-100 ${bar3}"></div></div>
+                                    <div class="text-center" title="Hoàn thành"><i class="fas fa-check-circle ${step4}"></i></div>
+                                </div>
+                                <div class="text-center mt-1"><small class="fw-bold text-secondary" style="font-size:0.7rem;">${d.toUpperCase()}</small></div>
+                            `;
+                        }
                     },
                     {
                         data: 'OrderId',
@@ -1381,6 +1413,52 @@
             background: #fef2f2; /* Đỏ nhạt */
             border-color: #fecaca;
             color: #b91c1c;
+        }
+
+        /* --- DARK MODE OVERRIDES --- */
+        body[data-theme="dark"] .order-detail-wrapper, 
+        body[data-theme="dark"] .order-left, 
+        body[data-theme="dark"] .customer-card { 
+            background-color: transparent !important; 
+        }
+        body[data-theme="dark"] .shipping-card,
+        body[data-theme="dark"] .pickup-card { 
+            background-color: #151521; 
+            border-color: #2b2b40; 
+            color: #e1e3ea; 
+        }
+        body[data-theme="dark"] .badge-standard { 
+            background: #2b2b40; 
+            color: #a1a5b7; 
+        }
+        body[data-theme="dark"] .customer-name,
+        body[data-theme="dark"] .shipping-address { 
+            color: #e1e3ea; 
+        }
+        body[data-theme="dark"] .payment-success {
+            background-color: rgba(25, 135, 84, 0.15);
+            border-color: rgba(25, 135, 84, 0.3);
+            color: #28a745;
+        }
+        body[data-theme="dark"] .payment-pending {
+            background-color: rgba(255, 193, 7, 0.15);
+            border-color: rgba(255, 193, 7, 0.3);
+            color: #ffc107;
+        }
+        body[data-theme="dark"] .payment-failed {
+            background-color: rgba(220, 53, 69, 0.15);
+            border-color: rgba(220, 53, 69, 0.3);
+            color: #dc3545;
+        }
+        body[data-theme="dark"] .child-row-container {
+            background-color: #1e1e2d;
+            box-shadow: none;
+        }
+        body[data-theme="dark"] .section-title {
+            color: #a1a5b7;
+        }
+        body[data-theme="dark"] .customer-info li {
+            color: #a1a5b7;
         }
     </style>
 }

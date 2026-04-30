@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -16,7 +16,6 @@ namespace EMarket.Forecast.Services.Implementations
 {
     public class AIService : IAIService
     {
-        // Nếu bạn muốn tận dụng connection string từ EMarketContext
         private readonly string _connectionString;
 
         public AIService()
@@ -64,13 +63,7 @@ namespace EMarket.Forecast.Services.Implementations
                         r.recommended_min AS RecommendedMin,
                         r.recommended_max AS RecommendedMax,
                         r.reason AS Reason,
-                        r.confidence_level AS ConfidenceLevel,
-                        CASE 
-                            WHEN r.reason LIKE N'%Bất thường%' THEN N'🔥'
-                            WHEN r.reason LIKE N'%Mùa vụ%' THEN N'📅'
-                            WHEN r.reason LIKE N'%hết hàng%' THEN N''
-                            ELSE N''
-                        END AS InsightIcon
+                        r.confidence_level AS ConfidenceLevel
                     FROM AI_Purchase_Recommendation r
                     JOIN Products p ON r.product_id = p.product_id
                     LEFT JOIN ProductCategories c ON r.category_id = c.category_id
@@ -352,6 +345,44 @@ namespace EMarket.Forecast.Services.Implementations
                     TopCount = topCount
                 });
                 return result.AsList();
+            }
+        }
+
+        // [NÂNG CẤP NCKH] Phân tích rủi ro tài chính theo Lô hàng (Dapper - High Performance)
+        public async Task<AI_LotRiskSummaryDTO> GetLotFinancialRiskAsync(int branchId)
+        {
+            using (var conn = new SqlConnection(_connectionString))
+            {
+                string sql = @"
+                    SELECT 
+                        r.product_id AS ProductId,
+                        ISNULL(r.product_name, p.name) AS ProductName,
+                        r.lot_id AS LotId,
+                        r.quantity AS Quantity,
+                        r.days_to_expiry AS DaysToExpiry,
+                        ISNULL(r.cost_price, 0) AS CostPrice,
+                        r.risk_qty AS RiskQty,
+                        r.provision_value AS ProvisionValue,
+                        ISNULL(r.lot_status, 'SAFE') AS LotStatus,
+                        r.recommendation AS Recommendation,
+                        ISNULL(r.confidence_score, 0) AS ConfidenceScore
+                    FROM AI_LotFinancialRisk r WITH (NOLOCK)
+                    JOIN Products p ON r.product_id = p.product_id
+                    WHERE r.branch_id = @branchId
+                    ORDER BY r.provision_value DESC";
+
+                var details = (await conn.QueryAsync<AI_LotFinancialRiskDTO>(sql, new { branchId })).AsList();
+
+                // Tổng hợp KPIs cho popup
+                return new AI_LotRiskSummaryDTO
+                {
+                    TotalProvisionValue = details.Sum(x => x.ProvisionValue),
+                    TotalRiskLots = details.Count(x => x.RiskQty > 0),
+                    DangerCount = details.Count(x => x.LotStatus == "DANGER" || x.LotStatus == "EXPIRED"),
+                    WarningCount = details.Count(x => x.LotStatus == "WARNING"),
+                    SafeCount = details.Count(x => x.LotStatus == "SAFE"),
+                    Details = details
+                };
             }
         }
     }

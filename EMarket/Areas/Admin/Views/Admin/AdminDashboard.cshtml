@@ -1,4 +1,4 @@
-﻿@{
+@{
     ViewBag.Title = "Admin Dashboard";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
@@ -22,80 +22,75 @@
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-xl-3 col-md-6">
-                <div class="card card-hover">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <span class="text-label">Tổng doanh thu</span>
-                                <h3 id="spTotalSales" class="h3-counter mt-2 text-dark">0</h3>
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card border border-primary border-opacity-25 shadow-sm mb-0" style="background-color: rgba(13, 110, 253, 0.03);">
+                    <div class="card-body d-flex flex-wrap justify-content-between align-items-center py-3 px-4">
+                        <div class="d-flex align-items-center mb-2 mb-md-0">
+                            <div class="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                                <i class="fas fa-robot text-primary fs-5"></i>
                             </div>
-                            <div class="icon-shape bg-light-primary">
-                                <i class="fas fa-wallet"></i>
+                            <div>
+                                <h6 class="mb-1 fw-bold text-dark">AI Cảnh Báo & Đề Xuất</h6>
+                                <span class="text-muted small">Phát hiện <strong class="text-danger">3</strong> mặt hàng rủi ro cao và <strong class="text-warning">2</strong> mã dưới định mức an toàn.</span>
                             </div>
                         </div>
-                        <div class="mt-3 text-muted small">
-                            <span class="fw-bold">Tiền hàng nhập:</span> <span id="spTotalPurchase" class="text-dark">0</span> đ
+                        <a href="@Url.Action("WarehouseManagementDashboard", "Admin", new { area = "Admin" })" class="btn btn-sm btn-primary rounded-pill px-4 fw-bold shadow-sm">Xử lý ngay &rarr;</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-xl-3 col-md-6">
+                <div class="card card-hover h-100 position-relative overflow-hidden border-0 shadow-sm rounded-3">
+                    <div class="card-body z-1">
+                        <span class="text-muted fw-bold text-uppercase fs-7">Tổng doanh thu</span>
+                        <h3 id="spTotalSales" class="fw-bold mt-2 text-dark mb-1">0</h3>
+                        <div class="text-muted small mt-2">
+                            <span>Tiền hàng nhập:</span> <span id="spTotalPurchase" class="fw-bold text-dark">0</span> đ
                         </div>
                     </div>
+                    <i class="fas fa-wallet position-absolute text-primary opacity-10" style="font-size: 5rem; right: -10px; bottom: -10px; z-index: 0;"></i>
                 </div>
             </div>
 
             <div class="col-xl-3 col-md-6">
-                <div class="card card-hover border-start border-4 border-success">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <span class="text-label text-success">Lợi nhuận thực tế</span>
-                                <h3 id="spActualProfit" class="h3-counter mt-2 text-success">0</h3>
-                            </div>
-                            <div class="icon-shape bg-light-success">
-                                <i class="fas fa-hand-holding-usd"></i>
-                            </div>
-                        </div>
-                        <div class="mt-3 text-muted small">
-                            <span class="fw-bold">Lãi gộp:</span> <span id="spGrossProfit" class="text-dark">0</span> đ
+                <div class="card card-hover h-100 position-relative overflow-hidden border-0 shadow-sm rounded-3">
+                    <div class="card-body z-1">
+                        <span class="text-muted fw-bold text-uppercase fs-7">Lợi nhuận thực tế</span>
+                        <h3 id="spActualProfit" class="fw-bold mt-2 text-success mb-1">0</h3>
+                        <div class="text-muted small mt-2">
+                            <span>Lãi gộp:</span> <span id="spGrossProfit" class="fw-bold text-dark">0</span> đ
                         </div>
                     </div>
+                    <i class="fas fa-hand-holding-usd position-absolute text-success opacity-10" style="font-size: 5rem; right: -10px; bottom: -10px; z-index: 0;"></i>
                 </div>
             </div>
 
             <div class="col-xl-3 col-md-6">
-                <div class="card card-hover border-start border-4 border-danger">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <span class="text-label text-danger">Thất thoát (Hết hạn)</span>
-                                <h3 id="spInventoryLoss" class="h3-counter mt-2 text-danger">0</h3>
-                            </div>
-                            <div class="icon-shape bg-light-danger">
-                                <i class="fas fa-trash-alt"></i>
-                            </div>
-                        </div>
-                        <div class="mt-3 text-muted small">
-                            <span class="fw-bold">Chiếm:</span> <span id="spLossRate" class="text-danger fw-bold">0</span>% Lãi gộp
+                <div class="card card-hover h-100 position-relative overflow-hidden border-0 shadow-sm rounded-3">
+                    <div class="card-body z-1">
+                        <span class="text-muted fw-bold text-uppercase fs-7">Thất thoát (Hết hạn)</span>
+                        <h3 id="spInventoryLoss" class="fw-bold mt-2 text-danger mb-1">0</h3>
+                        <div class="text-muted small mt-2">
+                            <span>Chiếm:</span> <span id="spLossRate" class="text-danger fw-bold">0</span>% Lãi gộp
                         </div>
                     </div>
+                    <i class="fas fa-trash-alt position-absolute text-danger opacity-10" style="font-size: 5rem; right: -10px; bottom: -10px; z-index: 0;"></i>
                 </div>
             </div>
 
             <div class="col-xl-3 col-md-6">
-                <div class="card card-hover border-start border-4 border-warning">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <span class="text-label text-warning">Mã sắp hết hàng</span>
-                                <h3 id="spLowStock" class="h3-counter mt-2 text-warning">0</h3>
-                            </div>
-                            <div class="icon-shape" style="background-color: rgba(255, 193, 7, 0.15); color: #ffc107;">
-                                <i class="fas fa-boxes"></i>
-                            </div>
-                        </div>
-                        <div class="mt-3 text-muted small">
-                            <span class="fw-bold">Tổng tồn:</span> <span id="spTotalInventory" class="text-dark">0</span> đ/vị
+                <div class="card card-hover h-100 position-relative overflow-hidden border-0 shadow-sm rounded-3">
+                    <div class="card-body z-1">
+                        <span class="text-muted fw-bold text-uppercase fs-7">Mã sắp hết hàng</span>
+                        <h3 id="spLowStock" class="fw-bold mt-2 text-warning mb-1">0</h3>
+                        <div class="text-muted small mt-2">
+                            <span>Tổng tồn:</span> <span id="spTotalInventory" class="fw-bold text-dark">0</span> đ/vị
                         </div>
                     </div>
+                    <i class="fas fa-boxes position-absolute text-warning opacity-10" style="font-size: 5rem; right: -10px; bottom: -10px; z-index: 0;"></i>
                 </div>
             </div>
         </div>
@@ -412,7 +407,6 @@
 
 @section Styles {
     <style>
-        body { background-color: #f8f9fa; }
         .card { border: none; border-radius: 12px; box-shadow: 0 4px 20px 0 rgba(0,0,0,0.05); transition: all 0.3s ease; margin-bottom: 24px; }
         .card-hover:hover { transform: translateY(-5px); box-shadow: 0 8px 25px 0 rgba(0,0,0,0.1); }
         .icon-shape { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }

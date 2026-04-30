@@ -1,4 +1,4 @@
-﻿@using EMarket.Modules.UserModule.Services.Interfaces
+@using EMarket.Modules.UserModule.Services.Interfaces
 @{
     var UserContext = System.Web.Mvc.DependencyResolver.Current.GetService<IUserContext>();
 
@@ -87,6 +87,13 @@
                             <a class="btn" id="searchdiv"><img src="~/assets/img/icons/search.svg" alt="img" /></a>
                         </form>
                     </div>
+                </li>
+                
+                <!-- Dark Mode Toggle -->
+                <li class="nav-item d-flex align-items-center me-2">
+                    <a href="javascript:void(0);" id="darkModeToggle" class="nav-link rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 38px; height: 38px; background: #f3f6f9; transition: all 0.3s;" title="Chuyển chế độ giao diện">
+                        <i class="fas fa-moon text-secondary" id="darkModeIcon"></i>
+                    </a>
                 </li>
 
                 <li class="nav-item dropdown">
@@ -361,6 +368,36 @@
     @RenderSection("Scripts", required: false)
     @RenderSection("Styles", required: false)
 
+    <style>
+        /* --- DARK MODE OVERRIDES FOR MODERNIZED UI --- */
+        body[data-theme="dark"] .bg-light { background-color: #1e1e2d !important; border-color: #2b2b40 !important; color: #a1a5b7 !important; }
+        body[data-theme="dark"] .text-dark { color: #e1e3ea !important; }
+        body[data-theme="dark"] .card { background-color: #1e1e2d; border-color: #2b2b40; }
+        body[data-theme="dark"] .card-header { background-color: #151521; border-color: #2b2b40; }
+        body[data-theme="dark"] .table-responsive { background-color: transparent !important; box-shadow: none !important; }
+        body[data-theme="dark"] .border-end { border-right-color: #2b2b40 !important; }
+        body[data-theme="dark"] .border { border-color: #2b2b40 !important; }
+        body[data-theme="dark"] .text-muted { color: #8e91a0 !important; }
+        body[data-theme="dark"] .bg-white { background-color: #1e1e2d !important; }
+        body[data-theme="dark"] table.dataTable tbody tr:hover { background-color: #2b2b40 !important; }
+        body[data-theme="dark"] .form-control { background-color: #151521; border-color: #2b2b40; color: #e1e3ea; }
+        body[data-theme="dark"] .select2-container--default .select2-selection--single { background-color: #151521; border-color: #2b2b40; color: #e1e3ea; }
+        body[data-theme="dark"] .btn-soft-primary { background-color: rgba(13, 110, 253, 0.15); }
+        body[data-theme="dark"] .btn-soft-info { background-color: rgba(13, 202, 240, 0.15); }
+        body[data-theme="dark"] .btn-soft-danger { background-color: rgba(220, 53, 69, 0.15); }
+        body[data-theme="dark"] #darkModeToggle { background-color: #2b2b40 !important; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2) !important; }
+        body[data-theme="dark"] .modal-content { background-color: #1e1e2d; border-color: #2b2b40; color: #e1e3ea; }
+        body[data-theme="dark"] .modal-header { background-color: #151521; border-color: #2b2b40; }
+        body[data-theme="dark"] .modal-footer { border-color: #2b2b40; }
+        body[data-theme="dark"] .table { color: #a1a5b7; }
+        body[data-theme="dark"] table.dataTable tbody td { border-color: #2b2b40 !important; }
+        body[data-theme="dark"] table.dataTable thead th { border-color: #2b2b40 !important; color: #e1e3ea; }
+        body[data-theme="dark"] .badge-soft-warehouse { background-color: rgba(25, 135, 84, 0.15); color: #28a745; border-color: rgba(25, 135, 84, 0.3); }
+        body[data-theme="dark"] .bg-lightgreen { background-color: rgba(25, 135, 84, 0.2) !important; color: #28a745 !important; }
+        body[data-theme="dark"] .bg-lightred { background-color: rgba(220, 53, 69, 0.2) !important; color: #dc3545 !important; }
+        body[data-theme="dark"] .dataTables_info, body[data-theme="dark"] .dataTables_length, body[data-theme="dark"] .dataTables_filter { color: #a1a5b7; }
+    </style>
+
     <script>
 
     function loadSystemEvents() {
@@ -420,6 +457,26 @@
             if ($.fn.DataTable || $.fn.dataTable) {
                 $.fn.dataTable.ext.errMode = 'none';
             }
+            
+            // --- DARK MODE LOGIC ---
+            const currentTheme = localStorage.getItem('theme');
+            if (currentTheme === 'dark') {
+                $('body').attr('data-theme', 'dark');
+                $('#darkModeIcon').removeClass('fa-moon text-secondary').addClass('fa-sun text-warning');
+            }
+
+            $('#darkModeToggle').click(function () {
+                const body = $('body');
+                if (body.attr('data-theme') === 'dark') {
+                    body.removeAttr('data-theme');
+                    localStorage.setItem('theme', 'light');
+                    $('#darkModeIcon').removeClass('fa-sun text-warning').addClass('fa-moon text-secondary');
+                } else {
+                    body.attr('data-theme', 'dark');
+                    localStorage.setItem('theme', 'dark');
+                    $('#darkModeIcon').removeClass('fa-moon text-secondary').addClass('fa-sun text-warning');
+                }
+            });
         });
 
     $(function () {

@@ -1,4 +1,4 @@
-﻿@using EMarket.Modules.UserModule.Services.Interfaces
+@using EMarket.Modules.UserModule.Services.Interfaces
 @{
     ViewBag.Title = "Lịch sử kho";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
@@ -79,7 +79,7 @@
                                     <a class="btn btn-filters ms-auto me-2" id="btnSearch" title="Tìm kiếm">
                                         <img src="~/assets/img/icons/search-whites.svg" alt="img" />
                                     </a>
-                                    <a class="btn btn-warning" id="btnReset" title="Làm mới" style="background: #ff9f43; border: none; color:white;">
+                                    <a class="btn btn-warning text-white" id="btnReset" title="Làm mới">
                                         <i class="fa fa-undo"></i>
                                     </a>
                                 </div>
@@ -396,20 +396,20 @@
                         render: function (data, type, row) {
                             // Config mapping badge
                             const config = {
-                                'SALE': { class: 'badge-out', icon: 'fa-arrow-up', label: 'Xuất bán' },
-                                'EXPORT': { class: 'badge-out', icon: 'fa-arrow-up', label: 'Xuất kho' },
-                                'RETURN': { class: 'badge-in', icon: 'fa-arrow-down', label: 'Trả hàng' },
-                                'IMPORT': { class: 'badge-in', icon: 'fa-arrow-down', label: 'Nhập kho' },
-                                'ADJUSTMENT': { class: 'badge-adjustment', icon: 'fa-sync-alt', label: 'Kiểm kê' },
-                                'INTERNAL': { class: 'badge-internal', icon: 'fa-exchange-alt', label: 'Chuyển kho' },
-                                'ISSUE': { class: 'badge-out', icon: 'fa-sign-out-alt', label: 'Xuất dùng' } // Thêm ISSUE
+                                'SALE': { class: 'bg-danger bg-opacity-10 text-danger', icon: 'fa-arrow-up', label: 'Xuất bán' },
+                                'EXPORT': { class: 'bg-danger bg-opacity-10 text-danger', icon: 'fa-arrow-up', label: 'Xuất kho' },
+                                'RETURN': { class: 'bg-success bg-opacity-10 text-success', icon: 'fa-arrow-down', label: 'Trả hàng' },
+                                'IMPORT': { class: 'bg-success bg-opacity-10 text-success', icon: 'fa-arrow-down', label: 'Nhập kho' },
+                                'ADJUSTMENT': { class: 'bg-warning bg-opacity-10 text-warning', icon: 'fa-sync-alt', label: 'Kiểm kê' },
+                                'INTERNAL': { class: 'bg-info bg-opacity-10 text-info', icon: 'fa-exchange-alt', label: 'Chuyển kho' },
+                                'ISSUE': { class: 'bg-danger bg-opacity-10 text-danger', icon: 'fa-sign-out-alt', label: 'Xuất dùng' }
                             };
 
                             const key = (data || '').toUpperCase();
                             const ui = config[key] || { class: 'bg-secondary', icon: 'fa-question', label: data };
 
                             // Render Badge
-                            let html = `<span class="badge ${ui.class} border border-opacity-10 mb-1" style="min-width: 95px;">
+                            let html = `<span class="badge ${ui.class} border-0 mb-1 rounded-pill px-3 py-2" style="min-width: 105px;">
                                                 <i class="fas ${ui.icon} me-1"></i>${ui.label}
                                             </span>`;
 
@@ -429,20 +429,17 @@
                         data: 'Quantity',
                         className: 'text-center',
                         render: function (qty) {
-                            let colorClass = 'text-dark';
-                            let sign = '';
+                            let colorClass = 'text-dark fw-bold';
 
                             if (qty > 0) {
-                                colorClass = 'text-success fw-bold';
-                                sign = '+';
+                                colorClass = 'bg-success bg-opacity-10 text-success fw-bold px-3 py-2 rounded-pill';
                             } else if (qty < 0) {
-                                colorClass = 'text-danger fw-bold';
-                                // qty âm đã có dấu trừ sẵn, hoặc bạn format lại
+                                colorClass = 'bg-danger bg-opacity-10 text-danger fw-bold px-3 py-2 rounded-pill';
                             }
 
-                            return `<span class="${colorClass}" style="font-size: 1.1em;">
-                                                                ${qty > 0 ? '+' + qty : qty}
-                                                            </span>`;
+                            return `<span class="${colorClass} d-inline-block" style="font-size: 1.0em; min-width: 60px;">
+                                        ${qty > 0 ? '+' + qty : qty}
+                                    </span>`;
                         }
                     },
                     // 5. Tham chiếu (Order ID + Movement ID)

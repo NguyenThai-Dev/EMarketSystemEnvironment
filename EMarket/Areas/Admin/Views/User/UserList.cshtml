@@ -1,4 +1,4 @@
-﻿@{
+@{
     ViewBag.Title = "Quản lý Nhân viên";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
@@ -34,12 +34,12 @@
                         <thead>
                             <tr>
                                 <th><label class="checkboxs"><input type="checkbox" id="select-all" /><span class="checkmarks"></span></label></th>
-                                <th style="min-width:200px">Avatar</th>
                                 <th>Nhân viên</th>
-                                <th>Tài khoản</th>
-                                <th>Vai trò (Role)</th>
-                                <th>Trạng thái</th>
-                                <th class="text-center">Hành động</th>
+                                <th>Email</th>
+                                <th>Điện thoại</th>
+                                <th>Vai trò</th>
+                                <th class="text-center">Trạng thái</th>
+                                <th class="text-end" style="width:140px;">Hành động</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -321,10 +321,12 @@
                             const img = d.Image || '/assets/img/EMarket_Logo_Icon.png';
                             return `
                                     <div class="d-flex align-items-center">
-                                        <img src="${img}" class="avatar avatar-sm me-2">
+                                        <div class="avatar-md me-3 rounded-circle shadow-sm overflow-hidden border border-white border-2" style="width: 45px; height: 45px;">
+                                            <img src="${img}" class="w-100 h-100" style="object-fit:cover;">
+                                        </div>
                                         <div>
-                                            <div class="fw-semibold">${d.FullName}</div>
-                                            <div class="text-muted fs-12">${d.Username}</div>
+                                            <div class="fw-bold text-dark">${d.FullName}</div>
+                                            <div class="text-muted small"><i class="far fa-id-badge me-1"></i>${d.Username}</div>
                                         </div>
                                     </div>`;
                         }
@@ -333,13 +335,13 @@
                     // ===== EMAIL =====
                     {
                         data: 'Email',
-                        render: d => d || '<span class="text-muted">N/A</span>'
+                        render: d => d ? `<small class="text-muted"><i class="far fa-envelope me-1"></i>${d}</small>` : '<span class="text-muted fst-italic small">N/A</span>'
                     },
 
                     // ===== PHONE =====
                     {
                         data: 'Phone',
-                        render: d => d || '<span class="text-muted">N/A</span>'
+                        render: d => d ? `<span class="badge bg-light text-dark border border-secondary border-opacity-25 px-2 py-1"><i class="fas fa-phone-alt text-muted me-2" style="font-size: 0.8rem;"></i>${d}</span>` : '<span class="text-muted fst-italic">N/A</span>'
                     },
 
                     // ===== ROLE =====
@@ -380,11 +382,14 @@
                     // ===== STATUS =====
                     {
                         data: 'Status',
-                        className: 'text-center',
+                        className: 'text-center align-middle',
                         render: function (d) {
-                            return d === 'Active'
-                                ? `<span class="badge bg-light-success text-success">Hoạt động</span>`
-                                : `<span class="badge bg-light-danger text-danger">Ngừng</span>`;
+                            const isChecked = d === 'Active' ? 'checked' : '';
+                            return `
+                                <div class="form-check form-switch form-switch-md d-flex justify-content-center mb-0" title="${d}">
+                                    <input class="form-check-input" type="checkbox" disabled ${isChecked} style="cursor: not-allowed; opacity: 1;">
+                                </div>
+                            `;
                         }
                     },
 
@@ -392,21 +397,21 @@
                     {
                         data: null,
                         orderable: false,
-                        className: 'text-center',
+                        className: 'text-end',
                         render: function (d) {
 
                             const safeJson = JSON.stringify(d).replace(/'/g, "&apos;");
 
                             return `
-                                    <a class="me-2" href="javascript:void(0);" onclick='openViewModal(${safeJson})'>
-                                        <img src="/assets/img/icons/eye.svg">
-                                    </a>
-                                    <a class="me-2" href="javascript:void(0);" onclick='openEditModal(${safeJson})'>
-                                        <img src="/assets/img/icons/edit.svg">
-                                    </a>
-                                    <a href="javascript:void(0);" onclick="deleteUser(${d.UserId})">
-                                        <img src="/assets/img/icons/delete.svg">
-                                    </a>`;
+                                <a href="javascript:void(0)" class="btn btn-icon btn-sm btn-soft-info me-1" title="Chi tiết" onclick='openViewModal(${safeJson})'>
+                                    <img src="/assets/img/icons/eye.svg" alt="view" style="width:14px; filter: brightness(0) saturate(100%) invert(48%) sepia(97%) saturate(1412%) hue-rotate(161deg) brightness(97%) contrast(98%);" />
+                                </a>
+                                <a href="javascript:void(0)" class="btn btn-icon btn-sm btn-soft-primary me-1" title="Chỉnh sửa" onclick='openEditModal(${safeJson})'>
+                                    <img src="/assets/img/icons/edit.svg" alt="edit" style="width:14px; filter: brightness(0) saturate(100%) invert(26%) sepia(90%) saturate(1914%) hue-rotate(203deg) brightness(98%) contrast(106%);" />
+                                </a>
+                                <a href="javascript:void(0)" class="btn btn-icon btn-sm btn-soft-danger" title="Xóa" onclick="deleteUser(${d.UserId})">
+                                    <img src="/assets/img/icons/delete.svg" alt="delete" style="width:14px; filter: brightness(0) saturate(100%) invert(35%) sepia(58%) saturate(3015%) hue-rotate(338deg) brightness(95%) contrast(92%);" />
+                                </a>`;
                         }
                     }
                 ],
@@ -497,9 +502,9 @@
                 const res = await $.ajax({
                     url: url,
                     type: 'POST',
-                    data: formData,           // 🔥 TRUYỀN THẲNG
-                    processData: false,       // 🔥 BẮT BUỘC
-                    contentType: false        // 🔥 BẮT BUỘC
+                    data: formData,           
+                    processData: false,       
+                    contentType: false        
                 });
 
                 if (res.success) {
@@ -797,6 +802,41 @@
                     background-color: #eafaf1;
                     color: #198754;
                     border-color: #c7eed8;
+                }
+                
+                /* --- DIRECTORY STYLES & TOGGLE --- */
+                .form-switch-md .form-check-input {
+                    width: 2.5rem;
+                    height: 1.25rem;
+                    border-radius: 2rem;
+                }
+                
+                .btn-icon {
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 32px;
+                    height: 32px;
+                    padding: 0;
+                    border-radius: 6px;
+                    transition: all 0.2s ease;
+                }
+                
+                .btn-soft-primary { background-color: rgba(13, 110, 253, 0.1); border: 1px solid transparent; }
+                .btn-soft-primary:hover { background-color: rgba(13, 110, 253, 0.2); border-color: rgba(13, 110, 253, 0.3); transform: translateY(-1px); }
+                
+                .btn-soft-info { background-color: rgba(13, 202, 240, 0.1); border: 1px solid transparent; }
+                .btn-soft-info:hover { background-color: rgba(13, 202, 240, 0.2); border-color: rgba(13, 202, 240, 0.3); transform: translateY(-1px); }
+                
+                .btn-soft-danger { background-color: rgba(220, 53, 69, 0.1); border: 1px solid transparent; }
+                .btn-soft-danger:hover { background-color: rgba(220, 53, 69, 0.2); border-color: rgba(220, 53, 69, 0.3); transform: translateY(-1px); }
+                
+                table.dataTable tbody tr {
+                    transition: all 0.2s;
+                }
+                table.dataTable tbody tr:hover {
+                    background-color: #f8f9fa !important;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.02) inset;
                 }
 
                 /* ===== Sales ===== */

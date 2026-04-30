@@ -12,6 +12,12 @@ namespace EMarket.Modules.ProductModule.Services.Interfaces
         Task<List<object>> GetFilteredProductAsync(string keyWord, int? categoryId, int? branchId, int? supplierId, int? warehouseId);
         Task<List<ProductDTO>> GetFilteredProductAsync(string keyword, int? branchId);
         Task<List<ProductDTO>> GetProductsByIdsAsync(List<int> ids);
+
+        // Lấy sản phẩm bị khóa trong hệ thống
+        Task<List<object>> GetFilteredInactiveProductAsync(string keyWord, int? categoryId, int? branchId, int? supplierId, int? warehouseId);
+        Task<bool> ActiveProductAsync(int productId, int minStock, int maxStock);
+
+
         Task<Dictionary<int, string>> GetProductNamesByIdsAsync(List<int> productIds);
         Task<ProductDTO> GetProductByIdAsync(int id);
         Task<int> CreateProductAsync(ProductDTO dto, HttpPostedFileBase file);

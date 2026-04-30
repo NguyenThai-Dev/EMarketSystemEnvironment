@@ -1,4 +1,4 @@
-﻿<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
@@ -26,93 +26,87 @@
         position: fixed;
         bottom: 30px;
         right: 30px;
-        width: 64px;
-        height: 64px;
-        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        width: 60px;
+        height: 60px;
+        background: var(--primary);
         color: white;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 26px;
+        font-size: 24px;
         cursor: pointer;
-        box-shadow: 0 8px 24px rgba(102, 126, 234, 0.35);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         z-index: 9999;
-        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        transition: all 0.2s ease;
         border: none;
         outline: none;
     }
 
     #ai-chat-trigger:hover {
-        transform: scale(1.12) rotate(15deg);
-        box-shadow: 0 12px 32px rgba(102, 126, 234, 0.45);
+        transform: translateY(-3px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
     }
 
     #ai-chat-trigger:active {
         transform: scale(1.08);
     }
 
-    .pulse-ring {
-        background-color: rgba(0, 212, 255, 0.15);
-        border: 3px solid rgba(0, 212, 255, 0.4);
-        position: absolute;
-        top: -8px;
-        left: -8px;
-        right: -8px;
-        bottom: -8px;
-        border-radius: 50%;
-        animation: pulse 2.5s infinite cubic-bezier(0.4, 0, 0.6, 1);
+    /* Typing Indicator */
+    .typing-indicator {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 4px 8px;
     }
 
-    @@keyframes pulse {
-        0% {
-            transform: scale(1);
-            opacity: 1;
-        }
-        100% {
-            transform: scale(1.4);
-            opacity: 0;
-        }
+    .typing-indicator span {
+        width: 6px;
+        height: 6px;
+        background-color: #a0aec0;
+        border-radius: 50%;
+        animation: typing 1.4s infinite ease-in-out both;
+    }
+
+    .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+    .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+
+    @@keyframes typing {
+        0%, 80%, 100% { transform: scale(0); opacity: 0.5; }
+        40% { transform: scale(1); opacity: 1; }
     }
 
     #ai-chat-window {
         display: flex;
         position: fixed;
-        bottom: 110px;
+        bottom: 100px;
         right: 30px;
-        width: 460px;
-        height: 700px;
-        max-height: 85vh;
+        width: 420px;
+        height: 650px;
+        max-height: 80vh;
         flex-direction: column;
         z-index: 1000;
         overflow: hidden;
         background: white;
-        border-radius: 20px;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.14);
+        border-radius: 12px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
         border: 1px solid var(--border);
-        animation: slideUp 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+        animation: slideUp 0.3s ease;
     }
 
     @@keyframes slideUp {
-        from {
-            opacity: 0;
-            transform: translateY(20px) scale(0.95);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-        }
+        from { opacity: 0; transform: translateY(15px); }
+        to { opacity: 1; transform: translateY(0); }
     }
 
     .ai-header {
-        padding: 16px 20px;
-        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        padding: 14px 18px;
+        background: var(--primary);
         color: white;
         display: flex;
         justify-content: space-between;
         align-items: center;
         flex-shrink: 0;
-        border-radius: 20px 20px 0 0;
     }
 
     .ai-header-left {
@@ -289,46 +283,42 @@
     }
 
     .ai-avatar {
-        width: 36px;
-        height: 36px;
-        background: linear-gradient(135deg, #e0e7ff 0%, #f0f4ff 100%);
-        color: var(--primary);
+        width: 32px;
+        height: 32px;
+        background: #e2e8f0;
+        color: var(--text-primary);
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
-        font-size: 16px;
-        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
+        font-size: 14px;
     }
 
     .ai-user .ai-avatar {
-        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        background: var(--primary);
         color: white;
-        font-size: 14px;
+        font-size: 13px;
     }
 
     .ai-bubble {
         max-width: 85%;
-        padding: 12px 16px;
-        border-radius: 16px;
+        padding: 10px 14px;
+        border-radius: 8px;
         font-size: 14px;
-        line-height: 1.6;
+        line-height: 1.5;
         word-wrap: break-word;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
     }
 
     .ai-bot .ai-bubble {
         background: white;
         color: var(--text-primary);
         border: 1px solid var(--border);
-        border-top-left-radius: 4px;
     }
 
     .ai-user .ai-bubble {
-        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        background: var(--primary);
         color: white;
-        border-top-right-radius: 4px;
     }
 
     .ai-bubble table {
@@ -444,11 +434,11 @@
         border-radius: 50%;
         width: 40px;
         height: 40px;
-        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        background: var(--primary);
         color: white;
         border: none;
         cursor: pointer;
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: all 0.2s ease;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -457,8 +447,8 @@
     }
 
     .ai-footer .btn-send:hover {
-        transform: scale(1.08);
-        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        opacity: 0.9;
+        transform: translateY(-1px);
     }
 
     .ai-footer .btn-send:active {
@@ -466,21 +456,20 @@
     }
 
     .badge {
-        color: #fff !important; 
         padding: 0.5em 0.8em;
         font-weight: 500;
-        border-radius: 4px; 
-        text-transform: uppercase; 
+        border-radius: 4px;
+        text-transform: uppercase;
         font-size: 0.75rem;
     }
 
     .badge-critical {
         background-color: #d90429 !important;
-        box-shadow: 0 0 8px rgba(217, 4, 41, 0.4); 
+        box-shadow: 0 0 8px rgba(217, 4, 41, 0.4);
     }
 
     .badge-high {
-        background-color: #f48c06 !important; 
+        background-color: #f48c06 !important;
     }
 
     .badge-normal {
@@ -539,6 +528,14 @@
         animation-delay: -0.16s;
     }
 
+    @@media (min-width: 992px) {
+    .modal-lg {
+        width: fit-content;
+        max-width: 90%;
+    }
+}
+
+
     @@keyframes bounce {
         0%, 80%, 100% {
             transform: scale(0);
@@ -596,11 +593,70 @@
             justify-content: center;
         }
     }
+
+    /* === POPUP RỦI RO TÀI CHÍNH (LÔ HÀNG) === */
+    .risk-kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        padding: 16px;
+        background: linear-gradient(135deg, #1a1c2e 0%, #2d1f3d 100%);
+        border-radius: 12px;
+        margin-bottom: 16px;
+    }
+
+    .risk-kpi-card {
+        text-align: center;
+        padding: 14px 8px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .risk-kpi-card .kpi-value {
+        font-size: 22px;
+        font-weight: 800;
+        color: #fff;
+        line-height: 1.2;
+    }
+
+    .risk-kpi-card .kpi-label {
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.55);
+        margin-top: 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .risk-kpi-card.danger .kpi-value { color: #f56565; }
+    .risk-kpi-card.warning .kpi-value { color: #f39c12; }
+    .risk-kpi-card.safe .kpi-value { color: #48bb78; }
+
+    .provision-total {
+        text-align: center;
+        padding: 12px;
+        background: linear-gradient(135deg, rgba(245, 101, 101, 0.1) 0%, rgba(245, 101, 101, 0.05) 100%);
+        border: 1px solid rgba(245, 101, 101, 0.2);
+        border-radius: 10px;
+        margin-bottom: 12px;
+    }
+
+    .provision-total .amount {
+        font-size: 28px;
+        font-weight: 800;
+        color: var(--danger);
+    }
+
+    .provision-total .label {
+        font-size: 12px;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
 </style>
 
 <button id="ai-chat-trigger" onclick="toggleChat()">
-    <i class="fas fa-robot"></i>
-    <span class="pulse-ring"></span>
+    <i class="fas fa-comment-dots"></i>
 </button>
 
 <div id="ai-chat-window">
@@ -742,7 +798,8 @@
                     } else {
                         html = `<button onclick="askAI('forecast')"><i class="fas fa-box"></i> Dự báo Nhập</button>
                                 <button onclick="askAI('deadstock')"><i class="fas fa-warning"></i> Hàng tồn đọng</button>
-                                <button onclick="askAI('trend')"><i class="fas fa-chart-line"></i> Xu hướng bán</button>`;
+                                <button onclick="askAI('trend')"><i class="fas fa-chart-line"></i> Xu hướng bán</button>
+                                <button onclick="askAI('lotrisk')" style="border-color:#f56565;color:#f56565;"><i class="fas fa-coins"></i> Rủi ro Tài chính</button>`;
                     }
                     $('#quick-actions-container').html(html);
                 }
@@ -895,6 +952,50 @@
                             }
                         });
                     }
+                    else if (type === 'lotrisk') {
+                        var branchId = $('#ddlBranch').val() || 1;
+                        $.get(INTERNAL_API_BASE + '/GetLotFinancialRisk', { branchId: branchId }).done(function (res) {
+                            removeLoading();
+                            if (!res.success) {
+                                appendMessage("Lỗi: " + (res.message || "Không thể lấy dữ liệu rủi ro."), 'bot');
+                                return;
+                            }
+
+                            var s = res.summary;
+                            var list = res.data || [];
+                            window.tempLotRiskData = list;
+                            window.tempLotRiskSummary = s;
+
+                            if (list.length === 0) {
+                                appendMessage("Không có rủi ro tài chính nào. Kho hàng an toàn!", 'bot');
+                                return;
+                            }
+
+                            var fmtMoney = function(v) {
+                                return v.toLocaleString('vi-VN') + ' ₫';
+                            };
+
+                            var dangerItems = list.filter(x => x.LotStatus === 'DANGER' || x.LotStatus === 'EXPIRED');
+                            var html = `<b>Phân tích Rủi ro Tài chính (${list.length} lô):</b><br>`;
+                            html += `<span class="text-danger">Trích lập dự phòng: <b>${fmtMoney(s.TotalProvisionValue)}</b></span><br>`;
+                            html += `<small>${s.DangerCount} nguy hiểm · ${s.WarningCount} cảnh báo · ${s.SafeCount} an toàn</small>`;
+
+                            if (dangerItems.length > 0) {
+                                html += `<table><thead><tr><th>Lô hàng</th><th style="text-align:right;">Thiệt hại</th></tr></thead><tbody>`;
+                                dangerItems.slice(0, 5).forEach(x => {
+                                    html += `<tr>
+                                        <td><b>${x.ProductName}</b><br><small>${x.LotId} · ${x.DaysToExpiry} ngày</small></td>
+                                        <td style="text-align:right;" class="text-danger">${fmtMoney(x.ProvisionValue)}</td>
+                                    </tr>`;
+                                });
+                                html += `</tbody></table>`;
+                            }
+
+                            html += `<div style="text-align:center;margin-top:8px;"><button style="background:linear-gradient(135deg,#f56565,#c53030);color:white;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:600;" onclick="showFullList('lotrisk')">📊 Xem báo cáo đầy đủ</button></div>`;
+
+                            appendMessage(html, 'bot');
+                        });
+                    }
                 };
 
                 window.sendMessage = function () {
@@ -932,6 +1033,8 @@
 
                 window.loadChart = function (productId = null) {
                     var pId = productId || $('#selectProduct').val();
+                    var endDate = new Date($('#startDate').val());
+                    endDate.setMonth(endDate.getMonth() - 2);
                     if (!pId) return;
                     if ($('#selectProduct').length) $('#selectProduct').val(pId).trigger('change');
                     $('#chart-loading').show();
@@ -941,8 +1044,8 @@
                     var historyReq = $.get('/Admin/AIAnalysis/GetProductHistory', {
                         productId: pId,
                         branchId: $("#ddlBranch").val() || 1,
-                        startDate: $('#startDate').val(),
-                        endDate: $('#endDate').val(),
+                        startDate: endDate.toISOString().split('T')[0],
+                        endDate: $('#startDate').val(),
                     });
 
                     // Lấy dự báo bán hàng (AI Forecast)
@@ -1098,16 +1201,19 @@
                     var thead = "";
                     var tbody = "";
 
+                    var thStyle = 'padding: 14px 24px; color: #64748b; font-weight: 600; text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0;';
+                    var tdStyle = 'padding: 16px 24px; border-bottom: 1px solid #f1f5f9; vertical-align: middle;';
+
                     if (source === 'forecast') {
                         data = window.tempForecastData.filter(x => x.SuggestedQty > 0);
                         title = "Chi tiết Dự báo & Gợi ý Nhập hàng";
                         thead = `<tr>
-                            <th>Sản phẩm</th>
-                            <th>Hiện tại</th>
-                            <th>Dự báo (30đ)</th>
-                            <th style="text-align:right;">Cần Nhập</th>
-                            <th>Độ tin cậy</th>
-                            <th>Ưu tiên</th>
+                            <th style="${thStyle}">Sản phẩm</th>
+                            <th style="${thStyle} text-align:center;">Hiện tại</th>
+                            <th style="${thStyle} text-align:center;">Dự báo (30đ)</th>
+                            <th style="${thStyle} text-align:right;">Cần Nhập</th>
+                            <th style="${thStyle} width:120px;">Độ tin cậy</th>
+                            <th style="${thStyle} text-align:center;">Ưu tiên</th>
                         </tr>`;
 
                         data.forEach(x => {
@@ -1116,12 +1222,19 @@
                             let badgeClass = x.PriorityLevel === 'CRITICAL' ? 'badge-critical' : (x.PriorityLevel === 'HIGH' ? 'badge-high' : 'badge-normal');
 
                             tbody += `<tr>
-                                <td><b>${x.ProductName}</b></td>
-                                <td>${x.CurrentStock}</td>
-                                <td>${x.ExpectedDemand30d}</td>
-                                <td style="text-align:right;" class="text-danger">${x.SuggestedQty}</td>
-                                <td><div class="progress" style="height: 6px;"><div class="progress-bar ${color}" style="width: ${confidencePercent}%"></div></div></td>
-                                <td><span class="badge ${badgeClass}">${x.PriorityLevel}</span></td>
+                                <td style="${tdStyle} font-weight: 600; color: #1e293b;">${x.ProductName}</td>
+                                <td style="${tdStyle} text-align:center; color: #64748b;">${x.CurrentStock}</td>
+                                <td style="${tdStyle} text-align:center; color: #64748b;">${x.ExpectedDemand30d}</td>
+                                <td style="${tdStyle} text-align:right; font-weight: 700; color: #ef4444;">${x.SuggestedQty}</td>
+                                <td style="${tdStyle}">
+                                    <div class="d-flex align-items-center">
+                                        <div class="progress flex-grow-1" style="height: 6px; background-color: #e2e8f0;">
+                                            <div class="progress-bar ${color}" style="width: ${confidencePercent}%"></div>
+                                        </div>
+                                        <span class="ms-2" style="font-size: 11px; color: #64748b; min-width: 28px;">${confidencePercent}%</span>
+                                    </div>
+                                </td>
+                                <td style="${tdStyle} text-align:center;"><span class="badge ${badgeClass} px-3 py-2" style="border-radius: 6px;">${x.PriorityLevel}</span></td>
                             </tr>`;
                         });
                     }
@@ -1129,74 +1242,98 @@
                         data = window.tempDeadstockData;
                         title = "Phân tích Rủi ro & Hàng tồn đọng";
                         thead = `<tr>
-                            <th>Sản phẩm</th>
-                            <th>Tồn thực</th>
-                            <th>Trạng thái (Ngày)</th>
-                            <th style="text-align:right;">Đề xuất</th>
+                            <th style="${thStyle}">Sản phẩm</th>
+                            <th style="${thStyle} text-align:center;">Tồn thực</th>
+                            <th style="${thStyle}">Trạng thái</th>
+                            <th style="${thStyle} text-align:right;">Đề xuất</th>
                         </tr>`;
 
                         data.forEach(x => {
                             let statusHtml = x.WarningType.includes("Deadstock") || x.DaysToExhaust > 100
-                                ? `<span class="text-muted">Tồn ${x.DaysToExhaust} ngày</span>`
-                                : `<span class="${x.DaysToExhaust < 7 ? 'text-danger' : 'text-warning'}">Hết sau ${x.DaysToExhaust} ngày</span>`;
+                                ? `<span style="color: #64748b; font-weight: 500;">Tồn ${x.DaysToExhaust} ngày</span>`
+                                : `<span style="color: ${x.DaysToExhaust < 7 ? '#ef4444' : '#f59e0b'}; font-weight: 600;">Hết sau ${x.DaysToExhaust} ngày</span>`;
 
                             tbody += `<tr>
-                                <td><b>${x.ProductName}</b><br><small class="text-muted">${x.WarningType}</small></td>
-                                <td>${x.CurrentStock}</td>
-                                <td>${statusHtml}</td>
-                                <td style="text-align:right;"><span class="badge ${x.DaysToExhaust < 7 ? 'bg-danger' : 'bg-secondary'}">${x.Recommendation}</span></td>
+                                <td style="${tdStyle}">
+                                    <div style="font-weight: 600; color: #1e293b; margin-bottom: 4px;">${x.ProductName}</div>
+                                    <div style="font-size: 12px; color: #64748b;">${x.WarningType}</div>
+                                </td>
+                                <td style="${tdStyle} text-align:center; color: #64748b;">${x.CurrentStock}</td>
+                                <td style="${tdStyle}">${statusHtml}</td>
+                                <td style="${tdStyle} text-align:right;">
+                                    <span class="badge px-3 py-2" style="border-radius: 6px; background-color: ${x.DaysToExhaust < 7 ? '#fef2f2' : '#f8fafc'}; color: ${x.DaysToExhaust < 7 ? '#ef4444' : '#475569'}; border: 1px solid ${x.DaysToExhaust < 7 ? '#fca5a5' : '#e2e8f0'};">
+                                        ${x.Recommendation}
+                                    </span>
+                                </td>
                             </tr>`;
                         });
                     }
                     else if (source === 'trend') {
                         data = window.tempTrendData;
-                        title = "Top 50 Sản phẩm Dự báo Bán chạy (30 ngày)";
+                        title = "Top Sản phẩm Dự báo Bán chạy (30 ngày)";
                         thead = `<tr>
-                            <th>Hạng</th>
-                            <th>Sản phẩm</th>
-                            <th style="text-align:right;">Tổng dự báo</th>
+                            <th style="${thStyle} width: 60px; text-align:center;">Hạng</th>
+                            <th style="${thStyle}">Sản phẩm</th>
+                            <th style="${thStyle} text-align:right;">Tổng dự báo</th>
                         </tr>`;
 
                         data.forEach((x, i) => {
-                            let rankIcon = i === 0 ? "🥇" : (i === 1 ? "🥈" : (i === 2 ? "🥉" : `#${i + 1}`));
+                            let rankBadge = "";
+                            if (i === 0) rankBadge = `<span class="badge" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; font-weight: 700; box-shadow: 0 2px 4px rgba(245,158,11,0.3);">1</span>`;
+                            else if (i === 1) rankBadge = `<span class="badge" style="background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%); color: white; width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; font-weight: 700; box-shadow: 0 2px 4px rgba(148,163,184,0.3);">2</span>`;
+                            else if (i === 2) rankBadge = `<span class="badge" style="background: linear-gradient(135deg, #b45309 0%, #92400e 100%); color: white; width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; font-weight: 700; box-shadow: 0 2px 4px rgba(180,83,9,0.3);">3</span>`;
+                            else rankBadge = `<span style="color: #94a3b8; font-weight: 600; font-size: 14px;">${i + 1}</span>`;
+
                             tbody += `<tr>
-                                <td>${rankIcon}</td>
-                                <td><b>${x.ProductName}</b></td>
-                                <td style="text-align:right;" class="text-success">${Math.round(x.TotalPredictedQty)}</td>
+                                <td style="${tdStyle} text-align:center;">${rankBadge}</td>
+                                <td style="${tdStyle} font-weight: 600; color: #1e293b;">${x.ProductName}</td>
+                                <td style="${tdStyle} text-align:right; font-weight: 700; color: #10b981; font-size: 15px;">${Math.round(x.TotalPredictedQty)}</td>
                             </tr>`;
                         });
                     }
                     else if (source === 'system') {
                         data = window.tempSystemData;
-                        title = "System Suggestion";
-                        thead = `<tr><th>Sản phẩm</th><th>Lý do</th><th>Tồn</th><th style="text-align:right;">Gợi ý</th></tr>`;
+                        title = "Gợi ý từ Hệ thống";
+                        thead = `<tr>
+                            <th style="${thStyle}">Sản phẩm</th>
+                            <th style="${thStyle}">Lý do</th>
+                            <th style="${thStyle} text-align:center;">Tồn kho</th>
+                            <th style="${thStyle} text-align:right;">Gợi ý nhập</th>
+                        </tr>`;
                         data.forEach(x => {
                             tbody += `<tr>
-                                <td>${x.ProductName}</td>
-                                <td>${x.Reason}</td>
-                                <td>${x.CurrentStock}</td>
-                                <td style="text-align:right;" class="text-danger">${x.RecommendedMin}</td>
+                                <td style="${tdStyle} font-weight: 600; color: #1e293b;">${x.ProductName}</td>
+                                <td style="${tdStyle} color: #64748b;">${x.Reason}</td>
+                                <td style="${tdStyle} text-align:center; color: #64748b;">${x.CurrentStock}</td>
+                                <td style="${tdStyle} text-align:right; font-weight: 700; color: #ef4444;">${x.RecommendedMin}</td>
                             </tr>`;
                         });
+                    }
+                    else if (source === 'lotrisk') {
+                        // Mở popup chuyên dụng thay vì modal chung
+                        openLotRiskPopup();
+                        return;
                     }
 
                     if ($('#aiDetailsModal').length === 0) {
                         $('body').append(`
                             <div class="modal fade" id="aiDetailsModal" tabindex="-1">
                                 <div class="modal-dialog modal-lg modal-dialog-scrollable">
-                                    <div class="modal-content">
-                                        <div class="modal-header bg-light">
-                                            <h5 class="modal-title" id="aiModalTitle"></h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    <div class="modal-content border-0 shadow-lg" style="border-radius: 16px; overflow: hidden;">
+                                        <div class="modal-header border-bottom-0" style="background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); padding: 20px 24px;">
+                                            <h5 class="modal-title text-white fw-bold" id="aiModalTitle" style="font-size: 1.15rem; letter-spacing: 0.3px;"></h5>
+                                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" style="opacity: 0.8;"></button>
                                         </div>
-                                        <div class="modal-body p-0">
-                                            <table class="table table-striped table-hover mb-0" style="font-size:13px;">
-                                                <thead class="table-light" id="aiModalHead"></thead>
-                                                <tbody id="aiModalBody"></tbody>
-                                            </table>
+                                        <div class="modal-body p-0" style="background-color: #f8fafc;">
+                                            <div class="table-responsive">
+                                                <table class="table table-hover mb-0 align-middle" style="font-size: 14px; border-collapse: collapse; width: 100%;">
+                                                    <thead id="aiModalHead" style="background-color: #f1f5f9; position: sticky; top: 0; z-index: 1; box-shadow: 0 1px 2px rgba(0,0,0,0.05);"></thead>
+                                                    <tbody id="aiModalBody" class="bg-white"></tbody>
+                                                </table>
+                                            </div>
                                         </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Đóng</button>
+                                        <div class="modal-footer border-top-0" style="background-color: #f8fafc; padding: 16px 24px;">
+                                            <button type="button" class="btn btn-light px-4 py-2 fw-semibold" data-bs-dismiss="modal" style="border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); color: #475569; border: 1px solid #e2e8f0; transition: all 0.2s;">Đóng</button>
                                         </div>
                                     </div>
                                 </div>
@@ -1229,6 +1366,92 @@
                 function removeLoading() {
                     $('#loading').remove();
                 }
+
+                // === POPUP RỦI RO TÀI CHÍNH CHUYÊN DỤNG ===
+                window.openLotRiskPopup = function () {
+                    var data = window.tempLotRiskData || [];
+                    var s = window.tempLotRiskSummary || {};
+                    var fmtMoney = function(v) { return (v || 0).toLocaleString('vi-VN') + ' ₫'; };
+
+                    if ($('#aiLotRiskModal').length === 0) {
+                        $('body').append(`
+                            <div class="modal fade" id="aiLotRiskModal" tabindex="-1">
+                                <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                                    <div class="modal-content">
+                                        <div class="modal-header" style="background:linear-gradient(135deg,#1a202c,#2d3748);border:none;">
+                                            <h5 class="modal-title" style="color:#fff;font-weight:700;">💰 Báo cáo Rủi ro Tài chính (FEFO)</h5>
+                                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="modal-body" style="background:#f8f9fa;" id="lotRiskModalBody"></div>
+                                        <div class="modal-footer" style="border-top:1px solid #e2e8f0;">
+                                            <small class="text-muted me-auto" id="lotRiskTimestamp"></small>
+                                            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Đóng</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>`);
+                    }
+
+                    // Build KPI cards
+                    var kpiHtml = `
+                        <div class="provision-total">
+                            <div class="label">Tổng trích lập dự phòng</div>
+                            <div class="amount">${fmtMoney(s.TotalProvisionValue)}</div>
+                        </div>
+                        <div class="risk-kpi-grid">
+                            <div class="risk-kpi-card danger">
+                                <div class="kpi-value">${s.DangerCount || 0}</div>
+                                <div class="kpi-label">Nguy hiểm</div>
+                            </div>
+                            <div class="risk-kpi-card warning">
+                                <div class="kpi-value">${s.WarningCount || 0}</div>
+                                <div class="kpi-label">Cảnh báo</div>
+                            </div>
+                            <div class="risk-kpi-card safe">
+                                <div class="kpi-value">${s.SafeCount || 0}</div>
+                                <div class="kpi-label">An toàn</div>
+                            </div>
+                        </div>`;
+
+                    // Build detail table
+                    var tableHtml = `<table class="table table-striped table-hover mb-0" style="font-size:13px;">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Sản phẩm / Lô</th>
+                                <th style="text-align:center;">Tồn</th>
+                                <th style="text-align:center;">Rủi ro</th>
+                                <th style="text-align:center;">Còn (ngày)</th>
+                                <th style="text-align:right;">Thiệt hại (₫)</th>
+                                <th style="text-align:center;">Trạng thái</th>
+                            </tr>
+                        </thead><tbody>`;
+
+                    data.forEach(x => {
+                        var statusBadge = x.LotStatus === 'DANGER' || x.LotStatus === 'EXPIRED'
+                            ? `<span class="badge badge-critical"> ${x.LotStatus}</span>`
+                            : (x.LotStatus === 'WARNING'
+                                ? `<span class="badge badge-high">${x.LotStatus}</span>`
+                                : `<span class="badge badge-normal">${x.LotStatus}</span>`);
+
+                        var rowStyle = x.ProvisionValue > 0 ? 'style="background:rgba(245,101,101,0.04);"' : '';
+
+                        tableHtml += `<tr ${rowStyle}>
+                            <td><b>${x.ProductName}</b><br><small class="text-muted">${x.LotId}</small><br><small>${x.Recommendation}</small></td>
+                            <td style="text-align:center;">${x.Quantity}</td>
+                            <td style="text-align:center;" class="${x.RiskQty > 0 ? 'text-danger' : ''}">${x.RiskQty}</td>
+                            <td style="text-align:center;" class="${x.DaysToExpiry < 15 ? 'text-danger' : ''}">${x.DaysToExpiry}</td>
+                            <td style="text-align:right;font-weight:600;" class="${x.ProvisionValue > 0 ? 'text-danger' : 'text-success'}">${fmtMoney(x.ProvisionValue)}</td>
+                            <td style="text-align:center;">${statusBadge}</td>
+                        </tr>`;
+                    });
+                    tableHtml += `</tbody></table>`;
+
+                    $('#lotRiskModalBody').html(kpiHtml + tableHtml);
+                    $('#lotRiskTimestamp').text('Dữ liệu lúc: ' + (window.tempLotRiskSummary.generatedAt || new Date().toLocaleString('vi-VN')));
+
+                    var modal = new bootstrap.Modal(document.getElementById('aiLotRiskModal'));
+                    modal.show();
+                };
 
                 $('#ai-user-input').off('keypress').on('keypress', function (e) {
                     if (e.which == 13) {

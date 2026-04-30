@@ -1,4 +1,4 @@
-﻿@{
+@{
     ViewBag.Title = "PurchaseOrderList";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
@@ -762,7 +762,12 @@ function loadWarehouses(branchId) {
                         defaultContent: '', // Quan trọng: Để rỗng để CSS ::before hoạt động
                         width: "20px"
                     },
-                    { data: 'PurchaseOrderId' },
+                    {
+                        data: 'PurchaseOrderId',
+                        render: function(data) {
+                            return `<a href="javascript:void(0)" class="fw-bold text-primary"><i class="fas fa-file-invoice-dollar me-1 text-secondary"></i> PO-${data}</a>`;
+                        }
+                    },
                     { data: 'SupplierName' },
                     { data: 'BranchName' },
                     { data: 'WarehouseName' },
@@ -774,7 +779,9 @@ function loadWarehouses(branchId) {
                     {
                         data: 'TotalAmount',
                         className: 'text-end',
-                        render: d => d?.toLocaleString()
+                        render: function(d) {
+                            return `<span class="fw-bold text-success" style="font-size: 1.05rem;">${(d || 0).toLocaleString('vi-VN')} <small>đ</small></span>`;
+                        }
                     },
 
                     {

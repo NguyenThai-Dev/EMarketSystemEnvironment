@@ -1,4 +1,4 @@
-﻿@using EMarket.Modules.UserModule.Services.Interfaces
+@using EMarket.Modules.UserModule.Services.Interfaces
 
 @{
     Layout = null;
@@ -76,6 +76,9 @@
             flex: 1;
             display: flex;
             overflow: hidden;
+            padding: 15px;
+            gap: 15px;
+            background: var(--bg-body);
         }
 
         /* Panels */
@@ -84,17 +87,22 @@
             display: flex;
             flex-direction: column;
             background: #fff;
-            border-right: 1px solid var(--border-color);
+            border-radius: 1rem;
+            box-shadow: 0 .125rem .25rem rgba(0,0,0,.075);
+            overflow: hidden;
+            border: none;
         }
 
         .panel-right {
             flex: 3;
-            background: #f8f9fa;
+            background: #fff;
+            border-radius: 1rem;
             display: flex;
             flex-direction: column;
             padding: 15px;
             gap: 15px;
-            box-shadow: -5px 0 15px rgba(0,0,0,0.03);
+            box-shadow: 0 .125rem .25rem rgba(0,0,0,.075);
+            border: none;
             z-index: 10;
         }
 
@@ -430,14 +438,15 @@
 
         .action-group {
             display: grid;
-            grid-template-columns: 1fr 1fr 2fr;
-            gap: 10px;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: auto;
         }
 
         .btn-pos {
-            height: 50px;
+            height: 55px;
             border: none;
-            border-radius: 6px;
+            border-radius: 10px;
             font-weight: 600;
             display: flex;
             align-items: center;
@@ -445,27 +454,47 @@
             gap: 8px;
             font-size: 0.95rem;
             cursor: pointer;
-            transition: opacity 0.2s;
+            transition: all 0.2s;
         }
 
-            .btn-pos:hover {
-                opacity: 0.9;
-            }
+        .btn-pos:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
 
         .btn-return {
-            background: #e7f1ff; /* Màu xanh nhạt phân biệt với màu đỏ hủy */
+            background: #e7f1ff;
             color: var(--primary);
             border: 1px solid #b6d4fe;
         }
 
         .btn-cancel {
             background: #ffe2e5;
+            color: var(--danger);
             border: 1px solid #f5c2c7;
         }
 
+        .btn-discount {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+        }
+
         .btn-checkout {
-            grid-column: span 1; /* Hoặc span 1 nếu muốn chia đều 3 cột bằng nhau */
-            /* Nếu muốn nút thanh toán to bự chảng thì để grid-template-columns: 1fr 1fr 2fr; */
+            grid-column: span 2;
+            height: 70px;
+            font-size: 1.3rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            background: linear-gradient(135deg, var(--success) 0%, #20c997 100%);
+            color: #fff;
+            box-shadow: 0 6px 20px rgba(25, 135, 84, 0.4);
+            border-radius: 16px;
+        }
+        
+        .btn-checkout:hover {
+            box-shadow: 0 8px 25px rgba(25, 135, 84, 0.5);
+            transform: translateY(-3px);
         }
 
         /* Lock Screen */
@@ -918,20 +947,20 @@
                 </div>
 
                 <div class="action-group">
-                    <button id="btnCancelOrder" class="btn-pos btn-cancel d-none" onclick="POS.Cart.clear()">
-                        <i class="fas fa-times-circle text-danger"></i> <span class="text-danger">Hủy đơn</span>
-                    </button>
-
                     <button id="btnReturnOrder" class="btn-pos btn-return" onclick="POS.Return.init()">
-                        <i class="fas fa-undo text-primary"></i> <span class="text-primary">Trả hàng</span>
+                        <i class="fas fa-undo"></i> <span>Trả hàng</span>
                     </button>
 
                     <button class="btn-pos btn-discount" onclick="POS.Cart.showDiscountModal()">
-                        <i class="fas fa-percentage text-warning"></i> <span>Giảm giá</span>
+                        <i class="fas fa-percentage"></i> <span>Giảm giá</span>
+                    </button>
+                    
+                    <button id="btnCancelOrder" class="btn-pos btn-cancel d-none" onclick="POS.Cart.clear()">
+                        <i class="fas fa-times-circle"></i> <span>Hủy đơn</span>
                     </button>
 
                     <button class="btn-pos btn-checkout" onclick="POS.Payment.openModal()">
-                        <i class="fas fa-check-circle"></i> THANH TOÁN
+                        <i class="fas fa-check-circle me-2"></i> THANH TOÁN
                     </button>
                 </div>
             </div>

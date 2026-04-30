@@ -1,4 +1,4 @@
-﻿@{
+@{
     ViewBag.Title = "Quản lý Công Nợ & Nhà Cung Cấp";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
@@ -595,6 +595,35 @@
 
         .text-xs {
             font-size: 10px;
+        }
+
+        /* --- DARK MODE OVERRIDES --- */
+        body[data-theme="dark"] .filter-bar {
+            background-color: transparent !important;
+            border-color: #2b2b40 !important;
+        }
+        body[data-theme="dark"] .status-safe {
+            background-color: rgba(56, 158, 13, 0.15) !important;
+            color: #73d13d !important;
+            border-color: rgba(56, 158, 13, 0.3) !important;
+        }
+        body[data-theme="dark"] .status-warning {
+            background-color: rgba(212, 136, 6, 0.15) !important;
+            color: #ffc53d !important;
+            border-color: rgba(212, 136, 6, 0.3) !important;
+        }
+        body[data-theme="dark"] .status-critical {
+            background-color: rgba(207, 19, 34, 0.15) !important;
+            color: #ff4d4f !important;
+            border-color: rgba(207, 19, 34, 0.3) !important;
+        }
+        body[data-theme="dark"] .status-danger {
+            background-color: #1a1a2e !important;
+            color: #e1e3ea !important;
+            border-color: #ff4d4f !important;
+        }
+        body[data-theme="dark"] #tblTransactions tr:hover {
+            background-color: #2b2b40 !important;
         }
     </style>
 }

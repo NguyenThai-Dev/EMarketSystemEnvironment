@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -58,6 +58,30 @@ namespace EMarket.Areas.Admin.Controllers
         {
             var products = await _productService.GetFilteredProductAsync(keyWord, categoryId, branchId, supplierId, warehouseId);
             return Json(new { products }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> GetAllInactiveProduct(string keyWord, int? categoryId, int? branchId, int? supplierId, int? warehouseId)
+        {
+            var products = await _productService.GetFilteredInactiveProductAsync(keyWord, categoryId, branchId, supplierId, warehouseId);
+            return Json(new { products }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [EMarketAuthorize(Module = "ProductModule")]
+        public async Task<ActionResult> ActiveProduct(int productId, int minStock, int maxStock)
+        {
+            try
+            {
+                var result = await _productService.ActiveProductAsync(productId, minStock, maxStock);
+                return Json(new { success = result });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
         }
 
         [HttpGet]

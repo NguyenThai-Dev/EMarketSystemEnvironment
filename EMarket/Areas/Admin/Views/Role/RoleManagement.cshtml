@@ -1,4 +1,4 @@
-﻿@{
+@{
     ViewBag.Title = "Phân quyền Hệ thống";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
@@ -113,30 +113,30 @@
                 ],
                 columns: [
                     {
-                        data: 'RoleId', width: "50px", orderable: false
+                        data: 'RoleId', width: "50px", orderable: false,
+                        render: d => `<span class="text-muted fw-medium">#${d}</span>`
                     },
                     {
                         data: 'Name',
                         orderable: false,
-                        className: 'fw-bold',
                         render: function (d) {
-                            if (d === 'System Admin') return `<span class="text-danger">${d}</span>`;
-                            return `<span class="text-primary">${d}</span>`;
+                            const icon = d === 'System Admin' ? '<i class="fas fa-crown text-warning me-2 fs-5"></i>' : '<i class="fas fa-shield-alt text-primary me-2 fs-5"></i>';
+                            const colorClass = d === 'System Admin' ? 'text-danger' : 'text-dark';
+                            return `<div class="d-flex align-items-center">${icon}<span class="fw-bold ${colorClass}">${d}</span></div>`;
                         }
                     },
                     {
                         data: 'Permissions',
                         orderable: false,
-                        render: d => `<span class="badges bg-lightgreen">${d ? d.length : 0} permissions</span>`
+                        render: d => `<span class="badge bg-light text-dark border border-secondary border-opacity-25 px-2 py-1"><i class="fas fa-key text-muted me-2" style="font-size: 0.8rem;"></i>${d ? d.length : 0} permissions</span>`
                     },
                     {
                         data: null, orderable: false, className: 'text-end',
                         render: (data) => `
-                                    <a class="me-3 btn-permission" href="javascript:void(0)"
-                                       data-id="${data.RoleId}" data-name="${data.Name}">
-                                        <img src="/assets/img/icons/settings.svg" alt="img" title="Cấu hình quyền">
-                                    </a>
-                                `
+                            <a href="javascript:void(0)" class="btn btn-icon btn-sm btn-soft-primary btn-permission" title="Cấu hình quyền" data-id="${data.RoleId}" data-name="${data.Name}">
+                                <img src="/assets/img/icons/settings.svg" alt="img" style="width:14px; filter: brightness(0) saturate(100%) invert(26%) sepia(90%) saturate(1914%) hue-rotate(203deg) brightness(98%) contrast(106%);" />
+                            </a>
+                        `
                     }
                 ]
             });
@@ -302,7 +302,6 @@
             #tblPermissionMatrix td:first-child, #tblPermissionMatrix th:first-child {
                 text-align: left; /* Cột tên Module canh trái */
                 font-weight: 600;
-                background-color: #f9f9f9;
             }
 
         /* Style checkbox DreamPOS đè vào Table */
@@ -371,8 +370,31 @@
         #modalPermission .table-responsive {
             padding: 0.75rem;
             border-radius: 8px;
-            background-color: #fff;
+            background-color: var(--bs-body-bg);
             box-shadow: inset 0 0 0 1px #e5e7eb;
+        }
+
+        /* --- MODERN STYLES --- */
+        .btn-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-soft-primary { background-color: rgba(13, 110, 253, 0.1); border: 1px solid transparent; }
+        .btn-soft-primary:hover { background-color: rgba(13, 110, 253, 0.2); border-color: rgba(13, 110, 253, 0.3); transform: translateY(-1px); }
+        
+        table.dataTable tbody tr {
+            transition: all 0.2s;
+        }
+        table.dataTable tbody tr:hover {
+            background-color: #f8f9fa !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02) inset;
         }
 
     </style>

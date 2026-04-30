@@ -1,10 +1,13 @@
-﻿using System.Threading.Tasks;
+using System;
+using System.Threading.Tasks;
 using System.Web.Http;
 using EMarket.Modules.CustomerModule.Services.Interfaces;
 
 namespace EMarket.ApiControllers.Admin
 {
-    [AllowAnonymous]
+    /// <summary>
+    /// Read-only API for Customer, Address, and Loyalty Program data.
+    /// </summary>
     [RoutePrefix("api/admin/customer")]
     public class CustomerAdminApiController : ApiController
     {
@@ -23,11 +26,11 @@ namespace EMarket.ApiControllers.Admin
         }
 
         // ============================================================
-        #region Customer APIs
+        #region Customer Core APIs
         // ============================================================
 
         /// <summary>
-        /// Lấy toàn bộ khách hàng.
+        /// Lấy toàn bộ danh sách khách hàng.
         /// </summary>
         [HttpGet]
         [Route("")]
@@ -38,27 +41,25 @@ namespace EMarket.ApiControllers.Admin
         }
 
         /// <summary>
-        /// Tìm kiếm khách hàng.
+        /// Tìm kiếm khách hàng theo từ khóa (Tên, SĐT, Email).
         /// </summary>
         [HttpGet]
         [Route("search")]
-        public async Task<IHttpActionResult> Search(string keyword)
+        public async Task<IHttpActionResult> SearchCustomers(string keyword = null)
         {
             var data = await _customerService.GetAllCustomerFilteredAsync(keyword ?? "");
             return Ok(data);
         }
 
         /// <summary>
-        /// Lấy chi tiết khách hàng theo ID.
+        /// Lấy thông tin chi tiết khách hàng theo ID.
         /// </summary>
         [HttpGet]
         [Route("{id:int}")]
         public async Task<IHttpActionResult> GetCustomerById(int id)
         {
             var data = await _customerService.GetCustomerByIdAsync(id);
-            if (data == null)
-                return NotFound();
-
+            if (data == null) return NotFound();
             return Ok(data);
         }
 
@@ -73,8 +74,46 @@ namespace EMarket.ApiControllers.Admin
             return Ok(email);
         }
 
+        #endregion
+
+        // ============================================================
+        #region Customer Dashboard & Analytics
+        // ============================================================
+
         /// <summary>
-        /// Lấy danh sách phân khúc khách hàng.
+        /// Lấy thống kê tổng hợp khách hàng: Tổng số, VIP, khách mới trong khoảng thời gian.
+        /// </summary>
+        [HttpGet]
+        [Route("stats")]
+        public async Task<IHttpActionResult> GetCustomerStats(DateTime? fromDate = null)
+        {
+            var from = fromDate ?? DateTime.Today.AddDays(-30);
+            var total = await _customerService.CountAllAsync();
+            var vip = await _customerService.CountVipAsync();
+            var newCustomers = await _customerService.CountCreatedFromAsync(from);
+
+            return Ok(new
+            {
+                TotalCustomers = total,
+                VipCustomers = vip,
+                NewCustomersSinceDate = newCustomers,
+                SinceDate = from
+            });
+        }
+
+        /// <summary>
+        /// Đếm khách hàng tạo mới trong khoảng tháng cụ thể.
+        /// </summary>
+        [HttpGet]
+        [Route("count-in-month")]
+        public async Task<IHttpActionResult> CountCreatedInMonth(DateTime fromDate, DateTime toDate)
+        {
+            var count = await _customerService.CountCreatedInMonthAsync(fromDate, toDate);
+            return Ok(new { Count = count, FromDate = fromDate, ToDate = toDate });
+        }
+
+        /// <summary>
+        /// Lấy phân khúc khách hàng (VIP, Thường, Mới...).
         /// </summary>
         [HttpGet]
         [Route("segments")]
@@ -85,7 +124,7 @@ namespace EMarket.ApiControllers.Admin
         }
 
         /// <summary>
-        /// Lấy thống kê số lượng khách hàng tạo theo từng tháng.
+        /// Lấy thống kê số lượng khách hàng tạo theo từng tháng (dùng vẽ biểu đồ).
         /// </summary>
         [HttpGet]
         [Route("created-by-month")]
@@ -96,7 +135,7 @@ namespace EMarket.ApiControllers.Admin
         }
 
         /// <summary>
-        /// Lấy top khách hàng theo tiêu chí hệ thống.
+        /// Lấy top khách hàng theo tiêu chí hệ thống (Doanh thu, Đơn hàng...).
         /// </summary>
         [HttpGet]
         [Route("top")]
@@ -107,16 +146,13 @@ namespace EMarket.ApiControllers.Admin
         }
 
         #endregion
-        // ============================================================
-
-
 
         // ============================================================
         #region Customer Address APIs
         // ============================================================
 
         /// <summary>
-        /// Lấy toàn bộ địa chỉ của khách hàng.
+        /// Lấy toàn bộ địa chỉ của một khách hàng.
         /// </summary>
         [HttpGet]
         [Route("address/by-customer/{customerId:int}")]
@@ -127,7 +163,7 @@ namespace EMarket.ApiControllers.Admin
         }
 
         /// <summary>
-        /// Lấy địa chỉ mặc định của khách hàng.
+        /// Lấy địa chỉ mặc định của khách hàng (dùng cho giao hàng).
         /// </summary>
         [HttpGet]
         [Route("address/default/{customerId:int}")]
@@ -138,30 +174,25 @@ namespace EMarket.ApiControllers.Admin
         }
 
         /// <summary>
-        /// Lấy địa chỉ theo ID.
+        /// Lấy chi tiết một địa chỉ theo ID.
         /// </summary>
         [HttpGet]
         [Route("address/{id:int}")]
         public async Task<IHttpActionResult> GetAddressById(int id)
         {
             var data = await _addressService.GetCustomerAddressByIdAsync(id);
-            if (data == null)
-                return NotFound();
-
+            if (data == null) return NotFound();
             return Ok(data);
         }
 
         #endregion
-        // ============================================================
-
-
 
         // ============================================================
         #region Loyalty Program APIs
         // ============================================================
 
         /// <summary>
-        /// Lấy toàn bộ chương trình Loyalty.
+        /// Lấy toàn bộ chương trình Loyalty (Khách hàng thân thiết).
         /// </summary>
         [HttpGet]
         [Route("loyalty")]
@@ -179,13 +210,10 @@ namespace EMarket.ApiControllers.Admin
         public async Task<IHttpActionResult> GetLoyaltyById(int id)
         {
             var data = await _loyaltyService.GetLoyaltyByIdAsync(id);
-            if (data == null)
-                return NotFound();
-
+            if (data == null) return NotFound();
             return Ok(data);
         }
 
         #endregion
-        // ============================================================
     }
 }

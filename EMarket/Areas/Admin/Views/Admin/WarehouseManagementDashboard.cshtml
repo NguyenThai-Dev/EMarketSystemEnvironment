@@ -1,4 +1,4 @@
-﻿@{
+@{
     ViewBag.Title = "Warehouse Command Center";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
@@ -230,54 +230,63 @@
         </div>
 
         <div class="row mt-3">
-            <div class="col-lg-8">
-                <div class="card h-100 shadow-sm border-0 border-warning border-2 border-top-0 border-end-0 border-bottom-0">
+            <div class="col-lg-7">
+                <div class="card h-100 shadow-sm border-0">
                     <div class="card-header bg-white border-0 pt-4 pb-0 d-flex justify-content-between align-items-center">
                         <div class="d-flex align-items-center">
-                            <div class="bg-warning bg-opacity-10 p-2 rounded-circle me-3">
+                            <div class="bg-warning bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
                                 <i class="fas fa-calendar-times text-warning"></i>
                             </div>
                             <div>
-                                <h5 class="card-title fw-bold mb-0">Hàng cận Date / Hết hạn (FEFO)</h5>
-                                <small class="text-muted">Các lô hàng đã hết hạn hoặc sắp hết hạn trong chu kỳ</small>
+                                <h5 class="card-title fw-bold mb-0 text-dark">Hàng cận Date & Hết hạn (FEFO)</h5>
+                                <small class="text-muted">Kiểm soát rủi ro lưu kho theo lô</small>
                             </div>
                         </div>
                     </div>
-                    <div class="card-body px-0">
-                        <div class="table-responsive custom-scroll" style="max-height: 450px; overflow-y: auto;">
-                            <table class="table table-hover align-middle mb-0" id="tblExpired">
-                                <thead class="bg-light sticky-top" style="z-index: 1;">
-                                    <tr>
-                                        <th class="ps-4">Sản phẩm</th>
-                                        <th>Lô hàng (Batch)</th>
-                                        <th>Số lượng</th>
-                                        <th>Ngày hết hạn</th>
-                                        <th class="text-end pe-4">Trạng thái</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
+                    <div class="card-body">
+                        <!-- Alert-driven List Group for FEFO -->
+                        <div class="list-group list-group-flush custom-scroll pe-2" id="listExpired" style="max-height: 380px; overflow-y: auto;">
+                            <!-- Data sẽ được render qua JS -->
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="col-lg-4">
-                <div class="card h-100 shadow-sm border-0 border-danger border-2 border-top-0 border-end-0 border-bottom-0 gradient-ai-risk">
-                    <div class="card-header bg-transparent border-0 pt-4 pb-0">
-                        <div class="d-flex align-items-center">
-                            <div class="bg-danger bg-opacity-25 p-2 rounded-circle me-3">
-                                <i class="fas fa-radiation text-danger"></i>
-                            </div>
+            <div class="col-lg-5">
+                <div class="card h-100 shadow-sm border-0 bg-light">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
                             <div>
-                                <h5 class="card-title fw-bold mb-0 text-dark">Phân tích rủi ro (AI)</h5>
-                                <small class="text-muted">Cảnh báo điểm mù tồn kho & hủy hàng</small>
+                                <h5 class="fw-bold mb-0 text-dark"><i class="fas fa-shield-alt text-primary me-2"></i>Rủi Ro Tài Chính</h5>
+                                <small class="text-muted">Cảnh báo rủi ro tồn kho (AI)</small>
+                            </div>
+                            <span class="badge bg-white text-danger border border-danger border-opacity-25 shadow-sm rounded-pill px-3 py-2"><i class="fas fa-exclamation-triangle me-1"></i>Risk Alert</span>
+                        </div>
+                        
+                        <!-- Progress Bar Visual -->
+                        <div class="bg-white p-3 rounded-3 shadow-sm mb-4">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="fw-bold text-dark small text-uppercase">Tỷ lệ rủi ro danh mục</span>
+                                <span class="fw-bold text-danger">15%</span>
+                            </div>
+                            <div class="progress" style="height: 10px;">
+                                <div class="progress-bar bg-success" role="progressbar" style="width: 65%"></div>
+                                <div class="progress-bar bg-warning" role="progressbar" style="width: 20%"></div>
+                                <div class="progress-bar bg-danger progress-bar-striped progress-bar-animated" role="progressbar" style="width: 15%"></div>
+                            </div>
+                            <div class="d-flex justify-content-between mt-2 text-muted" style="font-size: 0.7rem;">
+                                <span>An toàn</span>
+                                <span>Cần chú ý</span>
+                                <span>Báo động</span>
                             </div>
                         </div>
-                    </div>
-                    <div class="card-body p-0 mt-3 custom-scroll" style="max-height: 350px; overflow-y: auto;">
-                        <div class="list-group list-group-flush" id="listAIRisk"></div>
+
+                        <!-- AI Risk List -->
+                        <div class="custom-scroll pe-2" style="max-height: 230px; overflow-y: auto;">
+                            <div class="list-group" id="listAIRisk">
+                                <!-- Data rendered by JS -->
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -381,6 +390,20 @@
         .custom-scroll::-webkit-scrollbar-thumb {
             background: #ddd;
             border-radius: 4px;
+        }
+
+        /* --- DARK MODE OVERRIDES --- */
+        body[data-theme="dark"] .gradient-ai-risk {
+            background: linear-gradient(180deg, #1e1e2d 0%, #2b2b40 100%);
+        }
+        body[data-theme="dark"] .low-stock-item:hover {
+            background-color: #2b2b40;
+        }
+        body[data-theme="dark"] .ai-risk-item:hover {
+            background-color: #3f2a2a;
+        }
+        body[data-theme="dark"] .list-group-item.bg-transparent {
+            background-color: transparent !important;
         }
     </style>
 }
@@ -553,12 +576,28 @@
         }
 
         function renderExpiredTable(list) {
-            const $tbody = $('#tblExpired tbody').empty();
-            if (list.length === 0) return $tbody.append('<tr><td colspan="5" class="text-center text-success py-4"><i class="fas fa-check-circle me-2"></i>Kho an toàn, không có hàng cận date!</td></tr>');
+            const $div = $('#listExpired').empty();
+            if (list.length === 0) return $div.append('<div class="text-center text-success py-4 fw-bold"><i class="fas fa-check-circle me-2"></i>Kho an toàn, không có hàng cận date!</div>');
 
             list.forEach(i => {
                 const isExp = i.Status === "Expired";
-                $tbody.append(`<tr><td class="ps-4 fw-bold text-dark">${i.Name}</td><td><span class="badge bg-light text-dark border">${i.LotNumber}</span></td><td class="fw-bold">${i.Qty}</td><td class="text-muted fw-bold">${i.ExpiryDate}</td><td class="text-end pe-4"><span class="badge ${isExp?'bg-danger':'bg-warning text-dark'} border-0 rounded-pill px-3 py-2"><i class="fas ${isExp?'fa-times-circle':'fa-exclamation-circle'} me-1"></i>${isExp?'Đã hết hạn':'Cận date'}</span></td></tr>`);
+                const badgeColor = isExp ? "danger" : "warning";
+                const icon = isExp ? "fa-times-circle" : "fa-exclamation-triangle";
+                const statusText = isExp ? "Đã hết hạn" : "Cận date";
+
+                $div.append(`
+                    <div class="list-group-item px-3 py-3 border-0 border-bottom bg-transparent">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <span class="fw-bold text-dark">${i.Name}</span>
+                            <span class="badge bg-${badgeColor} bg-opacity-10 text-${badgeColor} border border-${badgeColor} border-opacity-25 rounded-pill"><i class="fas ${icon} me-1"></i>${statusText}</span>
+                        </div>
+                        <div class="d-flex text-muted small">
+                            <div class="me-3"><i class="fas fa-box text-secondary me-1"></i>Lô: <span class="fw-bold text-dark">${i.LotNumber}</span></div>
+                            <div class="me-3"><i class="fas fa-cubes text-secondary me-1"></i>SL: <span class="fw-bold text-dark">${i.Qty}</span></div>
+                            <div><i class="far fa-calendar-alt text-secondary me-1"></i>HSD: <span class="fw-bold text-${badgeColor}">${i.ExpiryDate}</span></div>
+                        </div>
+                    </div>
+                `);
             });
         }
 
@@ -594,24 +633,20 @@
             if (list.length === 0) return $div.append('<div class="text-center text-muted p-4"><i class="fas fa-shield-alt fs-3 text-success opacity-50 mb-2"></i><br>Không phát hiện rủi ro bất thường.</div>');
 
             list.forEach(i => {
-                // Mapping field từ API trả về (ConfidenceScore hay Confidence)
                 let score = i.ConfidenceScore || i.Confidence || 0;
                 let barColor = score > 90 ? 'bg-danger' : (score > 80 ? 'bg-warning' : 'bg-info');
 
                 $div.append(`
-                    <div class="list-group-item ai-risk-item px-3 py-3 border-0 border-bottom">
-                        <div class="d-flex justify-content-between mb-1">
-                            <span class="fw-bold text-dark">${i.ProductName}</span>
-                            <span class="badge bg-danger text-white rounded-pill">${score}% Risk</span>
+                    <div class="list-group-item bg-white border-0 shadow-sm rounded-3 mb-2 px-3 py-3">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="fw-bold text-dark text-truncate" style="max-width: 70%;">${i.ProductName}</span>
+                            <span class="fw-bold text-danger">${score}% Risk</span>
                         </div>
-                        <div class="text-muted fs-7 mb-2 text-truncate" title="${i.RiskReason || 'Cảnh báo rủi ro hết hạn tồn kho'}">
+                        <div class="progress mb-2" style="height: 4px;">
+                            <div class="progress-bar ${barColor}" style="width: ${score}%"></div>
+                        </div>
+                        <div class="text-muted fs-7" title="${i.RiskReason || 'Cảnh báo rủi ro hết hạn tồn kho'}">
                             <i class="fas fa-biohazard text-danger me-1"></i>${i.RiskReason || 'Nguy cơ hủy hàng do quá Date'}
-                        </div>
-                        <div class="d-flex justify-content-between align-items-center mb-1 fs-7">
-                            <span class="text-muted">Độ tin cậy AI:</span>
-                        </div>
-                        <div class="progress" style="height: 4px;">
-                            <div class="progress-bar progress-bar-striped progress-bar-animated ${barColor}" style="width: ${score}%"></div>
                         </div>
                     </div>
                 `);

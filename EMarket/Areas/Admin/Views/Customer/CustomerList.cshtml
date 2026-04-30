@@ -1,4 +1,4 @@
-﻿@{
+@{
     ViewBag.Title = "Quản lý Khách hàng";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
@@ -43,7 +43,7 @@
                                 <th>Liên hệ</th>
                                 <th>Hạng</th>
                                 <th>Điểm tích lũy</th>
-                                <th class="text-center">Hành động</th>
+                                <th class="text-end" style="width:140px;">Hành động</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -244,16 +244,24 @@
                         data: 'FullName',
                         render: (data, type, row) => {
                             const img = row.UserImg || '/assets/img/EMarket_Logo_Icon.png'; 
+                            const emailHtml = row.Email ? `<small class="text-muted d-block mt-1"><i class="far fa-envelope me-1"></i>${row.Email}</small>` : '';
                             return `
-                                        <a href="javascript:void(0);" class="product-img">
-                                            <img src="${img}" alt="img">
-                                        </a>
-                                        <a href="javascript:void(0);">${data}</a>
-                                    `;
-                        },
-                        className: 'productimgname'
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar-md me-3 rounded-circle shadow-sm overflow-hidden border border-white border-2" style="width: 45px; height: 45px;">
+                                        <img src="${img}" alt="img" class="w-100 h-100" style="object-fit:cover;">
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-0 fw-semibold text-dark">${data}</h6>
+                                        ${emailHtml}
+                                    </div>
+                                </div>
+                            `;
+                        }
                     },
-                    { data: 'Phone', render: d => d || '-' },
+                    { 
+                        data: 'Phone', 
+                        render: d => d ? `<span class="badge bg-light text-dark border border-secondary border-opacity-25 px-2 py-1"><i class="fas fa-phone-alt text-muted me-2" style="font-size: 0.8rem;"></i>${d}</span>` : '<span class="text-muted fst-italic">Trống</span>' 
+                    },
                     {
                         data: 'CustomerType',
                         className: 'text-center align-middle', 
@@ -280,20 +288,24 @@
                             return `<span class="badge-type ${cls}">${label}</span>`;
                         }
                     },
-                    { data: 'PointBalance', className: 'text-center fw-bold' },
+                    { 
+                        data: 'PointBalance', 
+                        className: 'text-center',
+                        render: d => `<div class="d-inline-flex align-items-center"><i class="fas fa-star text-warning me-1"></i><span class="fw-bold">${d}</span></div>` 
+                    },
                     {
-                        data: null, className: 'text-center',
+                        data: null, className: 'text-end',
                         render: (data, type, row) => `
-                                    <a class="me-3" href="javascript:void(0);" onclick='openViewModal(${JSON.stringify(row)})'>
-                                        <img src="/assets/img/icons/eye.svg" alt="view">
-                                    </a>
-                                    <a class="me-3" href="javascript:void(0);" onclick='openEditModal(${JSON.stringify(row)})'>
-                                        <img src="/assets/img/icons/edit.svg" alt="edit">
-                                    </a>
-                                    <a class="me-3" href="javascript:void(0);" onclick="deleteCustomer(${row.CustomerId})">
-                                        <img src="/assets/img/icons/delete.svg" alt="delete">
-                                    </a>
-                                `
+                            <a href="javascript:void(0)" class="btn btn-icon btn-sm btn-soft-info me-1" title="Chi tiết" onclick='openViewModal(${JSON.stringify(row)})'>
+                                <img src="/assets/img/icons/eye.svg" alt="view" style="width:14px; filter: brightness(0) saturate(100%) invert(48%) sepia(97%) saturate(1412%) hue-rotate(161deg) brightness(97%) contrast(98%);" />
+                            </a>
+                            <a href="javascript:void(0)" class="btn btn-icon btn-sm btn-soft-primary me-1" title="Chỉnh sửa" onclick='openEditModal(${JSON.stringify(row)})'>
+                                <img src="/assets/img/icons/edit.svg" alt="edit" style="width:14px; filter: brightness(0) saturate(100%) invert(26%) sepia(90%) saturate(1914%) hue-rotate(203deg) brightness(98%) contrast(106%);" />
+                            </a>
+                            <a href="javascript:void(0)" class="btn btn-icon btn-sm btn-soft-danger" title="Xóa" onclick="deleteCustomer(${row.CustomerId})">
+                                <img src="/assets/img/icons/delete.svg" alt="delete" style="width:14px; filter: brightness(0) saturate(100%) invert(35%) sepia(58%) saturate(3015%) hue-rotate(338deg) brightness(95%) contrast(92%);" />
+                            </a>
+                        `
                     }
                 ],
                 order: [[1, 'asc']],
@@ -570,6 +582,35 @@
         table.dataTable thead th.text-center {
             text-align: center !important;
             padding-right: 12px !important; /* Đè lại padding-right của sorting icon */
+        }
+        
+        /* --- DIRECTORY STYLES --- */
+        .btn-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-soft-primary { background-color: rgba(13, 110, 253, 0.1); border: 1px solid transparent; }
+        .btn-soft-primary:hover { background-color: rgba(13, 110, 253, 0.2); border-color: rgba(13, 110, 253, 0.3); transform: translateY(-1px); }
+        
+        .btn-soft-info { background-color: rgba(13, 202, 240, 0.1); border: 1px solid transparent; }
+        .btn-soft-info:hover { background-color: rgba(13, 202, 240, 0.2); border-color: rgba(13, 202, 240, 0.3); transform: translateY(-1px); }
+        
+        .btn-soft-danger { background-color: rgba(220, 53, 69, 0.1); border: 1px solid transparent; }
+        .btn-soft-danger:hover { background-color: rgba(220, 53, 69, 0.2); border-color: rgba(220, 53, 69, 0.3); transform: translateY(-1px); }
+        
+        table.dataTable tbody tr {
+            transition: all 0.2s;
+        }
+        table.dataTable tbody tr:hover {
+            background-color: #f8f9fa !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02) inset;
         }
     </style>
 }

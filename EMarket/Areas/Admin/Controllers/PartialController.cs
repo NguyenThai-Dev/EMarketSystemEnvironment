@@ -129,15 +129,6 @@ namespace EMarket.Areas.Admin.Controllers
                     }
                     else if (list.First() is IDictionary<string, object>)
                     {
-                        // 🔥 ĐÂY CHÍNH LÀ THẰNG GÂY LỖI CỦA BRO: Mảng chứa Object lồng nhau
-
-                        // --- TRƯỜNG PHÁI 1: GOM VÀO 1 Ô EXCEL (Khuyên dùng) ---
-                        // Chuyển mảng Object thành chuỗi JSON (hoặc chuỗi đọc được) để nhét gọn vào 1 ô Excel.
-                        // Giúp file Excel không bị đẻ ra hàng chục cột mới làm loạn file.
-                        // flatDict[newKey] = JsonConvert.SerializeObject(list, Formatting.Indented);
-
-                        // --- TRƯỜNG PHÁI 2: ĐẺ CỘT THEO INDEX (Bỏ comment nếu sếp thích kiểu này) ---
-                        // Ví dụ: details_0_Ten, details_0_Gia, details_1_Ten, details_1_Gia
                         for (int i = 0; i < list.Count; i++)
                         {
                             var listItem = list[i] as IDictionary<string, object>;

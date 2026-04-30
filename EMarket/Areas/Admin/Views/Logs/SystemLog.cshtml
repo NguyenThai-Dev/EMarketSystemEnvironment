@@ -1,4 +1,4 @@
-﻿@{
+@{
     ViewBag.Title = "System Monitoring";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
@@ -237,46 +237,47 @@
                 columns: [
                     {
                         data: 'CreatedAt',
-                        render: d => {
-                            const time = moment(d).format('HH:mm:ss');
-                            const date = moment(d).format('DD/MM');
-                            return `<div><strong>${time}</strong><br><small class="text-muted">${date}</small></div>`;
+                        render: function(d, type, row) {
+                            const time = moment(row.CreatedAt).format('HH:mm:ss');
+                            const date = moment(row.CreatedAt).format('DD/MM/YYYY');
+                            const colors = { 'Deleted': 'danger', 'Added': 'success', 'Modified': 'warning' };
+                            const color = colors[row.ActionType] || 'secondary';
+                            const icon = row.ActionType === 'Added' ? 'fa-plus' : (row.ActionType === 'Deleted' ? 'fa-trash' : 'fa-pen');
+                            
+                            return `
+                                <div class="timeline-item w-100">
+                                    <div class="timeline-marker bg-${color} pulse-${color}">
+                                        <i class="fas ${icon} text-white" style="font-size: 10px;"></i>
+                                    </div>
+                                    <div class="timeline-content w-100">
+                                        <div class="d-flex justify-content-between align-items-center mb-1">
+                                            <div>
+                                                <span class="badge bg-light text-dark me-2 border"><i class="fas fa-user text-muted me-1"></i>${row.Username}</span>
+                                                <span class="badge bg-${color}-light text-${color} me-2">${row.ActionType}</span>
+                                                <span class="fw-bold text-dark">${row.TableName} <code class="ms-1 text-muted">#${row.PrimaryKeyId}</code></span>
+                                            </div>
+                                            <div class="text-end">
+                                                <span class="text-muted fw-bold small">${time}</span>
+                                                <span class="text-muted ms-2 small" style="font-size: 0.7rem;">${date}</span>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-end mt-2">
+                                            <div class="text-muted small"><i class="fas fa-globe me-1"></i> IP: ${row.IpAddress}</div>
+                                            <a href="javascript:void(0)" class="btn btn-sm btn-outline-primary py-1 px-2" onclick="viewAudit(${row.AuditId})">
+                                                <i class="fas fa-eye me-1"></i> Chi tiết
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
                         }
                     },
-                    {
-                        data: 'Username',
-                        render: d => `<span class="badge bg-light text-dark">${d}</span>`
-                    },
-                    {
-                        data: 'TableName',
-                        render: d => `<span class="fw-bold text-primary">${d}</span>`
-                    },
-                    {
-                        data: 'ActionType',
-                        render: d => {
-                            const colors = {
-                                'Deleted': 'danger',
-                                'Added': 'success',
-                                'Modified': 'warning'
-                            };
-                            const color = colors[d] || 'secondary';
-                            return `<span class="badge bg-${color}">${d}</span>`;
-                        }
-                    },
-                    {
-                        data: 'PrimaryKeyId',
-                        render: d => `<code class="text-muted">#${d}</code>`
-                    },
-                    {
-                        data: 'IpAddress',
-                        render: d => `<code class="text-muted">${d}</code>`
-                    },
-                    {
-                        data: 'AuditId',
-                        orderable: false,
-                        className: 'text-center',
-                        render: id => `<a href="javascript:void(0)" class="btn-view" onclick="viewAudit(${id})" title="Xem chi tiết"><i class="fas fa-eye"></i></a>`
-                    }
+                    { data: 'Username', visible: false },
+                    { data: 'TableName', visible: false },
+                    { data: 'ActionType', visible: false },
+                    { data: 'PrimaryKeyId', visible: false },
+                    { data: 'IpAddress', visible: false },
+                    { data: 'AuditId', visible: false }
                 ],
                 order: [[0, 'desc']]
             });
@@ -290,39 +291,44 @@
                 columns: [
                     {
                         data: 'CreatedAt',
-                        render: d => {
-                            const time = moment(d).format('HH:mm:ss');
-                            const date = moment(d).format('DD/MM');
-                            return `<div><strong>${time}</strong><br><small class="text-muted">${date}</small></div>`;
+                        render: function(d, type, row) {
+                            const time = moment(row.CreatedAt).format('HH:mm:ss');
+                            const date = moment(row.CreatedAt).format('DD/MM/YYYY');
+                            const colors = { 'ERROR': 'danger', 'FATAL': 'danger', 'WARN': 'warning', 'INFO': 'info' };
+                            const color = colors[row.LogLevel] || 'secondary';
+                            const icon = row.LogLevel === 'INFO' ? 'fa-info' : 'fa-exclamation';
+                            
+                            return `
+                                <div class="timeline-item w-100">
+                                    <div class="timeline-marker bg-${color} pulse-${color}">
+                                        <i class="fas ${icon} text-white" style="font-size: 10px;"></i>
+                                    </div>
+                                    <div class="timeline-content w-100 border-start border-${color} border-4">
+                                        <div class="d-flex justify-content-between align-items-center mb-1">
+                                            <div>
+                                                <span class="badge bg-${color} me-2">${row.LogLevel}</span>
+                                                <code class="text-muted">${row.Logger}</code>
+                                            </div>
+                                            <div class="text-end">
+                                                <span class="text-muted fw-bold small">${time}</span>
+                                                <span class="text-muted ms-2 small" style="font-size: 0.7rem;">${date}</span>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-end mt-2">
+                                            <div class="text-dark small text-truncate" style="max-width: 80%;" title="${row.Message}">${row.Message || '-'}</div>
+                                            <a href="javascript:void(0)" class="btn btn-sm btn-outline-danger py-1 px-2" onclick="viewAppLog(${row.LogId})">
+                                                <i class="fas fa-bug me-1"></i> Báo cáo
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
                         }
                     },
-                    {
-                        data: 'LogLevel',
-                        render: d => {
-                            const colors = {
-                                'ERROR': 'danger',
-                                'FATAL': 'danger',
-                                'WARN': 'warning',
-                                'INFO': 'info'
-                            };
-                            const color = colors[d] || 'secondary';
-                            return `<span class="badge bg-${color}">${d}</span>`;
-                        }
-                    },
-                    {
-                        data: 'Logger',
-                        render: d => `<code class="text-muted text-truncate d-block">${d}</code>`
-                    },
-                    {
-                        data: 'Message',
-                        render: d => `<small class="text-truncate d-block" title="${d}">${d || '-'}</small>`
-                    },
-                    {
-                        data: 'LogId',
-                        orderable: false,
-                        className: 'text-center',
-                        render: id => `<a href="javascript:void(0)" class="btn-view" onclick="viewAppLog(${id})" title="Xem chi tiết"><i class="fas fa-eye"></i></a>`
-                    }
+                    { data: 'LogLevel', visible: false },
+                    { data: 'Logger', visible: false },
+                    { data: 'Message', visible: false },
+                    { data: 'LogId', visible: false }
                 ],
                 order: [[0, 'desc']]
             });
@@ -650,6 +656,33 @@
             word-wrap: break-word;
         }
 
+        /* ===== TIMELINE STYLES ===== */
+        .logs-tabs table.dataTable thead { display: none; }
+        .logs-tabs table.dataTable.no-footer { border-bottom: none; }
+        .logs-tabs table.dataTable tbody tr { display: flex; background: transparent; border: none; box-shadow: none; }
+        .logs-tabs table.dataTable tbody td { border: none; padding: 0; width: 100%; }
+        
+        .timeline-item { position: relative; padding-left: 45px; margin-bottom: 20px; }
+        .timeline-item::before { content: ''; position: absolute; left: 15px; top: 0; bottom: -20px; width: 2px; background: #e9ecef; z-index: 0; }
+        .timeline-marker { position: absolute; left: 0; top: 0; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 1; box-shadow: 0 0 0 4px #fff; }
+        .timeline-content { background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); border: 1px solid #f1f1f1; transition: all 0.2s ease; }
+        .timeline-content:hover { box-shadow: 0 5px 15px rgba(0,0,0,0.08); transform: translateY(-2px); }
+        
+        /* Pulse Effects */
+        .pulse-danger { box-shadow: 0 0 0 0 rgba(234, 84, 85, 0.7); animation: pulse-danger 2s infinite; }
+        .pulse-success { box-shadow: 0 0 0 0 rgba(40, 199, 111, 0.7); animation: pulse-success 2s infinite; }
+        .pulse-warning { box-shadow: 0 0 0 0 rgba(255, 159, 67, 0.7); animation: pulse-warning 2s infinite; }
+        .pulse-info { box-shadow: 0 0 0 0 rgba(0, 207, 232, 0.7); animation: pulse-info 2s infinite; }
+        
+        @@keyframes pulse-danger { 0% { box-shadow: 0 0 0 0 rgba(234, 84, 85, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(234, 84, 85, 0); } 100% { box-shadow: 0 0 0 0 rgba(234, 84, 85, 0); } }
+        @@keyframes pulse-success { 0% { box-shadow: 0 0 0 0 rgba(40, 199, 111, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(40, 199, 111, 0); } 100% { box-shadow: 0 0 0 0 rgba(40, 199, 111, 0); } }
+        @@keyframes pulse-warning { 0% { box-shadow: 0 0 0 0 rgba(255, 159, 67, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(255, 159, 67, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 159, 67, 0); } }
+        @@keyframes pulse-info { 0% { box-shadow: 0 0 0 0 rgba(0, 207, 232, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(0, 207, 232, 0); } 100% { box-shadow: 0 0 0 0 rgba(0, 207, 232, 0); } }
+        
+        .bg-success-light { background-color: rgba(40, 199, 111, 0.1); }
+        .bg-danger-light { background-color: rgba(234, 84, 85, 0.1); }
+        .bg-warning-light { background-color: rgba(255, 159, 67, 0.1); }
+        
         /* ===== SCROLLBAR ===== */
         ::-webkit-scrollbar {
             width: 6px;

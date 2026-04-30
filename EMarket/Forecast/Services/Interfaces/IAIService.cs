@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using EMarket.Forecast.DTOs;
@@ -35,6 +35,9 @@ namespace EMarket.Forecast.Services.Interfaces
         Task<List<AI_DeadstockDTO>> GetDeadstockAnalysisAsync(int branchId);
         Task<List<AI_SalesForecastDTO>> GetSalesForecastAsync(int productId, int branchId);
         Task<List<AI_TopForecastDTO>> GetTopPredictedProductsAsync(int branchId, int topCount);
+
+        // [NÂNG CẤP NCKH] Lấy dữ liệu phân tích rủi ro tài chính theo Lô hàng (FEFO)
+        Task<AI_LotRiskSummaryDTO> GetLotFinancialRiskAsync(int branchId);
     }
 
 }

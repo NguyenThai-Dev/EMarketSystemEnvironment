@@ -2275,86 +2275,190 @@ a:hover {
         height: 4px;
     }
 
-body[data-theme='dark'] {
-    background: #141432;
+/* 1. Trạng thái mặc định của Input */
+body[data-theme='dark'] .form-group input[type='text'], 
+body[data-theme='dark'] .form-group input[type='password'],
+body[data-theme='dark'] .form-control {
+    background-color: #0f172a; /* Nền tối hơn card để tạo độ trũng */
+    border: 1px solid #334155; /* Viền Slate trung tính */
+    color: #f1f5f9; /* Chữ trắng sữa rõ nét */
+    transition: all 0.2s ease-in-out;
 }
 
-    body[data-theme='dark'] .header {
-        background: #141432;
-    }
+/* 2. Trạng thái khi người dùng nhấn vào (Focus) */
+body[data-theme='dark'] .form-group input[type='text']:focus, 
+body[data-theme='dark'] .form-group input[type='password']:focus,
+body[data-theme='dark'] .form-control:focus {
+    background-color: #0f172a;
+    border-color: #ff9f43; /* Màu cam EMarket để báo hiệu đang nhập liệu */
+    color: #fff;
+    box-shadow: 0 0 0 0.25rem rgba(255, 159, 67, 0.15); /* Hiệu ứng Glow cam nhẹ */
+    outline: 0;
+}
 
-    body[data-theme='dark'] .sidebar .slimScrollDiv {
-        background: #141432;
-    }
+/* 3. Trạng thái Placeholder (Chữ gợi ý) */
+body[data-theme='dark'] input::placeholder {
+    color: #64748b; /* Màu xám xanh trầm, không gây nhầm lẫn với dữ liệu thật */
+    opacity: 1;
+}
 
-    body[data-theme='dark'] .page-wrapper {
-        background: #141432;
-    }
+/* 4. Trạng thái bị khóa (Readonly/Disabled) */
+body[data-theme='dark'] input:disabled, 
+body[data-theme='dark'] input[readonly] {
+    background-color: #1e293b; /* Tiệp màu với Card để báo hiệu không thể chỉnh sửa */
+    border-color: #334155;
+    color: #475569;
+    cursor: not-allowed;
+}
 
-    body[data-theme='dark'] #toggle_btn:before {
-        border: 2px solid #fff;
-    }
+/* 5. Tương thích cho các loại input khác (Date, Number, Email) */
+body[data-theme='dark'] input[type='date'],
+body[data-theme='dark'] input[type='number'],
+body[data-theme='dark'] input[type='email'],
+body[data-theme='dark'] textarea {
+    background-color: #0f172a;
+    border: 1px solid #334155;
+    color: #f1f5f9;
+}
 
-    body[data-theme='dark'] .header-left.active #toggle_btn:after {
-        border: 2px solid #fff;
-    }
+    /* 1. Nền tổng thể: Dùng màu Slate đậm, không dùng đen tuyền */
+body[data-theme='dark'] {
+    background: #0f172a !important; /* Xanh đen Slate hiện đại */
+    color: #e2e8f0;
+}
 
-    body[data-theme='dark'] .sidebar .sidebar-menu > ul > li.submenu ul {
-        background: #fafbfe;
-        border-radius: 5px;
-        padding: 10px 0;
-    }
+/* 2. Header & Sidebar: Đồng bộ với nền nhưng có độ bóng nhẹ */
+body[data-theme='dark'] .header,
+body[data-theme='dark'] .sidebar .slimScrollDiv,
+body[data-theme='dark'] .page-wrapper,
+body[data-theme='dark'] .list-group .list-group-item {
+    background: #0f172a !important;
+}
 
-    body[data-theme='dark'] .dash-widget {
-        background: #1d1d42;
-        border: 1px solid #353570;
-    }
+/* 3. Thẻ Card & Widget: Sáng hơn nền 1 tone để tạo hiệu ứng nổi (Elevation) */
+body[data-theme='dark'] .card,
+body[data-theme='dark'] .dash-widget {
+    background: #1e293b !important; /* Blue-Grey đậm */
+    border: 1px solid #334155 !important; /* Border tinh tế */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2) !important;
+    padding: 1rem !important;
+}
 
-        body[data-theme='dark'] .dash-widget .dash-widgetcontent h5 {
-            color: #fff;
-        }
+/* 4. Text: Dùng màu xám nhạt/trắng sữa để tránh mỏi mắt */
+body[data-theme='dark'] .card-title,
+body[data-theme='dark'] .dash-widgetcontent h5,
+body[data-theme='dark'] .dash-widgetcontent h6,
+body[data-theme='dark'] h4, 
+body[data-theme='dark'] h6,
+body[data-theme='dark'] .form-group label {
+    color: #f1f5f9 !important;
+}
 
-        body[data-theme='dark'] .dash-widget .dash-widgetcontent h6 {
-            color: #fff;
-        }
+/* 5. Table: Quan trọng nhất để nhìn rõ số liệu */
+body[data-theme='dark'] .table thead {
+    background: #334155 !important; /* Nền header table sáng hơn để phân biệt */
+}
 
-    body[data-theme='dark'] .card {
-        background: #1d1d42;
-        border: 1px solid #353570;
-    }
+body[data-theme='dark'] .table thead tr th{
+    color: #cbd5e1 !important;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    border-bottom: 2px solid #475569;
+}
 
-        body[data-theme='dark'] .card .card-header .card-title {
-            color: #fff;
-        }
+body[data-theme='dark'] .table tbody tr td, body[data-theme='dark'] .form-select {
+    color: #e2e8f0 !important;
+    border-color: #334155 !important;
+}
 
-        body[data-theme='dark'] .card .card-body .card-title {
-            color: #fff;
-        }
+body[data-theme='dark'] .table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.03) !important; /* Hiệu ứng hover nhẹ */
+}
 
-    body[data-theme='dark'] .table thead {
-        background: #141432;
-        border-bottom: 1px solid #353570;
-    }
+/* 6. Link & Action: Giữ màu trắng nhưng không quá chói */
+body[data-theme='dark'] .table tbody tr td a {
+    color: #d2e5ff !important; /* Màu xám xanh cho link phụ */
+}
+body[data-theme='dark'] .table tbody tr td a:hover {
+    color: #38bdf8 !important; /* Highlight xanh cyan khi hover */
+}
 
-        body[data-theme='dark'] .table thead tr:hover {
-            background: 0 0;
-        }
+body[data-theme='dark'] .child-row-container {
+    background-color: #1e293b !important;
+}
 
-        body[data-theme='dark'] .table thead tr th {
-            color: #fff;
-        }
+/* 7. UI Elements: Toggle button */
+body[data-theme='dark'] #toggle_btn:before,
+body[data-theme='dark'] .header-left.active #toggle_btn:after {
+    border: 2px solid #94a3b8;
+}
 
-    body[data-theme='dark'] .table tbody tr:hover {
-        background: 0 0;
-    }
+/* 8. Submenu: Đừng để nền trắng như code cũ, nhìn rất đau mắt */
+body[data-theme='dark'] .sidebar .sidebar-menu > ul > li.submenu ul {
+    background: #1e293b !important;
+    border: 1px solid #334155;
+}
 
-    body[data-theme='dark'] .table tbody tr td {
-        color: #fff;
-    }
+/* Sidebar Submenu Active State - Dark Mode */
+body[data-theme='dark'] .sidebar .sidebar-menu > ul > li.submenu ul li a.active {
+    color: #ff9f43; /* Chữ chuyển sang màu cam khi active */
+}
 
-        body[data-theme='dark'] .table tbody tr td a {
-            color: #fff !important;
-        }
+body[data-theme='dark'] .sidebar .sidebar-menu > ul > li.submenu ul li a.active:after {
+    background: #ff9f43; /* Cái chấm hoặc thanh chỉ thị sẽ có màu cam rực rỡ */
+    border: 2px solid #0f172a; /* Thêm viền trùng màu nền để tạo hiệu ứng tách khối sạch sẽ */
+}
+
+/* Tinh chỉnh màu chữ cho các item chưa active để không bị mờ quá */
+body[data-theme='dark'] .sidebar .sidebar-menu > ul > li.submenu ul li a {
+    color: #94a3b8;
+}
+
+body[data-theme='dark'] .stat-card {
+    background: #1e293b; /* Cùng tông với card chính */
+    border-color: #334155;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+body[data-theme='dark'] .stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+    border-color: #475569;
+}
+
+body[data-theme='dark'] .timeline-content {
+    background: #1e293b;
+    border-color: #334155;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    color: #e2e8f0;
+}
+
+body[data-theme='dark'] .timeline-content:hover {
+    background: #232f42; /* Sáng nhẹ khi hover để tạo hiệu ứng tương tác */
+}
+
+body[data-theme='dark'] table.dataTable thead tr {
+    background-color: #1e293b;
+    border-bottom: 2px solid #334155;
+}
+
+body[data-theme='dark'] table.dataTable thead th {
+    color: #f1f5f9;
+    border-bottom: 1px solid #475569;
+}
+
+/* Nhuộm sáng con số thống kê để tạo điểm nhấn thị giác cực mạnh */
+body[data-theme='dark'] .stat-value {
+    color: #f8fafc; /* Trắng Slate sáng nhất để nổi bật trên nền card #1e293b */
+    text-shadow: 0 0 1px rgba(255, 255, 255, 0.1); /* Hiệu ứng sắc nét nhẹ */
+}
+
+/* Nếu bro có các con số mang tính xu hướng (Trend) đi kèm */
+body[data-theme='dark'] .stat-label {
+    color: #94a3b8; /* Màu xám xanh cho nhãn mô tả để phân cấp thông tin */
+    font-weight: 500;
+}
 
 .btn-outline-primary {
     color: #ff9f43;
@@ -2370,6 +2474,32 @@ body[data-theme='dark'] {
 .btn-outline-info:hover,
 .btn-outline-warning:hover {
     color: #fff;
+}
+
+/* Tông màu Indigo Modern để phối cùng màu Cam EMarket */
+.btn-outline-custom {
+    color: #6366f1; /* Indigo hiện đại */
+    border-color: #6366f1;
+    background: transparent;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-custom:hover {
+    background: #6366f1;
+    border-color: #6366f1;
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3); /* Hiệu ứng đổ bóng nhẹ khi hover */
+}
+
+/* Biến thể Dark Mode để màu không bị chói */
+body[data-theme='dark'] .btn-outline-custom {
+    color: #818cf8; /* Sáng hơn một chút cho nền tối */
+    border-color: #818cf8;
+}
+
+body[data-theme='dark'] .btn-outline-custom:hover {
+    background: #818cf8;
+    color: #0f172a; /* Chữ tối trên nền sáng để dễ đọc */
 }
 
 .cardhead .card-header {
@@ -2559,47 +2689,59 @@ body[data-theme='dark'] {
             right: auto;
         }
 
-body[data-layout-mode='dark'] .alertify .ajs-dialog {
-    background-color: #333;
+/* Đồng bộ toàn bộ hộp thoại Alertify với hệ thống Deep Slate */
+body[data-theme='dark'] .alertify .ajs-dialog {
+    background-color: #1e293b !important; /* Cùng tông với Card để tạo sự nhất quán */
+    border: 1px solid #334155 !important;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4) !important;
+    border-radius: 8px !important;
 }
 
-body[data-layout-mode='dark'] .alertify .ajs-footer {
-    color: #b8bcc9;
-    background-color: #333;
-    border-color: #333;
+/* Header của thông báo */
+body[data-theme='dark'] .alertify .ajs-header {
+    color: #f1f5f9 !important;
+    background-color: #1e293b !important;
+    border-bottom: 1px solid #334155 !important;
+    font-weight: 600 !important;
 }
 
-    body[data-layout-mode='dark'] .alertify .ajs-footer .ajs-buttons .ajs-button {
-        color: #b8bcc9;
-    }
-
-        body[data-layout-mode='dark'] .alertify .ajs-footer .ajs-buttons .ajs-button.ajs-ok {
-            color: #ff9f43;
-        }
-
-body[data-layout-mode='dark'] .alertify .ajs-header {
-    color: #b8bcc9;
-    background-color: #333;
-    border-color: #333;
+/* Nội dung thông báo */
+body[data-theme='dark'] .alertify .ajs-body {
+    color: #cbd5e1 !important;
+    background-color: #1e293b !important;
 }
 
-body[data-layout-mode='dark'] .alertify .ajs-body {
-    color: #b8bcc9;
+/* Input bên trong thông báo (nếu có prompt) */
+body[data-theme='dark'] .alertify .ajs-body .ajs-content .ajs-input {
+    color: #f1f5f9 !important;
+    background-color: #0f172a !important; /* Nền tối hơn để nổi bật ô nhập liệu */
+    border: 1px solid #475569 !important;
+    border-radius: 6px !important;
+    padding: 10px !important;
 }
 
-    body[data-layout-mode='dark'] .alertify .ajs-body .ajs-content .ajs-input {
-        color: #b8bcc9;
-        background-color: #333;
-        border: 1px solid #333;
-    }
+/* Footer và các nút bấm */
+body[data-theme='dark'] .alertify .ajs-footer {
+    background-color: #1e293b !important;
+    border-top: 1px solid #334155 !important;
+}
 
-body[data-layout-mode='dark'] .alertify .ajs-content .ajs-input {
-    display: block;
-    width: 100%;
-    border-radius: 2px;
-    border: 1px solid #ccc;
-    margin: 4px;
-    padding: 8px;
+body[data-theme='dark'] .alertify .ajs-footer .ajs-buttons .ajs-button {
+    color: #94a3b8 !important;
+    background-color: transparent !important;
+    font-weight: 500 !important;
+    transition: all 0.2s ease !important;
+}
+
+/* Nút OK / Xác nhận: Dùng màu cam đặc trưng của EMarket để tạo điểm nhấn */
+body[data-theme='dark'] .alertify .ajs-footer .ajs-buttons .ajs-button.ajs-ok {
+    color: #ff9f43 !important;
+    font-weight: 700 !important;
+}
+
+body[data-theme='dark'] .alertify .ajs-footer .ajs-buttons .ajs-button:hover {
+    color: #f1f5f9 !important;
+    background-color: rgba(255, 255, 255, 0.05) !important;
 }
 
 .alertify .ajs-footer .ajs-buttons .ajs-button {
@@ -4267,10 +4409,6 @@ hr {
     padding: 0 15px;
 }
 
-    .user-menu.nav > li > a.dropdown-toggle.nav-link.show {
-        background: #eee;
-    }
-
     .user-menu.nav > li > a .badge {
         color: #fff;
         font-weight: 700;
@@ -4455,12 +4593,81 @@ div#global-loader {
 }
 
 .select2-container--focus .select2-selection--single {
-    background: #fff !important;
+    background: #fff;
     border-color: #ff9f43;
 }
 
 span.select2-container.select2-container--default.select2-container--open {
     z-index: 9999;
+}
+/* Nâng cấp menu thả xuống sang tông nền tối chuyên nghiệp */
+body[data-theme='dark'] .dropdown-menu {
+    background-color: #1e293b; /* Đồng bộ với Card và Modal */
+    color: #e2e8f0; /* Chữ trắng xám dịu mắt */
+    border: 1px solid #334155; /* Viền xanh Slate tinh tế */
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+    border-radius: 8px; /* Bo góc mượt hơn bản cũ 0.25rem */
+}
+
+/* Các item bên trong menu */
+body[data-theme='dark'] .dropdown-item {
+    color: #cbd5e1;
+    padding: 0.6rem 1.2rem;
+    transition: all 0.2s ease;
+}
+
+/* Hiệu ứng khi rê chuột qua item */
+body[data-theme='dark'] .dropdown-item:hover,
+body[data-theme='dark'] .dropdown-item:focus {
+    background-color: #334155; /* Sáng hơn nền menu một chút */
+    color: #ff9f43; /* Chuyển sang màu Cam đặc trưng khi chọn */
+}
+
+/* Các đường kẻ phân cách bên trong menu (nếu có) */
+body[data-theme='dark'] .dropdown-divider {
+    border-top: 1px solid #334155;
+    opacity: 1;
+}
+
+/* Text phụ hoặc icon trong dropdown */
+body[data-theme='dark'] .dropdown-item i,
+body[data-theme='dark'] .dropdown-item span {
+    color: inherit; /* Đảm bảo icon đi theo màu chữ của item */
+}
+
+/* 1. Nền của danh sách Options */
+body[data-theme='dark'] .select2-container--default .select2-results > .select2-results__options,
+body[data-theme='dark'] .form-select {
+    background-color: #1e293b; /* Đồng bộ màu với Card */
+    color: #e2e8f0;
+}
+
+/* 2. Khung bao quanh dropdown (Dropdown container) */
+body[data-theme='dark'] .select2-dropdown {
+    background-color: #1e293b;
+    border: 1px solid #334155;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+}
+
+/* 3. Từng item trong danh sách */
+body[data-theme='dark'] .select2-container--default .select2-results__option {
+    padding: 8px 12px;
+    color: #cbd5e1;
+}
+
+/* 4. Trạng thái khi Hover hoặc được chọn (Highlighted) */
+body[data-theme='dark'] .select2-container--default .select2-results__option--highlighted[aria-selected],
+body[data-theme='dark'] .select2-container--default .select2-results__option[aria-selected=true] {
+    background-color: #334155 !important; /* Sáng hơn nền một chút */
+    color: #ff9f43 !important; /* Chữ chuyển sang màu cam đặc trưng của EMarket */
+}
+
+/* 5. Ô tìm kiếm bên trong Select2 (nếu có) */
+body[data-theme='dark'] .select2-container--default .select2-search--dropdown .select2-search__field {
+    background-color: #0f172a;
+    border: 1px solid #475569;
+    color: #f1f5f9;
+    border-radius: 4px;
 }
 
 .sidebar {

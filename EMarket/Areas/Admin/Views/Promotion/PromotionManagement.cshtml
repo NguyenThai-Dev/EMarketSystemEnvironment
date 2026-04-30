@@ -1,4 +1,4 @@
-﻿@{
+@{
     ViewBag.Title = "Quản lý Khuyến Mãi";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
@@ -36,55 +36,45 @@
                     @Html.Partial("~/Areas/Admin/Views/Partial/_ExportButtons.cshtml", "tblPromotions")
                 </div>
 
-                <div class="card" id="filter_inputs">
-                    <div class="card-body pb-0">
-                        <div class="row">
+                <div class="card mb-3 border-0 shadow-sm rounded-3" id="filter_inputs">
+                    <div class="card-body p-3">
+                        <div class="row g-2 align-items-center">
 
-                            <div class="col-lg col-sm-6 col-12">
-                                <div class="form-group">
-                                    <select id="ddlCategory" name="SupplierId" class="select form-control">
-                                        <option value="">-- Danh mục sản phẩm --</option>
-                                    </select>
+                            <div class="col-lg col-md-6">
+                                <select id="ddlCategory" name="SupplierId" class="form-select bg-light border-0 shadow-none">
+                                    <option value="">-- Danh mục sản phẩm --</option>
+                                </select>
+                            </div>
+
+                            <div class="col-lg col-md-6">
+                                <select id="ddlDiscountType" name="DiscountType" class="form-select bg-light border-0 shadow-none">
+                                    <option value="">-- Loại giảm giá --</option>
+                                    <option value="Percentage">Theo phần trăm (%)</option>
+                                    <option value="FixedAmount">Số tiền cố định</option>
+                                </select>
+                            </div>
+
+                            <div class="col-lg col-md-6">
+                                <select id="ddlCustomerGroup" name="CustomerGroup" class="form-select bg-light border-0 shadow-none">
+                                    <option value="">-- Tất cả khách hàng --</option>
+                                    <option value="VIP">Khách VIP</option>
+                                    <option value="Member">Thành viên</option>
+                                    <option value="Normal">Khách thường</option>
+                                </select>
+                            </div>
+
+                            <div class="col-lg-4 col-md-6">
+                                <div class="input-group">
+                                    <input type="date" id="txtFromDate" name="FromDate" class="form-control bg-light border-0 shadow-none" title="Từ ngày">
+                                    <span class="input-group-text bg-light border-0 text-muted small">đến</span>
+                                    <input type="date" id="txtToDate" name="ToDate" class="form-control bg-light border-0 shadow-none" title="Đến ngày">
                                 </div>
                             </div>
 
-                            <div class="col-lg col-sm-6 col-12">
-                                <div class="form-group">
-                                    <select id="ddlDiscountType" name="DiscountType" class="select form-control">
-                                        <option value="">-- Loại giảm giá --</option>
-                                        <option value="Percentage">Theo phần trăm (%)</option>
-                                        <option value="FixedAmount">Số tiền cố định</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-lg col-sm-6 col-12">
-                                <div class="form-group">
-                                    <select id="ddlCustomerGroup" name="CustomerGroup" class="select form-control">
-                                        <option value="">-- Tất cả khách hàng --</option>
-                                        <option value="VIP">Khách VIP</option>
-                                        <option value="Member">Thành viên</option>
-                                        <option value="Normal">Khách thường</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-lg-4 col-sm-6 col-12">
-                                <div class="form-group">
-                                    <div class="input-group">
-                                        <input type="date" id="txtFromDate" name="FromDate" class="form-control" title="Từ ngày">
-                                        <span class="input-group-text">đến</span>
-                                        <input type="date" id="txtToDate" name="ToDate" class="form-control" title="Đến ngày">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-lg-1 col-sm-6 col-12">
-                                <div class="form-group">
-                                    <button type="button" id="btnFilter" class="btn btn-filters ms-auto">
-                                        <img src="~/assets/img/icons/search-whites.svg" alt="img" />
-                                    </button>
-                                </div>
+                            <div class="col-lg-auto col-md-12 text-end">
+                                <button type="button" id="btnFilter" class="btn btn-primary rounded-3 px-4 d-flex align-items-center" style="height: 38px;">
+                                    <i class="fas fa-search me-2"></i> Tìm kiếm
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -121,8 +111,8 @@
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
 
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalTitle">Thông tin khuyến mãi</h5>
+            <div class="modal-header bg-light">
+                <h5 class="modal-title fw-bold" id="modalTitle">Thông tin khuyến mãi</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
@@ -202,9 +192,11 @@
                 </div>
             </div>
 
-            <div class="modal-footer border-0">
+            <div class="modal-footer">
                 <button class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                <button class="btn btn-primary" id="btnSave">Lưu lại</button>
+                <button class="btn btn-submit" id="btnSave">
+                    <i class="fas fa-save me-1"></i> Lưu
+                </button>
             </div>
         </div>
     </div>
@@ -282,8 +274,8 @@
                     {
                         data: null,
                         render: (d) => d.DiscountType === 'Percent'
-                            ? `<span class="badge bg-info text-white">-${d.DiscountValue}%</span>`
-                            : `<span class="text-primary fw-bold">-${formatCurrency(d.DiscountValue)} đ</span>`
+                            ? `<span class="badge bg-light text-dark border border-secondary border-opacity-25 px-2 py-1"><i class="fas fa-percentage text-info me-1" style="font-size:0.75rem;"></i>${d.DiscountValue}%</span>`
+                            : `<span class="badge bg-light text-dark border border-secondary border-opacity-25 px-2 py-1"><i class="fas fa-tag text-primary me-1" style="font-size:0.75rem;"></i>-${formatCurrency(d.DiscountValue)} đ</span>`
                     },
                     {
                         data: null,
@@ -296,17 +288,30 @@
                     { data: null, render: (d) => `<small>${formatDate(d.StartDate)} - ${formatDate(d.EndDate)}</small>` },
                     { data: 'Priority', className: 'text-center' },
                     {
-                        data: 'IsActive', className: 'text-center',
-                        render: (d) => d ? '<span class="status-indicator active"></span>' : '<span class="status-indicator inactive"></span>'
+                        data: null,
+                        className: 'text-center',
+                        render: (d) => {
+                            const now = formatDate(Date.now());
+                            const endDate = formatDate(d.StartDate);
+                            
+                            if (endDate < now) {
+                                return '<span class="badge bg-soft-secondary text-secondary px-2 py-1 border border-secondary border-opacity-25">Hết hạn</span>';
+                            }
+
+                            return d.IsActive
+                                ? '<span class="badge bg-soft-success text-success px-2 py-1">Hoạt động</span>'
+                                : '<span class="badge bg-soft-danger text-danger px-2 py-1">Tạm ngưng</span>';
+                        }
                     },
+
                     {
                         data: null, className: 'text-end', orderable: false,
                         render: (d) => {
                             const safeJson = JSON.stringify(d).replace(/'/g, "&apos;").replace(/"/g, "&quot;");
                             return `
-                                    <a class="me-3 btn-view" href="javascript:void(0);" data-obj='${safeJson}'><img src="/assets/img/icons/eye.svg"></a>
-                                    <a class="me-3 btn-edit" href="javascript:void(0);" data-obj='${safeJson}'><img src="/assets/img/icons/edit.svg"></a>
-                                    <a class="btn-delete" href="javascript:void(0);" data-id="${d.PromotionId}"><img src="/assets/img/icons/delete.svg"></a>`;
+                                    <a class="me-1 btn-icon btn-sm btn-soft-info btn-view" href="javascript:void(0);" data-obj='${safeJson}' title="Xem"><img src="/assets/img/icons/eye.svg" style="width:14px; filter: brightness(0) saturate(100%) invert(45%) sepia(80%) saturate(500%) hue-rotate(170deg) brightness(95%) contrast(100%);"></a>
+                                    <a class="me-1 btn-icon btn-sm btn-soft-primary btn-edit" href="javascript:void(0);" data-obj='${safeJson}' title="Sửa"><img src="/assets/img/icons/edit.svg" style="width:14px; filter: brightness(0) saturate(100%) invert(26%) sepia(90%) saturate(1914%) hue-rotate(203deg) brightness(98%) contrast(106%);"></a>
+                                    <a class="btn-icon btn-sm btn-soft-danger btn-delete" href="javascript:void(0);" data-id="${d.PromotionId}" title="Xóa"><img src="/assets/img/icons/delete.svg" style="width:14px; filter: brightness(0) saturate(100%) invert(30%) sepia(95%) saturate(5000%) hue-rotate(345deg) brightness(90%) contrast(100%);"></a>`;
                         }
                     }
                 ],
@@ -360,7 +365,17 @@
                     if (res.success) {
                         $('#modalInput').modal('hide');
                         tbl.ajax.reload(null, false);
-                        Swal.fire({ icon: 'success', title: 'Đã lưu', timer: 1000, showConfirmButton: false });
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Đã lưu thông tin!',
+                            text: 'Dữ liệu của bạn đã được đồng bộ vào hệ thống.',
+                            timer: 2000,
+                            timerProgressBar: true, 
+                            showConfirmButton: false,
+                            padding: '2em',
+                            color: '#716add',
+                        });
+
                     } else {
                         Swal.fire('Lỗi', res.message || 'Lưu thất bại', 'error');
                     }
@@ -390,7 +405,7 @@
                 url: '/Admin/Product/GetAllProductCategory',
                 type: 'GET',
                 success: function (res) {
-                    const $selects = $('#ddlCategory, #ddlCategoryFilter');
+                    const $selects = $('#ddlCategory, #CategoryId');
 
                     let options = '<option value="">-- Tất cả danh mục --</option>';
 
@@ -403,7 +418,7 @@
                     $selects.html(options);
                 },
                 error: function () {
-                    $('#ddlCategory, #ddlCategoryFilter').html('<option value="">Lỗi tải danh mục</option>');
+                    $('#ddlCategory, #CategoryId').html('<option value="">Lỗi tải danh mục</option>');
                 }
             });
         }
@@ -444,21 +459,48 @@
 
 @section Styles {
     <style>
-        .status-indicator {
-            display: inline-block;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
+        /* ── Status Badges ── */
+        .bg-soft-success { background-color: #d1fae5; }
+        .bg-soft-danger { background-color: #fee2e2; }
+        .bg-soft-info { background-color: #cffafe; }
+
+        /* ── Action Icon Buttons ── */
+        .btn-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            border-radius: 6px;
+            transition: all 0.2s ease;
         }
 
-            .status-indicator.active {
-                background-color: #28c76f;
-                box-shadow: 0 0 5px #28c76f;
-            }
+        .btn-soft-primary { background-color: rgba(13, 110, 253, 0.1); border: 1px solid transparent; }
+        .btn-soft-primary:hover { background-color: rgba(13, 110, 253, 0.2); border-color: rgba(13, 110, 253, 0.3); transform: translateY(-1px); }
 
-            .status-indicator.inactive {
-                background-color: #ea5455;
-            }
+        .btn-soft-info { background-color: rgba(13, 202, 240, 0.1); border: 1px solid transparent; }
+        .btn-soft-info:hover { background-color: rgba(13, 202, 240, 0.2); border-color: rgba(13, 202, 240, 0.3); transform: translateY(-1px); }
+
+        .btn-soft-danger { background-color: rgba(220, 53, 69, 0.1); border: 1px solid transparent; }
+        .btn-soft-danger:hover { background-color: rgba(220, 53, 69, 0.2); border-color: rgba(220, 53, 69, 0.3); transform: translateY(-1px); }
+
+        /* ── Table Row Hover ── */
+        table.dataTable tbody tr {
+            transition: all 0.2s;
+        }
+        table.dataTable tbody tr:hover {
+            background-color: #f8f9fa !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02) inset;
+        }
+
+        /* ── Modal Polish ── */
+        #modalInput .modal-header {
+            border-bottom: 1px solid #e9ecef;
+        }
+        #modalInput .modal-footer {
+            border-top: 1px solid #e9ecef;
+        }
 
         .dropdown-item {
             cursor: pointer;

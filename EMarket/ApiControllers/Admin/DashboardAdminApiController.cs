@@ -1,10 +1,13 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using System.Web.Http;
 using EMarket.Modules.DashboardModule.Servcie.Interfaces;
 
 namespace EMarket.ApiControllers.Admin
 {
+    /// <summary>
+    /// Read-only API for all Dashboard aggregations: Summary, Performance, Charts, Finance, Debt.
+    /// </summary>
     [RoutePrefix("api/admin/dashboard")]
     public class DashboardAdminApiController : ApiController
     {
@@ -20,7 +23,7 @@ namespace EMarket.ApiControllers.Admin
         // ============================================================
 
         /// <summary>
-        /// Lấy tổng quan dashboard: doanh thu, khách hàng, sản phẩm, tồn kho, ...
+        /// Lấy tổng quan dashboard: doanh thu, khách hàng, sản phẩm, tồn kho.
         /// </summary>
         [HttpGet]
         [Route("summary")]
@@ -32,7 +35,6 @@ namespace EMarket.ApiControllers.Admin
 
         #endregion
 
-
         // ============================================================
         #region Branch Performance
         // ============================================================
@@ -43,27 +45,28 @@ namespace EMarket.ApiControllers.Admin
         [HttpGet]
         [Route("branch-performance")]
         public async Task<IHttpActionResult> GetBranchPerformance(
-            int? branchId,
-            DateTime fromDate,
-            DateTime toDate)
+            int? branchId = null,
+            DateTime? fromDate = null,
+            DateTime? toDate = null)
         {
-            var data = await _dashboardService.GetBranchPerformanceAsync(branchId, fromDate, toDate);
+            var f = fromDate ?? DateTime.Today.AddDays(-30);
+            var t = toDate ?? DateTime.Today;
+            var data = await _dashboardService.GetBranchPerformanceAsync(branchId, f, t);
             return Ok(data);
         }
 
         #endregion
-
 
         // ============================================================
         #region Stock Chart
         // ============================================================
 
         /// <summary>
-        /// Lấy dữ liệu biểu đồ tồn kho.
+        /// Lấy dữ liệu biểu đồ tồn kho theo chi nhánh.
         /// </summary>
         [HttpGet]
         [Route("stock-chart")]
-        public async Task<IHttpActionResult> GetStockChart(int? branchId)
+        public async Task<IHttpActionResult> GetStockChart(int? branchId = null)
         {
             var data = await _dashboardService.GetStockChartAsync(branchId);
             return Ok(data);
@@ -71,13 +74,12 @@ namespace EMarket.ApiControllers.Admin
 
         #endregion
 
-
         // ============================================================
         #region Overview
         // ============================================================
 
         /// <summary>
-        /// Lấy dữ liệu tổng quan theo ngày hoặc tháng.
+        /// Lấy dữ liệu tổng quan theo ngày hoặc tháng (Revenue, Orders, Customers...).
         /// </summary>
         /// <param name="branchId">ID chi nhánh.</param>
         /// <param name="fromDate">Ngày bắt đầu.</param>
@@ -93,20 +95,18 @@ namespace EMarket.ApiControllers.Admin
         {
             var f = fromDate ?? DateTime.Today.AddDays(-7);
             var t = toDate ?? DateTime.Today;
-
             var data = await _dashboardService.GetOverviewAsync(branchId, f, t, groupBy);
             return Ok(data);
         }
 
         #endregion
 
-
         // ============================================================
         #region People Dashboard
         // ============================================================
 
         /// <summary>
-        /// Lấy dashboard nhân sự.
+        /// Lấy dashboard nhân sự: nhân viên, vai trò, tăng trưởng.
         /// </summary>
         [HttpGet]
         [Route("people")]
@@ -118,18 +118,17 @@ namespace EMarket.ApiControllers.Admin
 
         #endregion
 
-
         // ============================================================
         #region Warehouse Dashboard
         // ============================================================
 
         /// <summary>
-        /// Lấy dashboard kho (nhập - xuất - tồn).
+        /// Lấy dashboard kho: nhập - xuất - tồn, biến động.
         /// </summary>
         [HttpGet]
         [Route("warehouse")]
         public async Task<IHttpActionResult> GetWarehouseDashboard(
-            int dayBacks,
+            int dayBacks = 30,
             int? branchId = null,
             int? warehouseId = null)
         {
@@ -138,7 +137,6 @@ namespace EMarket.ApiControllers.Admin
         }
 
         #endregion
-
 
         // ============================================================
         #region Finance Dashboard
@@ -150,7 +148,7 @@ namespace EMarket.ApiControllers.Admin
         [HttpGet]
         [Route("finance")]
         public async Task<IHttpActionResult> GetFinanceDashboard(
-            int daysBack,
+            int daysBack = 30,
             int? branchId = null)
         {
             var data = await _dashboardService.GetFinanceDashboardAsync(daysBack, branchId);
@@ -159,13 +157,12 @@ namespace EMarket.ApiControllers.Admin
 
         #endregion
 
-
         // ============================================================
         #region Debt / Payables Dashboard
         // ============================================================
 
         /// <summary>
-        /// Lấy dashboard công nợ nhà cung cấp.
+        /// Lấy dashboard công nợ nhà cung cấp với bộ lọc chi nhánh, NCC, thời gian.
         /// </summary>
         [HttpGet]
         [Route("debt")]
@@ -181,13 +178,12 @@ namespace EMarket.ApiControllers.Admin
 
         #endregion
 
-
         // ============================================================
         #region Super Admin Hub
         // ============================================================
 
         /// <summary>
-        /// Lấy dữ liệu tổng hợp dành cho Super Admin.
+        /// Lấy dữ liệu tổng hợp dành riêng cho Super Admin (toàn hệ thống).
         /// </summary>
         [HttpGet]
         [Route("super-admin")]
