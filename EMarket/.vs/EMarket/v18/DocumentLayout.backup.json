@@ -3,8 +3,16 @@
   "WorkspaceRootPath": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|d:\\bai_tap_cac_mon\\nghien_cuu_khoa_hoc\\emarket\\areas\\admin\\views\\product\\productlist.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\areas\\admin\\views\\product\\productlist.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:areas\\admin\\views\\product\\productlist.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|d:\\bai_tap_cac_mon\\nghien_cuu_khoa_hoc\\emarket\\areas\\admin\\views\\shared\\_layoutadmin.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:areas\\admin\\views\\shared\\_layoutadmin.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\areas\\admin\\views\\login\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:areas\\admin\\views\\login\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\areas\\admin\\controllers\\productcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -62,10 +70,6 @@
       "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:areas\\admin\\views\\logs\\systemlog.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\areas\\admin\\views\\shared\\_layoutadmin.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:areas\\admin\\views\\shared\\_layoutadmin.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
@@ -81,7 +85,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 298,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Bookmark",
@@ -93,7 +97,19 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
+              "Title": "Login.cshtml",
+              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\Login\\Login.cshtml",
+              "RelativeDocumentMoniker": "Areas\\Admin\\Views\\Login\\Login.cshtml",
+              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\Login\\Login.cshtml",
+              "RelativeToolTip": "Areas\\Admin\\Views\\Login\\Login.cshtml",
+              "ViewState": "AgIAACcAAAAAAAAAAAAAAC8AAABeAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-06T06:59:48.656Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "ProductController.cs",
               "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Controllers\\ProductController.cs",
               "RelativeDocumentMoniker": "Areas\\Admin\\Controllers\\ProductController.cs",
@@ -111,14 +127,14 @@
               "RelativeDocumentMoniker": "Areas\\Admin\\Views\\Product\\ProductList.cshtml",
               "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\Product\\ProductList.cshtml",
               "RelativeToolTip": "Areas\\Admin\\Views\\Product\\ProductList.cshtml",
-              "ViewState": "AgIAANUFAAAAAAAAAAAUwNwFAAAbAAAAAAAAAA==",
+              "ViewState": "AgIAANUFAAAAAAAAAAAcwNwFAAAbAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2026-04-30T06:04:36.396Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 8,
               "Title": "Web.config",
               "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Web.config",
               "RelativeDocumentMoniker": "Web.config",
@@ -131,7 +147,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 7,
               "Title": "secrets.xml",
               "DocumentMoniker": "C:\\Users\\duong\\AppData\\Roaming\\Microsoft\\UserSecrets\\91f90293-9db4-4560-b25c-fd47f4668ea3\\secrets.xml",
               "ToolTip": "C:\\Users\\duong\\AppData\\Roaming\\Microsoft\\UserSecrets\\91f90293-9db4-4560-b25c-fd47f4668ea3\\secrets.xml",
@@ -141,7 +157,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 4,
               "Title": "IProductService.cs",
               "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Modules\\ProductModule\\Services\\Interfaces\\IProductService.cs",
               "RelativeDocumentMoniker": "Modules\\ProductModule\\Services\\Interfaces\\IProductService.cs",
@@ -153,7 +169,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 10,
               "Title": "PromotionManagement.cshtml",
               "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\Promotion\\PromotionManagement.cshtml",
               "RelativeDocumentMoniker": "Areas\\Admin\\Views\\Promotion\\PromotionManagement.cshtml",
@@ -165,7 +181,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 6,
               "Title": "AIService.cs",
               "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Forecast\\Services\\Implementations\\AIService.cs",
               "RelativeDocumentMoniker": "Forecast\\Services\\Implementations\\AIService.cs",
@@ -177,7 +193,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 5,
               "Title": "ProductService.cs",
               "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Modules\\ProductModule\\Services\\Implementations\\ProductService.cs",
               "RelativeDocumentMoniker": "Modules\\ProductModule\\Services\\Implementations\\ProductService.cs",
@@ -189,7 +205,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 9,
               "Title": "DashboardService.cs",
               "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Modules\\DashboardModule\\Services\\Implementations\\DashboardService.cs",
               "RelativeDocumentMoniker": "Modules\\DashboardModule\\Services\\Implementations\\DashboardService.cs",
@@ -201,7 +217,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 14,
               "Title": "RequireLoginFilter.cs",
               "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Filters\\RequireLoginFilter.cs",
               "RelativeDocumentMoniker": "Filters\\RequireLoginFilter.cs",
@@ -213,7 +229,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 15,
               "Title": "EMarketAuthorizeAttribute.cs",
               "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Filters\\EMarketAuthorizeAttribute.cs",
               "RelativeDocumentMoniker": "Filters\\EMarketAuthorizeAttribute.cs",
@@ -225,7 +241,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 16,
               "Title": "SystemLog.cshtml",
               "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\Logs\\SystemLog.cshtml",
               "RelativeDocumentMoniker": "Areas\\Admin\\Views\\Logs\\SystemLog.cshtml",
@@ -237,7 +253,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 12,
               "Title": "AIAnalysisController.cs",
               "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Controllers\\AIAnalysisController.cs",
               "RelativeDocumentMoniker": "Areas\\Admin\\Controllers\\AIAnalysisController.cs",
@@ -249,19 +265,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 1,
               "Title": "_LayoutAdmin.cshtml",
               "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\Shared\\_LayoutAdmin.cshtml",
               "RelativeDocumentMoniker": "Areas\\Admin\\Views\\Shared\\_LayoutAdmin.cshtml",
               "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\Shared\\_LayoutAdmin.cshtml",
               "RelativeToolTip": "Areas\\Admin\\Views\\Shared\\_LayoutAdmin.cshtml",
-              "ViewState": "AgIAAJcAAAAAAAAAAIAwwLIAAABGAAAAAAAAAA==",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAABEAAAAGAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-04-23T12:09:33.693Z"
+              "WhenOpened": "2026-04-23T12:09:33.693Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 18,
               "Title": "HomeController.cs",
               "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Controllers\\HomeController.cs",
               "RelativeDocumentMoniker": "Controllers\\HomeController.cs",
@@ -273,7 +290,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 17,
               "Title": "Index.cshtml",
               "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Views\\Home\\Index.cshtml",
               "RelativeDocumentMoniker": "Views\\Home\\Index.cshtml",
@@ -285,7 +302,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 11,
               "Title": "_AIChatBox.cshtml",
               "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\AIAnalysis\\_AIChatBox.cshtml",
               "RelativeDocumentMoniker": "Areas\\Admin\\Views\\AIAnalysis\\_AIChatBox.cshtml",
@@ -297,7 +314,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 13,
               "Title": "PurchaseOrderList.cshtml",
               "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\PurchaseOrder\\PurchaseOrderList.cshtml",
               "RelativeDocumentMoniker": "Areas\\Admin\\Views\\PurchaseOrder\\PurchaseOrderList.cshtml",

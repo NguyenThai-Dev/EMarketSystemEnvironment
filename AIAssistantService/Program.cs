@@ -2,6 +2,8 @@ using System.Threading.RateLimiting;
 using AIAssistantService;
 using AIAssistantService.Plugins;
 using Microsoft.SemanticKernel;
+// Thêm thư viện OpenAI connector
+using Microsoft.SemanticKernel.Connectors.OpenAI;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,14 +16,13 @@ builder.Services.AddCors(options =>
     });
 });
 
-// 2. Cấu hình Key Rotation (Xoay tua API) - Đăng ký Singleton là chính xác
+// 2. Cấu hình Key Rotation
 builder.Services.AddSingleton<IApiKeyProvider, GroqApiKeyProvider>();
-builder.Services.AddSingleton<IPromptService, PromptService>();
 
 // 3. Cấu hình HttpClient cho EMARKET
 builder.Services.AddHttpClient("EMarketClient", client =>
 {
-    client.BaseAddress = new Uri("https://localhost:44338/");
+    client.BaseAddress = new Uri("https://localhost:44339/");
     client.Timeout = TimeSpan.FromMinutes(10);
     client.DefaultRequestHeaders.Add("Accept-Charset", "utf-8");
 })
@@ -30,34 +31,50 @@ builder.Services.AddHttpClient("EMarketClient", client =>
     ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
 });
 
-// 4. Database & History Services
+// [MỚI] 3.5 Cấu hình HttpClient cho GROQ (Chuẩn OpenAI tương thích)
+builder.Services.AddHttpClient("GroqClient", client =>
+{
+    // Endpoint chuẩn của Groq cho các request tương thích OpenAI
+    client.BaseAddress = new Uri("https://api.groq.com/openai/v1/");
+    client.Timeout = TimeSpan.FromMinutes(5);
+});
+
+// 4. History Services
 var connectionString = builder.Configuration["DatabaseSettings:ConnectionString"] ?? "";
-builder.Services.AddScoped<DatabasePlugin>(sp => new DatabasePlugin(connectionString));
 builder.Services.AddScoped<IAiHistoryService>(sp => new AiHistoryService(connectionString));
 
-// 5. Cấu hình Semantic Kernel (Transient để đổi Key theo từng Request)
+// Đăng ký Plugin mới gọi API EMarket
+builder.Services.AddScoped<EMarketApiPlugin>();
+
+// 5. Cấu hình Semantic Kernel (Chuyển sang Groq)
 builder.Services.AddTransient<Kernel>(sp =>
 {
     var keyProvider = sp.GetRequiredService<IApiKeyProvider>();
+    var apiKey = keyProvider.GetApiKey();
+
+    // Lấy HttpClient của Groq
+    var httpClientFactory = sp.GetRequiredService<IHttpClientFactory>();
+    var groqClient = httpClientFactory.CreateClient("GroqClient");
+
     var kernelBuilder = Kernel.CreateBuilder();
 
-#pragma warning disable SKEXP0001
+    // SỬ DỤNG OPENAI CONNECTOR ĐỂ GỌI GROQ
     kernelBuilder.AddOpenAIChatCompletion(
-        modelId: "llama-3.3-70b-versatile",
-        apiKey: keyProvider.GetApiKey(), // Bốc key xoay tua ở đây
-        endpoint: new Uri("https://api.groq.com/openai/v1")
+        modelId: "meta-llama/llama-4-scout-17b-16e-instruct", 
+        apiKey: apiKey,
+        httpClient: groqClient
     );
-#pragma warning restore SKEXP0001
 
+    // Đăng ký Plugins
     kernelBuilder.Plugins.AddFromObject(new TimePlugin(), "Time");
-    kernelBuilder.Plugins.AddFromObject(sp.GetRequiredService<DatabasePlugin>(), "EMarketDB");
+    kernelBuilder.Plugins.AddFromObject(sp.GetRequiredService<EMarketApiPlugin>(), "EMarketAPI");
 
     return kernelBuilder.Build();
 });
 
+// --- CÁC PHẦN CÒN LẠI GIỮ NGUYÊN ---
 builder.Services.AddRateLimiter(options =>
 {
-    // Cấu hình chặn toàn cục (Global)
     options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
     {
         return RateLimitPartition.GetFixedWindowLimiter(
@@ -70,8 +87,6 @@ builder.Services.AddRateLimiter(options =>
                 QueueLimit = 0
             });
     });
-
-    // Trả về lỗi 429 khi quá tải
     options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
 });
 
@@ -80,7 +95,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
-// Middleware Stack
+
 app.UseMiddleware<IpWhitelistMiddleware>();
 app.UseCors("AllowAll");
 app.UseRateLimiter();
@@ -94,5 +109,4 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
-
 app.Run();

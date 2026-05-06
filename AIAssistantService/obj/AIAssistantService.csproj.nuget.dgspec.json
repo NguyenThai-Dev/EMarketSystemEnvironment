@@ -64,6 +64,10 @@
               "target": "Package",
               "version": "[1.68.0, )"
             },
+            "Microsoft.SemanticKernel.Connectors.Google": {
+              "target": "Package",
+              "version": "[1.75.0-alpha, )"
+            },
             "Microsoft.SemanticKernel.Connectors.Ollama": {
               "target": "Package",
               "version": "[1.68.0-alpha, )"
