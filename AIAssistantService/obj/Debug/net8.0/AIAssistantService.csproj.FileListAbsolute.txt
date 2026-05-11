@@ -106,3 +106,4 @@ D:\Bai_Tap_Cac_Mon\Nghien_Cuu_Khoa_Hoc\AIAssistantService\obj\Debug\net8.0\refin
 D:\Bai_Tap_Cac_Mon\Nghien_Cuu_Khoa_Hoc\AIAssistantService\obj\Debug\net8.0\AIAssistantService.pdb
 D:\Bai_Tap_Cac_Mon\Nghien_Cuu_Khoa_Hoc\AIAssistantService\obj\Debug\net8.0\AIAssistantService.genruntimeconfig.cache
 D:\Bai_Tap_Cac_Mon\Nghien_Cuu_Khoa_Hoc\AIAssistantService\obj\Debug\net8.0\ref\AIAssistantService.dll
+D:\Bai_Tap_Cac_Mon\Nghien_Cuu_Khoa_Hoc\AIAssistantService\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

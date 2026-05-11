@@ -16,7 +16,6 @@ builder.Services.AddCors(options =>
 
 // 2. Cấu hình Key Rotation (Xoay tua API) - Đăng ký Singleton là chính xác
 builder.Services.AddSingleton<IApiKeyProvider, GroqApiKeyProvider>();
-builder.Services.AddSingleton<IPromptService, PromptService>();
 
 // 3. Cấu hình HttpClient cho EMARKET
 // Cho phép hệ thống truy cập vào HttpContext hiện tại
@@ -28,7 +27,7 @@ builder.Services.AddTransient<TokenForwardingHandler>();
 // 3. Cấu hình HttpClient cho EMARKET
 builder.Services.AddHttpClient("EMarketClient", client =>
 {
-    client.BaseAddress = new Uri("https://localhost:44338/");
+    client.BaseAddress = new Uri("https://localhost:44339/");
     client.Timeout = TimeSpan.FromMinutes(10);
     client.DefaultRequestHeaders.Add("Accept-Charset", "utf-8");
 })
@@ -49,8 +48,10 @@ builder.Services.AddHttpClient("GroqClient", client =>
 
 // 4. History Services
 var connectionString = builder.Configuration["DatabaseSettings:ConnectionString"] ?? "";
-builder.Services.AddScoped<DatabasePlugin>(sp => new DatabasePlugin(connectionString));
 builder.Services.AddScoped<IAiHistoryService>(sp => new AiHistoryService(connectionString));
+
+// Đăng ký EMarketApiPlugin
+builder.Services.AddScoped<EMarketApiPlugin>();
 
 // 5. Cấu hình Semantic Kernel (Transient để đổi Key theo từng Request)
 builder.Services.AddTransient<Kernel>(sp =>
@@ -60,14 +61,15 @@ builder.Services.AddTransient<Kernel>(sp =>
 
 #pragma warning disable SKEXP0001
     kernelBuilder.AddOpenAIChatCompletion(
-        modelId: "llama-3.3-70b-versatile",
+        //modelId: "llama-3.3-70b-versatile",
+        modelId: "meta-llama/llama-4-scout-17b-16e-instruct",
         apiKey: keyProvider.GetApiKey(), // Bốc key xoay tua ở đây
         endpoint: new Uri("https://api.groq.com/openai/v1")
     );
 #pragma warning restore SKEXP0001
 
     kernelBuilder.Plugins.AddFromObject(new TimePlugin(), "Time");
-    kernelBuilder.Plugins.AddFromObject(sp.GetRequiredService<DatabasePlugin>(), "EMarketDB");
+    kernelBuilder.Plugins.AddFromObject(sp.GetRequiredService<EMarketApiPlugin>(), "EMarketAPI");
 
     return kernelBuilder.Build();
 });

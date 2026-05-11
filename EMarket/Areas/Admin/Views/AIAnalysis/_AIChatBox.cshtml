@@ -1220,7 +1220,7 @@
                         </tr>`;
 
                         data.forEach(x => {
-                            let confidencePercent = Math.round(x.ConfidenceScore * 100);
+                            let confidencePercent = parseFloat(x.ConfidenceScore).toFixed(2);
                             let color = confidencePercent > 80 ? 'bg-success' : (confidencePercent > 50 ? 'bg-warning' : 'bg-danger');
                             let badgeClass = x.PriorityLevel === 'CRITICAL' ? 'badge-critical' : (x.PriorityLevel === 'HIGH' ? 'badge-high' : 'badge-normal');
 
