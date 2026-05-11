@@ -8,6 +8,7 @@ namespace EMarket.ApiControllers.Admin
     /// <summary>
     /// Read-only API for Customer, Address, and Loyalty Program data.
     /// </summary>
+    [Authorize]
     [RoutePrefix("api/admin/customer")]
     public class CustomerAdminApiController : ApiController
     {

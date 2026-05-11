@@ -451,9 +451,34 @@
         }).fail(function() {
             $('.notification-list').html('<li class="p-2 text-center text-danger small">Lỗi kết nối Server</li>');
         });
-    }
+        }
+
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        }
+
+        // 2. Hàm xóa Cookie sau khi đã sử dụng
+        function deleteCookie(name) {
+            document.cookie = name + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        }
+
 
         $(document).ready(function () {
+            
+            // 3. Kiểm tra và thực hiện luân chuyển Token
+            const apiToken = getCookie("access_token");
+            if (apiToken) {
+                // Lưu vào LocalStorage để đồng bộ với cách Login thường
+                localStorage.setItem('access_token', apiToken);
+
+                // Xóa ngay Cookie để tránh rò rỉ và bảo mật
+                deleteCookie("access_token");
+
+                console.log("Hệ thống: Đã đồng bộ Token từ Google Auth vào LocalStorage.");
+            }
+
             if ($.fn.DataTable || $.fn.dataTable) {
                 $.fn.dataTable.ext.errMode = 'none';
             }
@@ -500,18 +525,39 @@
                 }
             };
 
+
             logHub.client.forceLogout = function (message) {
                 console.warn("Tín hiệu Kick nhận được từ Server!");
 
-                if (typeof FormUtils !== 'undefined') {
-                    FormUtils.showNotification(message || "Tài khoản của bạn đã bị khóa hoặc hết hạn!", "error");
-                } else {
-                    alert(message || "Tài khoản của bạn đã bị khóa!");
-                }
+                // Sử dụng SweetAlert2 để thông báo
+                Swal.fire({
+                    title: 'Thông báo hệ thống!',
+                    text: message || "Tài khoản của bạn đã bị khóa hoặc hết hạn!",
+                    icon: 'warning',
+                    showConfirmButton: false, // Không cho tắt bằng nút
+                    allowOutsideClick: false, // Không cho click ra ngoài để tắt
+                    allowEscapeKey: false,    // Không cho nhấn Esc
+                    timer: 3000,              // Tự động đóng sau 3 giây
+                    timerProgressBar: true,   // Hiển thị thanh đếm ngược
+                    showClass: {
+                        popup: 'animate__animated animate__fadeInDown' 
+                    },
+                    hideClass: {
+                        popup: 'animate__animated animate__fadeOutUp'   
+                    },
+                }).then((result) => {
+                    localStorage.clear();
+                    sessionStorage.clear();
 
-                setTimeout(function () {
+                    const cookies = document.cookie.split(";");
+                    for (let i = 0; i < cookies.length; i++) {
+                        const cookie = cookies[i];
+                        const eqPos = cookie.indexOf("=");
+                        const name = eqPos > -1 ? cookie.substr(0, eqPos).trim() : cookie.trim();
+                        document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
+                    }
                     window.location.replace("/Admin/Admin/AccessDenied");
-                }, 2000);
+                });
             };
 
             logHub.client.updateLogTable = function (res) {

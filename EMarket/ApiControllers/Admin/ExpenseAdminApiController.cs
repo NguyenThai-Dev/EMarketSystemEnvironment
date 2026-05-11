@@ -8,6 +8,7 @@ namespace EMarket.ApiControllers.Admin
     /// <summary>
     /// Read-only API for Expense and Expense Category data.
     /// </summary>
+    [Authorize]
     [RoutePrefix("api/admin/expense")]
     public class ExpenseAdminApiController : ApiController
     {

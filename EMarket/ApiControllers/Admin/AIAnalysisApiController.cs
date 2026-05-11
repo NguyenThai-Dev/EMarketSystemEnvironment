@@ -9,6 +9,7 @@ namespace EMarket.ApiControllers.Admin
     /// Read-only API for AI Forecast & Analytics data.
     /// Exposes all prediction, recommendation, anomaly, insight, and risk analysis results.
     /// </summary>
+    [Authorize]
     [RoutePrefix("api/admin/ai-analysis")]
     public class AIAnalysisApiController : ApiController
     {

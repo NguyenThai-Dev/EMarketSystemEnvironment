@@ -8,6 +8,7 @@ namespace EMarket.ApiControllers.Admin
     /// <summary>
     /// Read-only API for all Dashboard aggregations: Summary, Performance, Charts, Finance, Debt.
     /// </summary>
+    [Authorize]
     [RoutePrefix("api/admin/dashboard")]
     public class DashboardAdminApiController : ApiController
     {
@@ -27,9 +28,19 @@ namespace EMarket.ApiControllers.Admin
         /// </summary>
         [HttpGet]
         [Route("summary")]
-        public async Task<IHttpActionResult> GetSummary(int? branchId = null)
+        public async Task<IHttpActionResult> GetSummary(DateTime? fromDate, DateTime? toDate, string groupBy, int? branchId = null)
         {
-            var data = await _dashboardService.GetSummaryAsync(branchId);
+            if (string.IsNullOrEmpty(groupBy) || (groupBy != "day" && groupBy != "month"))
+                groupBy = "month";
+
+            if (!fromDate.HasValue || !toDate.HasValue || toDate.Value < fromDate.Value)
+            {
+                fromDate = DateTime.Today.AddDays(-30);
+                toDate = DateTime.Today;
+            }
+
+            var data = await _dashboardService.GetOverviewAsync(branchId, fromDate.Value, toDate.Value, groupBy);
+
             return Ok(data);
         }
 

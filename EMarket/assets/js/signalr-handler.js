@@ -39,9 +39,6 @@
                         _paymentSuccessCallback(payload);
                         return; // Chạy xong logic riêng thì dừng, không reload table chung
                     }
-
-                    // Nếu các trang khác (không đăng ký) cũng muốn reload table khi có người thanh toán xong
-                    // thì cứ để nó chạy xuống phần safeReload bên dưới.
                 }
 
                 const safeReload = (selector, label) => {

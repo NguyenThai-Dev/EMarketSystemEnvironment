@@ -143,8 +143,6 @@
             <div class="modal-body">
                 <form id="frmProductEdit">
 
-                    @Html.AntiForgeryToken()
-
                     <input type="hidden" id="ProductId" />
 
                     <div class="row g-3">
@@ -1079,8 +1077,7 @@
                             const res = await $.post('/Admin/Product/ActiveProduct', {
                                 productId: productId,
                                 minStock: result.value.minStock,
-                                maxStock: result.value.maxStock,
-                                __RequestVerificationToken: $('input[name=__RequestVerificationToken]').val()
+                                maxStock: result.value.maxStock
                             });
 
                             if (res.success) {

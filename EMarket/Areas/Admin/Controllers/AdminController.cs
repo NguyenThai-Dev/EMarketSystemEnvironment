@@ -98,12 +98,13 @@ namespace EMarket.Areas.Admin.Controllers
         }
 
         #region Admin View
-        // GET: Admin/Admin
+        [EMarketAuthorize(RequireAdmin = true)]
         public ActionResult AdminDashboard()
         {
             return View();
         }
 
+        [EMarketAuthorize(RequireAdmin = true)]
         public ActionResult ExecutiveDashboard()
         {
             ViewBag.Title = "Super Admin Command Center";

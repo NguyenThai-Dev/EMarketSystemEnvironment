@@ -1,12 +1,13 @@
-﻿using System;
+﻿using EMarket.Models;
+using EMarket.Modules.InventoryModule.DTOs;
+using EMarket.Modules.InventoryModule.Services.Interfaces;
+using EMarket.Modules.ProductModule.Services.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
-using EMarket.Models;
-using EMarket.Modules.InventoryModule.DTOs;
-using EMarket.Modules.InventoryModule.Services.Interfaces;
-using EMarket.Modules.ProductModule.Services.Interfaces;
+using static System.Web.Razor.Parser.SyntaxConstants;
 
 
 
@@ -186,6 +187,8 @@ namespace EMarket.Modules.InventoryModule.Services.Implementations
                 if (warehouseId.HasValue)
                     query = query.Where(i => i.warehouse_id == warehouseId.Value);
 
+                Dictionary<int, string> lotBatchMap = new Dictionary<int, string>();
+
                 // ===== FILTER BY PRODUCT (THROUGH LOT SERVICE) =====
                 if (productId.HasValue)
                 {
@@ -195,9 +198,13 @@ namespace EMarket.Modules.InventoryModule.Services.Implementations
                     if (lots == null || lots.Count == 0)
                         return new List<InventoryDTO>();
 
-                    var lotIds = lots.Select(x => x.LotId).ToList();
+                    lotBatchMap = lots.ToDictionary(x => x.LotId, x => x.BatchCode);
+
+                    // 2. Lấy danh sách ID để lọc dưới Database như cũ
+                    var lotIds = lotBatchMap.Keys.ToList();
                     query = query.Where(i => lotIds.Contains(i.lot_id));
                 }
+
 
                 // ===== LOAD INVENTORY DATA FIRST =====
                 var inventories = await query
@@ -214,6 +221,17 @@ namespace EMarket.Modules.InventoryModule.Services.Implementations
 
                 if (!inventories.Any())
                     return inventories;
+
+                if (productId.HasValue && inventories.Count > 0)
+                {
+                    foreach (var item in inventories)
+                    {
+                        if (lotBatchMap.TryGetValue(item.LotId, out var batchCode))
+                        {
+                            item.BatchCode = batchCode;
+                        }
+                    }
+                }
 
                 // ===== LOAD WAREHOUSES + BRANCH =====
                 var warehouseIds = inventories

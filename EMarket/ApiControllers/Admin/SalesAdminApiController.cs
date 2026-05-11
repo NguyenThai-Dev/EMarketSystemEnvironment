@@ -5,6 +5,7 @@ using EMarket.Modules.SalesModule.Services.Interfaces;
 
 namespace EMarket.ApiControllers.Admin
 {
+    [Authorize]
     [RoutePrefix("api/admin/sales")]
     public class SalesAdminApiController : ApiController
     {

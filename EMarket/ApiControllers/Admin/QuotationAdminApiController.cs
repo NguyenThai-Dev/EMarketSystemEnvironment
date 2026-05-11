@@ -5,6 +5,7 @@ using EMarket.Modules.QuotationModule.Services.Interfaces;
 
 namespace EMarket.ApiControllers.Admin
 {
+    [Authorize]
     [RoutePrefix("api/admin/quotation")]
     public class QuotationAdminApiController : ApiController
     {

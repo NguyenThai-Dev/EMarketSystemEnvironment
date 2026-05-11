@@ -3,6 +3,14 @@
   "WorkspaceRootPath": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|d:\\bai_tap_cac_mon\\nghien_cuu_khoa_hoc\\aiassistantservice\\controllers\\chatcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|solutionrelative:controllers\\chatcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|d:\\bai_tap_cac_mon\\nghien_cuu_khoa_hoc\\aiassistantservice\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|d:\\bai_tap_cac_mon\\nghien_cuu_khoa_hoc\\aiassistantservice\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
@@ -17,10 +25,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|d:\\bai_tap_cac_mon\\nghien_cuu_khoa_hoc\\aiassistantservice\\ipwhitelistmiddleware.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|solutionrelative:ipwhitelistmiddleware.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|d:\\bai_tap_cac_mon\\nghien_cuu_khoa_hoc\\aiassistantservice\\controllers\\chatcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|solutionrelative:controllers\\chatcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|d:\\bai_tap_cac_mon\\nghien_cuu_khoa_hoc\\aiassistantservice\\prompts\\sqlgenerator.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
@@ -75,10 +79,6 @@
       "RelativeMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|solutionrelative:prompts\\domains\\inventory.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|d:\\bai_tap_cac_mon\\nghien_cuu_khoa_hoc\\aiassistantservice\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\duong\\AppData\\Roaming\\Microsoft\\UserSecrets\\01371756-1228-45bf-9787-40391bfb86dd\\secrets.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     }
   ],
@@ -89,7 +89,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 298,
-          "SelectedChildIndex": 10,
+          "SelectedChildIndex": 21,
           "Children": [
             {
               "$type": "Bookmark",
@@ -101,7 +101,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "launchSettings.json",
               "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\Properties\\launchSettings.json",
               "RelativeDocumentMoniker": "Properties\\launchSettings.json",
@@ -109,22 +109,22 @@
               "RelativeToolTip": "Properties\\launchSettings.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-04-24T00:43:32.157Z"
+              "WhenOpened": "2026-05-11T05:54:04.004Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 4,
               "Title": "AIAssistantService",
               "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\AIAssistantService.csproj",
               "RelativeDocumentMoniker": "AIAssistantService.csproj",
               "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\AIAssistantService.csproj",
               "RelativeToolTip": "AIAssistantService.csproj",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2026-04-24T00:43:24.558Z"
+              "WhenOpened": "2026-05-11T05:54:04.035Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 9,
               "Title": "AiHistoryService.cs",
               "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\AiHistoryService.cs",
               "RelativeDocumentMoniker": "AiHistoryService.cs",
@@ -132,11 +132,11 @@
               "RelativeToolTip": "AiHistoryService.cs",
               "ViewState": "AgIAAEwAAAAAAAAAAAAowFAAAAAYAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-13T01:40:47.333Z"
+              "WhenOpened": "2026-05-11T05:54:04.037Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 13,
               "Title": "DatabasePlugin.cs",
               "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\DatabasePlugin.cs",
               "RelativeDocumentMoniker": "DatabasePlugin.cs",
@@ -144,11 +144,11 @@
               "RelativeToolTip": "DatabasePlugin.cs",
               "ViewState": "AgIAABIAAAAAAAAAAAA4wB8AAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-13T01:36:42.715Z"
+              "WhenOpened": "2026-05-11T05:54:04.041Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 14,
               "Title": "Reporter.md",
               "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\Prompts\\Reporter.md",
               "RelativeDocumentMoniker": "Prompts\\Reporter.md",
@@ -156,11 +156,11 @@
               "RelativeToolTip": "Prompts\\Reporter.md",
               "ViewState": "AgIAACQAAAAAAAAAAAAAACYAAAA3AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
-              "WhenOpened": "2026-04-13T01:18:18.499Z"
+              "WhenOpened": "2026-05-11T05:54:04.043Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 12,
               "Title": "SqlFixer.md",
               "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\Prompts\\SqlFixer.md",
               "RelativeDocumentMoniker": "Prompts\\SqlFixer.md",
@@ -168,11 +168,11 @@
               "RelativeToolTip": "Prompts\\SqlFixer.md",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAyAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
-              "WhenOpened": "2026-04-13T01:18:09.772Z"
+              "WhenOpened": "2026-05-11T05:54:04.045Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 18,
               "Title": "Inventory.md",
               "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\Prompts\\Domains\\Inventory.md",
               "RelativeDocumentMoniker": "Prompts\\Domains\\Inventory.md",
@@ -180,11 +180,11 @@
               "RelativeToolTip": "Prompts\\Domains\\Inventory.md",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAA8AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
-              "WhenOpened": "2026-04-13T01:12:43.368Z"
+              "WhenOpened": "2026-05-11T05:54:04.048Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "SqlGenerator.md",
               "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\Prompts\\SqlGenerator.md",
               "RelativeDocumentMoniker": "Prompts\\SqlGenerator.md",
@@ -192,32 +192,33 @@
               "RelativeToolTip": "Prompts\\SqlGenerator.md",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAIkAAAATAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
-              "WhenOpened": "2026-04-13T01:01:21.1Z"
+              "WhenOpened": "2026-05-11T05:54:04.049Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "appsettings.json",
               "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\appsettings.json",
               "RelativeDocumentMoniker": "appsettings.json",
               "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\appsettings.json",
               "RelativeToolTip": "appsettings.json",
-              "ViewState": "AgIAAAUAAAAAAAAAAAAAAAoAAAABAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-04-08T05:11:49.446Z",
+              "WhenOpened": "2026-05-11T05:54:04.052Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 1,
               "Title": "Program.cs",
               "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
               "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\Program.cs",
               "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAAFEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-08T05:10:07.15Z"
+              "WhenOpened": "2026-05-11T05:54:04.061Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -227,11 +228,11 @@
               "ToolTip": "C:\\Users\\duong\\AppData\\Roaming\\Microsoft\\UserSecrets\\01371756-1228-45bf-9787-40391bfb86dd\\secrets.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-04-08T05:09:53.209Z"
+              "WhenOpened": "2026-05-11T05:54:04.067Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 5,
               "Title": "IpWhitelistMiddleware.cs",
               "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\IpWhitelistMiddleware.cs",
               "RelativeDocumentMoniker": "IpWhitelistMiddleware.cs",
@@ -239,11 +240,11 @@
               "RelativeToolTip": "IpWhitelistMiddleware.cs",
               "ViewState": "AgIAAAMAAAAAAAAAAAAAABAAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-08T05:08:09.892Z"
+              "WhenOpened": "2026-05-11T05:54:04.069Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 15,
               "Title": "Fallback.md",
               "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\Prompts\\Domains\\Fallback.md",
               "RelativeDocumentMoniker": "Prompts\\Domains\\Fallback.md",
@@ -251,11 +252,11 @@
               "RelativeToolTip": "Prompts\\Domains\\Fallback.md",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAACHAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
-              "WhenOpened": "2026-04-08T04:57:31.083Z"
+              "WhenOpened": "2026-05-11T05:54:04.073Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 17,
               "Title": "AIAndAnalytics.md",
               "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\Prompts\\Domains\\AIAndAnalytics.md",
               "RelativeDocumentMoniker": "Prompts\\Domains\\AIAndAnalytics.md",
@@ -263,11 +264,11 @@
               "RelativeToolTip": "Prompts\\Domains\\AIAndAnalytics.md",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAACjAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
-              "WhenOpened": "2026-04-08T04:55:57.677Z"
+              "WhenOpened": "2026-05-11T05:54:04.076Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 7,
               "Title": "FinanceAndParter.md",
               "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\Prompts\\Domains\\FinanceAndParter.md",
               "RelativeDocumentMoniker": "Prompts\\Domains\\FinanceAndParter.md",
@@ -275,11 +276,11 @@
               "RelativeToolTip": "Prompts\\Domains\\FinanceAndParter.md",
               "ViewState": "AgIAAAsAAAAAAAAAAAAqwBIAAAAzAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
-              "WhenOpened": "2026-04-08T04:55:10.567Z"
+              "WhenOpened": "2026-05-11T05:54:04.078Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 16,
               "Title": "Customer.md",
               "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\Prompts\\Domains\\Customer.md",
               "RelativeDocumentMoniker": "Prompts\\Domains\\Customer.md",
@@ -287,11 +288,11 @@
               "RelativeToolTip": "Prompts\\Domains\\Customer.md",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAABnAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
-              "WhenOpened": "2026-04-08T04:54:05.733Z"
+              "WhenOpened": "2026-05-11T05:54:04.079Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 8,
               "Title": "Sales.md",
               "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\Prompts\\Domains\\Sales.md",
               "RelativeDocumentMoniker": "Prompts\\Domains\\Sales.md",
@@ -299,11 +300,11 @@
               "RelativeToolTip": "Prompts\\Domains\\Sales.md",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAA4AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
-              "WhenOpened": "2026-04-08T04:53:29.01Z"
+              "WhenOpened": "2026-05-11T05:54:04.082Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 11,
               "Title": "PromptService.cs",
               "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\PromptService.cs",
               "RelativeDocumentMoniker": "PromptService.cs",
@@ -311,11 +312,11 @@
               "RelativeToolTip": "PromptService.cs",
               "ViewState": "AgIAAAUAAAAAAAAAAAAAwBMAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-08T04:51:04.658Z"
+              "WhenOpened": "2026-05-11T05:54:04.084Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 10,
               "Title": "Core.md",
               "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\Prompts\\Domains\\Core.md",
               "RelativeDocumentMoniker": "Prompts\\Domains\\Core.md",
@@ -323,19 +324,20 @@
               "RelativeToolTip": "Prompts\\Domains\\Core.md",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAACGAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
-              "WhenOpened": "2026-04-08T04:50:20.71Z"
+              "WhenOpened": "2026-05-11T05:54:04.086Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 0,
               "Title": "ChatController.cs",
               "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\Controllers\\ChatController.cs",
               "RelativeDocumentMoniker": "Controllers\\ChatController.cs",
               "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\Controllers\\ChatController.cs",
               "RelativeToolTip": "Controllers\\ChatController.cs",
-              "ViewState": "AgIAAGAAAAAAAAAAAADwv3kAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAACYBAAAAAAAAAAAkwJAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-04T03:00:10.088Z"
+              "WhenOpened": "2026-05-11T05:54:04.088Z",
+              "EditorCaption": ""
             }
           ]
         },

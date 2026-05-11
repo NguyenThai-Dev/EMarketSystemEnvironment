@@ -1,10 +1,4 @@
-﻿using System.Net;
-using System.Reflection;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.Optimization;
-using System.Web.Routing;
-using EMarket.Events.Implementations;
+﻿using EMarket.Events.Implementations;
 using EMarket.Events.Interfaces;
 using EMarket.Filters;
 using EMarket.Forecast.Services.Implementations;
@@ -38,6 +32,13 @@ using SimpleInjector.Integration.Web;
 using SimpleInjector.Integration.Web.Mvc;
 using SimpleInjector.Integration.WebApi;
 using SimpleInjector.Lifestyles;
+using System.Net;
+using System.Reflection;
+using System.Web;
+using System.Web.Helpers;
+using System.Web.Mvc;
+using System.Web.Optimization;
+using System.Web.Routing;
 using TvdP.SimpleInjector;
 using MemoryCache = Microsoft.Extensions.Caching.Memory.MemoryCache;
 
@@ -55,12 +56,11 @@ namespace EMarket
         /// </summary>
         protected void Application_Start()
         {
-
-            // Đảm bảo có using System.Net;
             System.Net.ServicePointManager.SecurityProtocol =
                 SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 
             System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+            AntiForgeryConfig.UniqueClaimTypeIdentifier = System.Security.Claims.ClaimTypes.Name;
 
             var container = new Container();
             GlobalContainer.Container = container;

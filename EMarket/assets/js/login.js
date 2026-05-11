@@ -130,6 +130,7 @@ class ModernSaaSLoginForm {
             const result = await response.json();
 
             if (result.success) {
+                localStorage.setItem('access_token', result.token);
                 this.showSuccess();
                 const redirectUrl = returnUrl || "/Admin/Admin/Index";
                 setTimeout(() => {

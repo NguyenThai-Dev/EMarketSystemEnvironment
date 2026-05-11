@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNet.SignalR;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.SignalR;
+using System.Security.Claims;
 
 namespace EMarket.Helpers
 {
@@ -6,9 +8,15 @@ namespace EMarket.Helpers
     {
         public string GetUserId(IRequest request)
         {
-            if (request.Cookies.ContainsKey("UserId"))
+            // Lấy trực tiếp từ Identity của User đã qua Middleware xác thực
+            if (request.User?.Identity is ClaimsIdentity identity)
             {
-                return request.Cookies["UserId"].Value;
+                // Tìm đúng cái Claim chứa ID (thường là NameIdentifier bạn set lúc Login)
+                var userIdClaim = identity.FindFirst(ClaimTypes.NameIdentifier);
+                if (userIdClaim != null)
+                {
+                    return userIdClaim.Value;
+                }
             }
             return null;
         }

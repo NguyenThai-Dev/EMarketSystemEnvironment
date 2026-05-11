@@ -536,7 +536,7 @@ $(document).ready(function () {
 });
 function logout() {
 	// Xóa localStorage
-	localStorage.removeItem('CurrentUser');
+	localStorage.removeItem("access_token");
 
 	$.post('/Admin/Login/SignOut', {}, function (res) {
 		if (res.success) {
@@ -549,6 +549,10 @@ function logout() {
 
 $(function () {
 	$.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+		const jwtToken = localStorage.getItem('access_token');
+		if (jwtToken) {
+			jqXHR.setRequestHeader('Authorization', 'Bearer ' + jwtToken);
+		}
 
 		if (!options.type || options.type.toUpperCase() !== 'POST') return;
 
@@ -557,28 +561,19 @@ $(function () {
 
 		const contentType = options.contentType || '';
 
-		// =========================
 		// CASE 1: JSON → TOKEN VÀO HEADER
-		// =========================
 		if (contentType.indexOf('application/json') === 0) {
-
 			jqXHR.setRequestHeader('RequestVerificationToken', token);
-
-			// 🚫 TUYỆT ĐỐI không đụng options.data
 			return;
 		}
 
-		// =========================
 		// CASE 2: FORM / FORM-DATA
-		// =========================
 		if (options.data instanceof FormData) {
-
 			options.data.append('__RequestVerificationToken', token);
 			return;
 		}
 
 		if (typeof options.data === 'string') {
-
 			if (options.data.indexOf('__RequestVerificationToken') === -1) {
 				options.data +=
 					(options.data.length ? '&' : '') +
@@ -588,9 +583,26 @@ $(function () {
 		}
 
 		if (typeof options.data === 'object') {
-
 			options.data.__RequestVerificationToken = token;
 			return;
 		}
 	});
+});
+
+$(document).ready(function () {
+	function getCookie(name) {
+		const value = `; ${document.cookie}`;
+		const parts = value.split(`; ${name}=`);
+		if (parts.length === 2) return parts.pop().split(';').shift();
+		return null;
+	}
+
+	// Nếu vừa login bằng Google xong, lấy token từ cookie lưu vào localStorage
+	const jwtCookie = getCookie('access_token');
+	if (jwtCookie) {
+		
+
+		// Xóa cookie ngay lập tức để dọn rác (vì đã lưu vào localStorage rồi)
+		document.cookie = "access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+	}
 });

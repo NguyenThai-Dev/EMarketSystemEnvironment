@@ -7,6 +7,7 @@
       "RelativeMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
+<<<<<<< Updated upstream
       "AbsoluteMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|d:\\bai_tap_cac_mon\\nghien_cuu_khoa_hoc\\aiassistantservice\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|solutionrelative:properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
@@ -19,10 +20,13 @@
       "RelativeMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|solutionrelative:ipwhitelistmiddleware.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+=======
+>>>>>>> Stashed changes
       "AbsoluteMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|d:\\bai_tap_cac_mon\\nghien_cuu_khoa_hoc\\aiassistantservice\\controllers\\chatcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|solutionrelative:controllers\\chatcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+<<<<<<< Updated upstream
       "AbsoluteMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|d:\\bai_tap_cac_mon\\nghien_cuu_khoa_hoc\\aiassistantservice\\prompts\\sqlgenerator.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
       "RelativeMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|solutionrelative:prompts\\sqlgenerator.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
     },
@@ -35,10 +39,13 @@
       "RelativeMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|solutionrelative:prompts\\domains\\sales.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
     },
     {
+=======
+>>>>>>> Stashed changes
       "AbsoluteMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|d:\\bai_tap_cac_mon\\nghien_cuu_khoa_hoc\\aiassistantservice\\aihistoryservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|solutionrelative:aihistoryservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+<<<<<<< Updated upstream
       "AbsoluteMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|d:\\bai_tap_cac_mon\\nghien_cuu_khoa_hoc\\aiassistantservice\\prompts\\domains\\core.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
       "RelativeMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|solutionrelative:prompts\\domains\\core.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
     },
@@ -73,6 +80,10 @@
     {
       "AbsoluteMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|d:\\bai_tap_cac_mon\\nghien_cuu_khoa_hoc\\aiassistantservice\\prompts\\domains\\inventory.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
       "RelativeMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|solutionrelative:prompts\\domains\\inventory.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
+=======
+      "AbsoluteMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|d:\\bai_tap_cac_mon\\nghien_cuu_khoa_hoc\\aiassistantservice\\tokenforwardinghandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|solutionrelative:tokenforwardinghandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+>>>>>>> Stashed changes
     },
     {
       "AbsoluteMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|d:\\bai_tap_cac_mon\\nghien_cuu_khoa_hoc\\aiassistantservice\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -80,6 +91,21 @@
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\duong\\AppData\\Roaming\\Microsoft\\UserSecrets\\01371756-1228-45bf-9787-40391bfb86dd\\secrets.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+<<<<<<< Updated upstream
+=======
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|d:\\bai_tap_cac_mon\\nghien_cuu_khoa_hoc\\aiassistantservice\\timeplugin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|solutionrelative:timeplugin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|d:\\bai_tap_cac_mon\\nghien_cuu_khoa_hoc\\aiassistantservice\\groqapikeyprovider.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|solutionrelative:groqapikeyprovider.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|d:\\bai_tap_cac_mon\\nghien_cuu_khoa_hoc\\aiassistantservice\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+>>>>>>> Stashed changes
     }
   ],
   "DocumentGroupContainers": [
@@ -89,7 +115,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 298,
+<<<<<<< Updated upstream
           "SelectedChildIndex": 10,
+=======
+          "SelectedChildIndex": 9,
+>>>>>>> Stashed changes
           "Children": [
             {
               "$type": "Bookmark",
@@ -101,18 +131,52 @@
             },
             {
               "$type": "Document",
+<<<<<<< Updated upstream
               "DocumentIndex": 1,
               "Title": "launchSettings.json",
               "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\Properties\\launchSettings.json",
               "RelativeDocumentMoniker": "Properties\\launchSettings.json",
               "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\Properties\\launchSettings.json",
               "RelativeToolTip": "Properties\\launchSettings.json",
+=======
+              "DocumentIndex": 3,
+              "Title": "TokenForwardingHandler.cs",
+              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\TokenForwardingHandler.cs",
+              "RelativeDocumentMoniker": "TokenForwardingHandler.cs",
+              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\TokenForwardingHandler.cs",
+              "RelativeToolTip": "TokenForwardingHandler.cs",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAYwBMAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-06T11:00:22.194Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ChatController.cs",
+              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\Controllers\\ChatController.cs",
+              "RelativeDocumentMoniker": "Controllers\\ChatController.cs",
+              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\Controllers\\ChatController.cs",
+              "RelativeToolTip": "Controllers\\ChatController.cs",
+              "ViewState": "AgIAAF0AAAAAAAAAAAAwwGYAAABLAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-30T09:32:56.984Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\appsettings.json",
+              "RelativeDocumentMoniker": "appsettings.json",
+              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\appsettings.json",
+              "RelativeToolTip": "appsettings.json",
+>>>>>>> Stashed changes
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
               "WhenOpened": "2026-04-24T00:43:32.157Z"
             },
             {
               "$type": "Document",
+<<<<<<< Updated upstream
               "DocumentIndex": 2,
               "Title": "AIAssistantService",
               "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\AIAssistantService.csproj",
@@ -125,17 +189,49 @@
             {
               "$type": "Document",
               "DocumentIndex": 8,
+=======
+              "DocumentIndex": 7,
+              "Title": "GroqApiKeyProvider.cs",
+              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\GroqApiKeyProvider.cs",
+              "RelativeDocumentMoniker": "GroqApiKeyProvider.cs",
+              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\GroqApiKeyProvider.cs",
+              "RelativeToolTip": "GroqApiKeyProvider.cs",
+              "ViewState": "AgIAAAsAAAAAAAAAAAAgwBAAAABoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-30T09:32:42.881Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "TimePlugin.cs",
+              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\TimePlugin.cs",
+              "RelativeDocumentMoniker": "TimePlugin.cs",
+              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\TimePlugin.cs",
+              "RelativeToolTip": "TimePlugin.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-30T09:32:28.06Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+>>>>>>> Stashed changes
               "Title": "AiHistoryService.cs",
               "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\AiHistoryService.cs",
               "RelativeDocumentMoniker": "AiHistoryService.cs",
               "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\AiHistoryService.cs",
               "RelativeToolTip": "AiHistoryService.cs",
+<<<<<<< Updated upstream
               "ViewState": "AgIAAEwAAAAAAAAAAAAowFAAAAAYAAAAAAAAAA==",
+=======
+              "ViewState": "AgIAABUAAAAAAAAAAAAQwB4AAAArAAAAAAAAAA==",
+>>>>>>> Stashed changes
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-04-13T01:40:47.333Z"
             },
             {
               "$type": "Document",
+<<<<<<< Updated upstream
               "DocumentIndex": 12,
               "Title": "DatabasePlugin.cs",
               "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\DatabasePlugin.cs",
@@ -193,10 +289,20 @@
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAIkAAAATAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
               "WhenOpened": "2026-04-13T01:01:21.1Z"
+=======
+              "DocumentIndex": 5,
+              "Title": "secrets.json",
+              "DocumentMoniker": "C:\\Users\\duong\\AppData\\Roaming\\Microsoft\\UserSecrets\\01371756-1228-45bf-9787-40391bfb86dd\\secrets.json",
+              "ToolTip": "C:\\Users\\duong\\AppData\\Roaming\\Microsoft\\UserSecrets\\01371756-1228-45bf-9787-40391bfb86dd\\secrets.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAABAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-04-30T08:41:15.745Z"
+>>>>>>> Stashed changes
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
+<<<<<<< Updated upstream
               "Title": "appsettings.json",
               "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\appsettings.json",
               "RelativeDocumentMoniker": "appsettings.json",
@@ -205,17 +311,35 @@
               "ViewState": "AgIAAAUAAAAAAAAAAAAAAAoAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
               "WhenOpened": "2026-04-08T05:11:49.446Z",
+=======
+              "Title": "EMarketApiPlugin.cs",
+              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\Plugins\\EMarketApiPlugin.cs",
+              "RelativeDocumentMoniker": "Plugins\\EMarketApiPlugin.cs",
+              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\Plugins\\EMarketApiPlugin.cs",
+              "RelativeToolTip": "Plugins\\EMarketApiPlugin.cs",
+              "ViewState": "AgIAAMMCAAAAAAAAAAAkwMYCAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-30T08:40:32.907Z",
+>>>>>>> Stashed changes
               "EditorCaption": ""
             },
             {
               "$type": "Document",
+<<<<<<< Updated upstream
               "DocumentIndex": 18,
+=======
+              "DocumentIndex": 4,
+>>>>>>> Stashed changes
               "Title": "Program.cs",
               "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
               "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\Program.cs",
               "RelativeToolTip": "Program.cs",
+<<<<<<< Updated upstream
               "ViewState": "AgIAAFEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+=======
+              "ViewState": "AgIAAB0AAAAAAAAAAAAwwCoAAAADAAAAAAAAAA==",
+>>>>>>> Stashed changes
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-04-08T05:10:07.15Z"
             },

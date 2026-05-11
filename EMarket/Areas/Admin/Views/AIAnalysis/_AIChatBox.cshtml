@@ -1010,6 +1010,9 @@
                         url: EXTERNAL_AI_URL,
                         type: 'POST',
                         contentType: 'application/json',
+                        headers: {
+                            "Authorization": "Bearer " + localStorage.getItem('access_token')
+                        },
                         data: JSON.stringify({ prompt: txt, userName: window.CURRENTUSERNAME }),
                         timeout: 10000,
                         success: function (res) {

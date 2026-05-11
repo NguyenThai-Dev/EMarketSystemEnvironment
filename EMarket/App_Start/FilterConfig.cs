@@ -10,11 +10,14 @@ namespace EMarket
     public class FilterConfig
     {
         public static void RegisterGlobalFilters(
-         GlobalFilterCollection filters,
-         Container container)
+            GlobalFilterCollection filters,
+            Container container)
         {
             filters.Add(new GlobalErrorFilter());
             filters.Add(container.GetInstance<RequireLoginFilter>());
+
+            filters.Add(new RateLimitFilter());
+
             filters.Add(new HandleErrorAttribute());
         }
     }
@@ -40,9 +43,6 @@ namespace EMarket
                 Message = $"https://www.merriam-webster.com/dictionary/error 500 tại: {filterContext.HttpContext.Request.RawUrl}",
                 Exception = ex.ToString()
             });
-
-            // Đánh dấu đã xử lý để tránh văng lỗi trắng ra màn hình nếu muốn
-            // filterContext.ExceptionHandled = true; 
         }
     }
 }

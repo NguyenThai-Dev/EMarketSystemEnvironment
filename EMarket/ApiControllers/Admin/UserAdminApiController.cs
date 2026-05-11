@@ -6,6 +6,7 @@ using EMarket.Modules.UserModule.Services.Interfaces;
 
 namespace EMarket.ApiControllers.Admin
 {
+    [Authorize]
     [RoutePrefix("api/admin/user-management")]
     public class UserAdminApiController : ApiController
     {

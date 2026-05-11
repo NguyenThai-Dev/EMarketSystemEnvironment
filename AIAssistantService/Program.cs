@@ -19,6 +19,13 @@ builder.Services.AddSingleton<IApiKeyProvider, GroqApiKeyProvider>();
 builder.Services.AddSingleton<IPromptService, PromptService>();
 
 // 3. Cấu hình HttpClient cho EMARKET
+// Cho phép hệ thống truy cập vào HttpContext hiện tại
+builder.Services.AddHttpContextAccessor();
+
+// Đăng ký TokenForwardingHandler
+builder.Services.AddTransient<TokenForwardingHandler>();
+
+// 3. Cấu hình HttpClient cho EMARKET
 builder.Services.AddHttpClient("EMarketClient", client =>
 {
     client.BaseAddress = new Uri("https://localhost:44338/");
@@ -28,9 +35,19 @@ builder.Services.AddHttpClient("EMarketClient", client =>
 .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
 {
     ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+})
+// Ép EMarketClient phải đi qua trạm thu phí để lấy Token
+.AddHttpMessageHandler<TokenForwardingHandler>();
+
+// 3.5 Cấu hình HttpClient cho GROQ (Chuẩn OpenAI tương thích)
+builder.Services.AddHttpClient("GroqClient", client =>
+{
+    // Endpoint chuẩn của Groq cho các request tương thích OpenAI
+    client.BaseAddress = new Uri("https://api.groq.com/openai/v1/");
+    client.Timeout = TimeSpan.FromMinutes(5);
 });
 
-// 4. Database & History Services
+// 4. History Services
 var connectionString = builder.Configuration["DatabaseSettings:ConnectionString"] ?? "";
 builder.Services.AddScoped<DatabasePlugin>(sp => new DatabasePlugin(connectionString));
 builder.Services.AddScoped<IAiHistoryService>(sp => new AiHistoryService(connectionString));

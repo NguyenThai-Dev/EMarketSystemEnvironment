@@ -2,6 +2,7 @@
 
 namespace EMarket.ApiControllers.Admin
 {
+    [Authorize]
     [AllowAnonymous]
     [RoutePrefix("api/test")]
     public class TestController : ApiController

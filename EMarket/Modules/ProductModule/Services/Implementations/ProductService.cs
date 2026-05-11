@@ -531,7 +531,7 @@ namespace EMarket.Modules.ProductModule.Services.Implementations
 
                 // 3) Lấy tất cả lot of product
                 var lotItems = await _db.ProductLots
-                    .Where(pl => pl.product_id == id)
+                    .Where(pl => pl.product_id == id && pl.expiry_date > DateTime.Now.Date.AddDays(1))
                     .ToListAsync();
 
                 // 4) Gom lot_ids
@@ -1237,84 +1237,61 @@ namespace EMarket.Modules.ProductModule.Services.Implementations
         {
             try
             {
-                /*
-                 * Tư duy mới (chuẩn module):
-                 * - Inventory chỉ dùng để SUM quantity theo (Product + Warehouse)
-                 * - Product / Category join trực tiếp (cùng module)
-                 * - Warehouse / Branch: LẤY TÊN QUA SERVICE
-                 */
+                var now = DateTime.Now.Date;
 
-                var rawData = await (
-                    from i in _db.Inventories.AsNoTracking()
-
-                    join pl in _db.ProductLots on i.lot_id equals pl.lot_id
-                    join p in _db.Products on pl.product_id equals p.product_id
-                    join c in _db.ProductCategories on p.category_id equals c.category_id
-
-                    group i by new
+                // BƯỚC 1: Query chính từ Database
+                var rawData = await _db.Inventories.AsNoTracking()
+                    // Lọc sớm ngay tại tầng Database: Chỉ tính các Lot chưa hết hạn
+                    .Where(i => i.ProductLot.expiry_date > now && i.ProductLot.Product.min_stock.HasValue)
+                    .GroupBy(i => new
                     {
-                        p.product_id,
-                        p.name,
-                        p.min_stock,
-                        CategoryName = c.name,
+                        ProductId = i.ProductLot.product_id,
+                        ProductName = i.ProductLot.Product.name,
+                        MinStock = (int)i.ProductLot.Product.min_stock,
+                        CategoryName = i.ProductLot.Product.ProductCategory.name,
                         WarehouseId = i.warehouse_id
-                    }
-                    into g
-
-                    let currentStock = g.Sum(x => x.quantity ?? 0)
-
-                    where g.Key.min_stock.HasValue
-                       && currentStock < g.Key.min_stock.Value
-
-                    select new
+                    })
+                    .Select(g => new
                     {
-                        g.Key.product_id,
-                        g.Key.name,
-                        g.Key.min_stock,
+                        g.Key.ProductId,
+                        g.Key.ProductName,
+                        g.Key.MinStock,
                         g.Key.CategoryName,
                         g.Key.WarehouseId,
-                        CurrentStock = currentStock
-                    }
-                ).ToListAsync();
+                        CurrentStock = g.Sum(x => x.quantity ?? 0)
+                    })
+                    // Lọc sau khi Group: Chỉ lấy những thằng thực sự thiếu hàng
+                    .Where(x => x.CurrentStock < x.MinStock)
+                    .ToListAsync();
 
-                // ===== LẤY DỮ LIỆU NGOÀI MODULE =====
+                // BƯỚC 2: Lấy dữ liệu bổ trợ (Ngoài module)
                 var warehouseDict = await _warehouseService.GetWarehouseDictAsync();
                 var branchDict = await _branchService.GetBranchDictAsync();
 
+                // BƯỚC 3: Map sang DTO và xử lý logic (In-memory)
                 var result = rawData.Select(x =>
                 {
                     warehouseDict.TryGetValue(x.WarehouseId, out var wh);
-                    BranchDTO branch = null;
-
-                    if (wh != null)
-                        branchDict.TryGetValue(wh.BranchId, out branch);
+                    branchDict.TryGetValue(wh?.BranchId ?? 0, out var branch);
 
                     return new LowStockAlertDTO
                     {
-                        ProductId = x.product_id,
-                        ProductName = x.name,
+                        ProductId = x.ProductId,
+                        ProductName = x.ProductName,
                         CategoryName = x.CategoryName,
-
                         CurrentStock = x.CurrentStock,
-                        MinStock = x.min_stock ?? 0,
-
+                        MinStock = x.MinStock,
                         WarehouseId = x.WarehouseId,
                         WarehouseName = wh?.Name ?? "N/A",
-
                         BranchId = wh?.BranchId ?? 0,
                         BranchName = branch?.Name ?? "N/A"
                     };
-                })
-                .ToList();
+                });
 
-                /*
-                 * SORT NGHIỆP VỤ:
-                 * 1. Nguy cấp: <= 50% MinStock
-                 * 2. Sau đó sort theo tỷ lệ tồn kho
-                 */
+                // BƯỚC 4: Sort nghiệp vụ
                 return result
-                    .OrderBy(x => x.CurrentStock <= x.MinStock * 0.5m ? 0 : 1)
-                    .ThenBy(x => x.MinStock == 0 ? 1 : (decimal)x.CurrentStock / x.MinStock)
+                    .OrderBy(x => x.CurrentStock <= x.MinStock * 0.5 ? 0 : 1) // Nguy cấp ưu tiên trước
+                    .ThenBy(x => x.MinStock == 0 ? 1 : (double)x.CurrentStock / x.MinStock) // Tỷ lệ thấp ưu tiên trước
                     .Take(top)
                     .ToList();
             }
@@ -1323,6 +1300,5 @@ namespace EMarket.Modules.ProductModule.Services.Implementations
                 throw new ApplicationException("Failed to load low stock alerts.", ex);
             }
         }
-
     }
 }

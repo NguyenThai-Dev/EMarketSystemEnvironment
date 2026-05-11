@@ -6,6 +6,7 @@ using EMarket.Modules.InventoryModule.Services.Interfaces;
 
 namespace EMarket.ApiControllers.Admin
 {
+    [Authorize]
     [RoutePrefix("api/admin/inventory")]
     public class InventoryAdminApiController : ApiController
     {

@@ -188,19 +188,18 @@ namespace EMarket.Forecast.Services.Implementations
                         p.unit AS Unit,
                         p.image AS ProductImage,
                         r.current_stock AS CurrentStock,
-                        r.expected_demand AS ExpectedDemand,
-                        r.safety_stock AS SafetyStock,
+                        r.expected_demand_30d AS ExpectedDemand,
                         r.suggested_qty AS SuggestedQty,
-                        r.confidence_level AS ConfidenceLevel,
-                        r.reason AS Reason
+                        r.confidence_score AS ConfidenceLevel,
+                        r.priority_level AS Reason
                     FROM AI_ReplenishmentAdvice r
                     JOIN Products p ON r.product_id = p.product_id
                     LEFT JOIN ProductCategories c ON p.category_id = c.category_id
                     WHERE r.branch_id = @BranchId
                     ORDER BY 
                         -- Ưu tiên tin cậy cao và số lượng nhập lớn lên đầu
-                        CASE WHEN r.confidence_level = 'HIGH' THEN 1 
-                             WHEN r.confidence_level = 'MEDIUM' THEN 2 
+                        CASE WHEN r.confidence_score >= 90 THEN 1 
+                             WHEN r.confidence_score = 80 THEN 2 
                              ELSE 3 END,
                         r.suggested_qty DESC";
 

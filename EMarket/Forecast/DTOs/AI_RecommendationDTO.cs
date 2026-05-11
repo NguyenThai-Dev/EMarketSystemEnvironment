@@ -54,7 +54,7 @@ namespace EMarket.Forecast.DTOs
         public int SafetyStock { get; set; }    // Tồn kho an toàn
         public int SuggestedQty { get; set; }   // Số lượng cần nhập
 
-        public string ConfidenceLevel { get; set; } // HIGH, MEDIUM, LOW
+        public string ConfidenceLevel { get; set; } 
 
         // Trường tính toán để hiển thị Icon/Màu sắc trên UI
         public string UrgencyColor
