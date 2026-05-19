@@ -600,7 +600,7 @@ $(document).ready(function () {
 	// Nếu vừa login bằng Google xong, lấy token từ cookie lưu vào localStorage
 	const jwtCookie = getCookie('access_token');
 	if (jwtCookie) {
-		
+		localStorage.setItem('access_token', jwtCookie);
 
 		// Xóa cookie ngay lập tức để dọn rác (vì đã lưu vào localStorage rồi)
 		document.cookie = "access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";

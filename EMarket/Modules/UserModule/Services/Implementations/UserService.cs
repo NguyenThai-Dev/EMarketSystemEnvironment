@@ -472,7 +472,7 @@ namespace EMarket.Modules.UserModule.Services.Implementations
 
         private string HashPassword(string password)
         {
-            string passwordHash = BCrypt.Net.BCrypt.HashPassword("myPassword");
+            string passwordHash = BCrypt.Net.BCrypt.HashPassword(password);
             return passwordHash;
         }
 

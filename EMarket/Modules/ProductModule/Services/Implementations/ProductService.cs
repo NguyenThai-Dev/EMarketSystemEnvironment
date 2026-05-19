@@ -528,10 +528,10 @@ namespace EMarket.Modules.ProductModule.Services.Implementations
                     .Where(s => s.supplier_id == productEntity.supplier_id)
                     .Select(s => s.name)
                     .FirstOrDefaultAsync();
-
+                var tomorrow = DateTime.Now.Date.AddDays(1);
                 // 3) Lấy tất cả lot of product
                 var lotItems = await _db.ProductLots
-                    .Where(pl => pl.product_id == id && pl.expiry_date > DateTime.Now.Date.AddDays(1))
+                    .Where(pl => pl.product_id == id && pl.expiry_date > tomorrow)
                     .ToListAsync();
 
                 // 4) Gom lot_ids
@@ -705,37 +705,37 @@ namespace EMarket.Modules.ProductModule.Services.Implementations
 
         public async Task<bool> DeleteProductAsync(int id)
         {
-            using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            try
             {
-                try
-                {
-                    var entity = await _db.Products.FindAsync(id);
-                    if (entity == null) return false;
+                var hasTransaction = await _db.OrderDetails
+                    .AsNoTracking()
+                    .AnyAsync(x => x.product_id == id);
 
-                    _db.Products.Remove(entity);
-                    await _db.SaveChangesAsync();
-
-                    scope.Complete();
-                }
-                catch
-                {
+                if (hasTransaction)
                     return false;
-                }
+
+                var entity = await _db.Products.FindAsync(id);
+                if (entity == null)
+                    return false;
+
+                _db.Products.Remove(entity);
+                await _db.SaveChangesAsync();
+            }
+            catch
+            {
+                return false;
             }
 
-            // ===== SAU KHI DB OK → XÓA FILE =====
             try
             {
                 string productFolder = HttpContext.Current.Server.MapPath($"~/Uploads/Products/{id}");
 
                 if (Directory.Exists(productFolder))
-                {
-                    Directory.Delete(productFolder, true); // recursive
-                }
+                    Directory.Delete(productFolder, true);
             }
             catch
             {
-                // log là đủ, KHÔNG throw
+                // log nếu cần, không throw
             }
 
             return true;
@@ -1095,91 +1095,119 @@ namespace EMarket.Modules.ProductModule.Services.Implementations
             };
 
             var errorRows = new List<(int Row, string Error)>();
+            var rows = new List<ProductImportRow>();
 
             using (var workbook = new XLWorkbook(excelFile.InputStream))
             {
                 var ws = workbook.Worksheet("Products");
                 var lastRow = ws.LastRowUsed().RowNumber();
+
                 result.TotalRows = lastRow - 1;
 
+                // ============================
+                // PHASE 1: READ SHEET
+                // ============================
+                for (int row = 2; row <= lastRow; row++)
+                {
+                    try
+                    {
+                        var name = ws.Cell(row, 1).GetString().Trim();
+                        var barcode = ws.Cell(row, 4).GetString().Trim();
+
+                        var dto = new ProductDTO
+                        {
+                            Name = name,
+                            CategoryId = ws.Cell(row, 2).GetValue<int>(),
+                            SupplierId = ws.Cell(row, 3).GetValue<int>(),
+                            Barcode = barcode,
+                            Price = ws.Cell(row, 5).GetValue<decimal>(),
+                            Unit = ws.Cell(row, 6).GetString().Trim(),
+                            MinStock = ws.Cell(row, 7).GetValue<int>(),
+                            MaxStock = ws.Cell(row, 8).GetValue<int>(),
+                            Quantity = ws.Cell(row, 9).GetValue<int>(),
+                            Description = ws.Cell(row, 12).GetString()
+                        };
+
+                        rows.Add(new ProductImportRow
+                        {
+                            RowNumber = row,
+                            Product = dto,
+                            ThumbnailUrl = ws.Cell(row, 10).GetString().Trim(),
+                            ImageUrls = ws.Cell(row, 11).GetString()
+                                .Split('|')
+                                .Select(x => x.Trim())
+                                .Where(x => !string.IsNullOrWhiteSpace(x))
+                                .ToList()
+                        });
+                    }
+                    catch (Exception ex)
+                    {
+                        errorRows.Add((row, "Dữ liệu không hợp lệ: " + ex.Message));
+                    }
+                }
+
+                // ============================
+                // PHASE 2: VALIDATE
+                // ============================
+
+                ValidateDuplicateInExcel(rows, errorRows);
+
+                await ValidateExistingProductsAsync(rows, errorRows);
+
+                if (errorRows.Any())
+                {
+                    var errorFile = BuildErrorReport(errorRows);
+                    result.ErrorToken = SaveErrorReport(errorFile);
+                    return result;
+                }
+
+                // ============================
+                // PHASE 3: INSERT
+                // ============================
                 using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
                     try
                     {
-                        for (int row = 2; row <= lastRow; row++)
+                        foreach (var item in rows)
                         {
-                            try
+                            var dto = item.Product;
+
+                            if (!string.IsNullOrWhiteSpace(item.ThumbnailUrl))
                             {
-                                // 1. Build DTO
-                                var dto = new ProductDTO
-                                {
-                                    Name = ws.Cell(row, 1).GetString(),
-                                    CategoryId = ws.Cell(row, 2).GetValue<int>(),
-                                    SupplierId = ws.Cell(row, 3).GetValue<int>(),
-                                    Barcode = ws.Cell(row, 4).GetString(),
-                                    Price = ws.Cell(row, 5).GetValue<decimal>(),
-                                    Unit = ws.Cell(row, 6).GetString(),
-                                    MinStock = ws.Cell(row, 7).GetValue<int>(),
-                                    MaxStock = ws.Cell(row, 8).GetValue<int>(),
-                                    Quantity = ws.Cell(row, 9).GetValue<int>(),
-                                    Description = ws.Cell(row, 12).GetString()
-                                };
-
-                                // ============================
-                                // THUMBNAIL (KHÔNG ĐƯA VÀO ProductImages)
-                                // ============================
-                                var thumbnailUrl = ws.Cell(row, 10).GetString();
-                                if (!string.IsNullOrWhiteSpace(thumbnailUrl))
-                                {
-                                    dto.Image = await DownloadToTempAsync(thumbnailUrl);
-                                }
-
-                                // 2. Create Product (service tự move thumbnail vào đúng folder)
-                                var productId = await CreateProductAsync(dto, null);
-
-                                // ============================
-                                // PRODUCT IMAGES (ĐÚNG CHỖ)
-                                // ============================
-                                var tempFiles = new List<string>();
-
-                                var imageUrls = ws.Cell(row, 11).GetString()
-                                    .Split('|')
-                                    .Select(x => x.Trim())
-                                    .Where(x => !string.IsNullOrWhiteSpace(x));
-
-                                foreach (var url in imageUrls)
-                                {
-                                    var tempImg = await DownloadToTempAsync(url);
-                                    if (!string.IsNullOrEmpty(tempImg))
-                                        tempFiles.Add(tempImg);
-                                }
-
-                                if (tempFiles.Any())
-                                {
-                                    await MoveTempImagesToProductAsync(productId, tempFiles);
-                                }
-
-
-                                result.ImportedRows++;
+                                dto.Image = await DownloadToTempAsync(item.ThumbnailUrl);
                             }
-                            catch (Exception exRow)
+
+                            var productId = await CreateProductAsync(dto, null);
+
+                            var tempFiles = new List<string>();
+
+                            foreach (var url in item.ImageUrls)
                             {
-                                errorRows.Add((row, exRow.Message));
+                                var tempImg = await DownloadToTempAsync(url);
+
+                                if (!string.IsNullOrEmpty(tempImg))
+                                    tempFiles.Add(tempImg);
                             }
-                        }
-                        if (errorRows.Any())
-                        {
-                            var errorFile = BuildErrorReport(errorRows);
-                            result.ErrorToken = SaveErrorReport(errorFile);
-                            return result;
+
+                            if (tempFiles.Any())
+                            {
+                                await MoveTempImagesToProductAsync(productId, tempFiles);
+                            }
+
+                            result.ImportedRows++;
                         }
 
                         scope.Complete();
                         result.Success = true;
                     }
-                    catch
+                    catch (Exception ex)
                     {
-                        // rollback by TransactionScope
+                        errorRows.Add((0, "Import thất bại: " + ex.Message));
+
+                        var errorFile = BuildErrorReport(errorRows);
+                        result.ErrorToken = SaveErrorReport(errorFile);
+
+                        return result;
                     }
                 }
             }
@@ -1187,6 +1215,122 @@ namespace EMarket.Modules.ProductModule.Services.Implementations
             return result;
         }
 
+        private void ValidateDuplicateInExcel(
+    List<ProductImportRow> rows,
+    List<(int Row, string Error)> errorRows)
+        {
+            var duplicateNames = rows
+                .Where(x => !string.IsNullOrWhiteSpace(x.Product.Name))
+                .GroupBy(x => x.Product.Name.Trim(), StringComparer.OrdinalIgnoreCase)
+                .Where(g => g.Count() > 1);
+
+            foreach (var group in duplicateNames)
+            {
+                var rowNumbers = string.Join(", ", group.Select(x => x.RowNumber));
+
+                foreach (var item in group)
+                {
+                    errorRows.Add((
+                        item.RowNumber,
+                        $"Tên sản phẩm bị trùng trong file Excel. Các dòng trùng: {rowNumbers}"
+                    ));
+                }
+            }
+
+            var duplicateBarcodes = rows
+                .Where(x => !string.IsNullOrWhiteSpace(x.Product.Barcode))
+                .GroupBy(x => x.Product.Barcode.Trim(), StringComparer.OrdinalIgnoreCase)
+                .Where(g => g.Count() > 1);
+
+            foreach (var group in duplicateBarcodes)
+            {
+                var rowNumbers = string.Join(", ", group.Select(x => x.RowNumber));
+
+                foreach (var item in group)
+                {
+                    errorRows.Add((
+                        item.RowNumber,
+                        $"Barcode bị trùng trong file Excel. Các dòng trùng: {rowNumbers}"
+                    ));
+                }
+            }
+        }
+
+        private async Task ValidateExistingProductsAsync(
+    List<ProductImportRow> rows,
+    List<(int Row, string Error)> errorRows)
+        {
+            var names = rows
+                .Select(x => x.Product.Name)
+                .Where(x => !string.IsNullOrWhiteSpace(x))
+                .Select(x => x.Trim())
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+
+            var barcodes = rows
+                .Select(x => x.Product.Barcode)
+                .Where(x => !string.IsNullOrWhiteSpace(x))
+                .Select(x => x.Trim())
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+
+            if (!names.Any() && !barcodes.Any())
+                return;
+
+            var existingProducts = await _db.Products
+                .AsNoTracking()
+                .Where(p =>
+                    names.Contains(p.name) ||
+                    barcodes.Contains(p.barcode))
+                .Select(p => new ProductExistingCheckResult
+                {
+                    Name = p.name,
+                    Barcode = p.barcode
+                })
+                .ToListAsync();
+
+            var existingNames = new HashSet<string>(
+                existingProducts
+                    .Where(x => !string.IsNullOrWhiteSpace(x.Name))
+                    .Select(x => x.Name.Trim()),
+                StringComparer.OrdinalIgnoreCase
+            );
+
+            var existingBarcodes = new HashSet<string>(
+                existingProducts
+                    .Where(x => !string.IsNullOrWhiteSpace(x.Barcode))
+                    .Select(x => x.Barcode.Trim()),
+                StringComparer.OrdinalIgnoreCase
+            );
+
+            foreach (var row in rows)
+            {
+                var name = row.Product.Name == null ? null : row.Product.Name.Trim();
+                var barcode = row.Product.Barcode == null ? null : row.Product.Barcode.Trim();
+
+                if (!string.IsNullOrWhiteSpace(name) && existingNames.Contains(name))
+                {
+                    errorRows.Add((
+                        row.RowNumber,
+                        $"Tên sản phẩm đã tồn tại trong hệ thống: {row.Product.Name}"
+                    ));
+                }
+
+                if (!string.IsNullOrWhiteSpace(barcode) && existingBarcodes.Contains(barcode))
+                {
+                    errorRows.Add((
+                        row.RowNumber,
+                        $"Barcode đã tồn tại trong hệ thống: {row.Product.Barcode}"
+                    ));
+                }
+            }
+        }
+
+        public class ProductExistingCheckResult
+        {
+            public string Name { get; set; }
+            public string Barcode { get; set; }
+        }
 
         private byte[] BuildErrorReport(List<(int Row, string Error)> errors)
         {

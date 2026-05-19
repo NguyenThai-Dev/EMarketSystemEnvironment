@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using EMarket.Modules.InventoryModule.DTOs;
@@ -22,6 +22,14 @@ namespace EMarket.Modules.InventoryModule.Services.Interfaces
             string paymentStatus,
             DateTime? fromDate,
             DateTime? toDate
+        );
+
+        /// <summary>Server-side DataTable: trả về (total, filtered, page data)</summary>
+        Task<(int total, int filtered, List<PurchaseOrderDTO> data)> GetPurchaseOrdersDataTableAsync(
+            int start, int length,
+            string keyword, int? supplierId, int? branchId, int? warehouseId,
+            string status, string paymentStatus,
+            DateTime? fromDate, DateTime? toDate
         );
 
         Task<List<PurchaseOrderDTO>> GetPurchaseByBranchIdAsync(int? branchId, DateTime? fromDate, DateTime? toDate);

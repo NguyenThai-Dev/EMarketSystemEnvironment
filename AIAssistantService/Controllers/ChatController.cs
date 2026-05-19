@@ -47,7 +47,7 @@ I. NGUYÊN TẮC CỐT LÕI (CORE DIRECTIVE)
 1. [STRATEGIC ANALYST]: Bạn KHÔNG PHẢI là một công cụ xuất dữ liệu thô. Bạn là một Cố vấn Chiến lược. Tập trung vào Báo cáo Phân tích AI (Forecast, Anomalies, FEFO Risk) và Dashboard KPIs.
 2. [TOKEN OPTIMIZATION]: TUYỆT ĐỐI CẤM cố gắng liệt kê toàn bộ dữ liệu (như tất cả đơn hàng, tất cả khách hàng). Dữ liệu đã được hệ thống tự động cắt giảm (chỉ giữ Top 5-20) để tối ưu.
 3. [ZERO HALLUCINATION]: MỌI con số PHẢI được trích xuất 100% từ kết quả trả về của Tool. KHÔNG tự bịa số liệu. Đặc biệt khi người dùng hỏi về Chi nhánh (vd: Bến Cát) hay Sản phẩm, phải gọi Tool báo cáo tổng hợp tương ứng.
-4. [NO HISTORY BIAS]: Lịch sử trò chuyện đã bị vô hiệu hóa. BẠN PHẢI GỌI TOOL MỚI NHẤT MỖI KHI ĐƯỢC HỎI, kể cả khi bạn nghĩ bạn đã biết câu trả lời.
+4. [TRUST THE CONTEXT]: Nếu thông tin đã có trong lịch sử cuộc hội thoại hoặc đã được trả lời đầy đủ trước đó, KHÔNG cần gọi lại Tool. Chỉ gọi Tool khi dữ liệu thực sự chưa có hoặc có thể đã thay đổi.
 
 ================================================================
 II. QUY TRÌNH THỰC THI (MANDATORY WORKFLOW)
@@ -78,11 +78,43 @@ V. CẤM KỴ TUYỆT ĐỐI (STRICTLY FORBIDDEN)
 ================================================================
 - CẤM giải thích bạn đang dùng Tool nào, gọi API ra sao.
 - CẤM nhắc đến các từ khóa kỹ thuật: JSON, API, Endpoint, Plugin, Token Limit.
+- CẤM trả lời các vấn đề ngoài lề không liên quan đến EMarket (như tình yêu, chiến tranh, chính trị...). Nếu người dùng hỏi ngoài lề, hãy trả lời CHÍNH XÁC chuỗi này: `ERR_OUT_OF_SCOPE` và không thêm bất kỳ từ nào khác.
 ";
 
+            // ══════════════════════════════════════════════════════════════
+            // PRE-PROCESSING GATE
+            // Chạy TRƯỚC KHI gọi AI — làm 2 việc:
+            //   [1] Phát hiện Prompt Injection  → chặn, trả 400
+            //   [2] Tìm cache mờ trong lịch sử  → short-circuit, trả luôn
+            // ══════════════════════════════════════════════════════════════
+            var gate = await _historyService.CheckCacheAndSafetyAsync(sessionId, request.Prompt);
+
+            if (gate.IsInjectionDetected)
+            {
+                return BadRequest(new { answer = "Yêu cầu của bạn chứa nội dung không được phép. Vui lòng chỉ hỏi các vấn đề liên quan đến hệ thống EMarket." });
+            }
+
+            if (gate.HasCache)
+            {
+                Console.WriteLine($"[CACHE HIT] Returning cached answer for user '{sessionId}'.");
+                return Ok(new { answer = gate.CachedAnswer });
+            }
+
+            // ══════════════════════════════════════════════════════════════
+            // Không có cache → gọi AI với lịch sử hội thoại đầy đủ
+            // ══════════════════════════════════════════════════════════════
             var chatHistory = new ChatHistory(systemPrompt);
 
-            // Gắn câu hỏi của người dùng
+            // Inject lịch sử 20 messages gần nhất để AI có "bộ nhớ ngắn hạn"
+            var recentHistory = await _historyService.GetRecentHistoryAsync(sessionId);
+            foreach (var msg in recentHistory)
+                chatHistory.Add(msg);
+
+            // Capture baseline TRƯỚC khi add user message (index N).
+            // Save loop bên dưới bắt đầu từ index N → tự nhiên lưu user message + toàn bộ AI output.
+            // KHÔNG gọi SaveLogAsync riêng cho user message để tránh double-save.
+            int initialHistoryCount = chatHistory.Count;
+
             chatHistory.AddUserMessage(request.Prompt);
 
             var chatService = _kernel.GetRequiredService<IChatCompletionService>();
@@ -101,18 +133,54 @@ V. CẤM KỴ TUYỆT ĐỐI (STRICTLY FORBIDDEN)
                 // Gọi API Semantic Kernel. Nếu cần gọi tool, Kernel sẽ tự động gọi EMarketApiPlugin.
                 var aiResponse = await chatService.GetChatMessageContentAsync(chatHistory, executionSettings, _kernel);
                 finalResponseText = aiResponse.Content ?? "Tôi không thể xử lý yêu cầu này vào lúc này.";
+                
+                // Đảm bảo aiResponse được add vào chatHistory để lưu log
+                chatHistory.Add(aiResponse);
             }
             catch (Exception ex)
             {
                 finalResponseText = $"Xin lỗi, có lỗi trong quá trình phân tích: {ex.Message}";
                 Console.WriteLine($"[ERROR]: {ex.Message}");
+                chatHistory.AddAssistantMessage(finalResponseText);
             }
 
-            // Lưu log
-            if (!string.IsNullOrEmpty(finalResponseText))
+            // Lưu log toàn bộ các message mới (bao gồm User, Tool Calls, Tool Results và Assistant)
+            for (int i = initialHistoryCount; i < chatHistory.Count; i++)
             {
-                await _historyService.SaveLogAsync(sessionId, "user", request.Prompt);
-                await _historyService.SaveLogAsync(sessionId, "assistant", finalResponseText);
+                var msg = chatHistory[i];
+                string role = msg.Role.Label;
+                string content = msg.Content ?? "";
+                string modelName = msg.ModelId;
+                int tokens = 0;
+                
+                if (msg.Metadata != null && msg.Metadata.TryGetValue("Usage", out var usageObj) && usageObj != null)
+                {
+                    try {
+                        dynamic usage = usageObj;
+                        tokens = usage.TotalTokenCount ?? 0;
+                    } catch { }
+                }
+
+                string toolCallsJson = null;
+                string toolCallId = null;
+
+                var functionCalls = msg.Items?.OfType<Microsoft.SemanticKernel.FunctionCallContent>().ToList();
+                if (functionCalls != null && functionCalls.Any())
+                {
+                    toolCallsJson = System.Text.Json.JsonSerializer.Serialize(functionCalls.Select(f => new { f.Id, f.PluginName, f.FunctionName, f.Arguments }));
+                }
+
+                var functionResult = msg.Items?.OfType<Microsoft.SemanticKernel.FunctionResultContent>().FirstOrDefault();
+                if (functionResult != null)
+                {
+                    toolCallId = functionResult.CallId;
+                    content = functionResult.Result?.ToString() ?? "Success";
+                }
+
+                if (!string.IsNullOrEmpty(content) || !string.IsNullOrEmpty(toolCallsJson))
+                {
+                    await _historyService.SaveLogAsync(sessionId, role, content, modelName, tokens, toolCallsJson, toolCallId);
+                }
             }
 
             return Ok(new { answer = finalResponseText });

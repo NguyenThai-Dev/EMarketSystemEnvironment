@@ -616,12 +616,12 @@
         function loadFullOrderDetail(orderData, containerId) {
             // 1. Chuẩn bị Request lấy thông tin khách hàng
             const customerPromise = (orderData.CustomerId && orderData.CustomerId > 0)
-                ? $.ajax({ url: '/Customer/GetCustomerById', type: 'GET', data: { id: orderData.CustomerId } })
+                ? $.ajax({ url: '/Admin/Customer/GetCustomerById', type: 'GET', data: { id: orderData.CustomerId } })
                 : Promise.resolve(null); // Nếu không có ID thì trả về null ngay
 
             // 2. Chuẩn bị Request lấy địa chỉ giao hàng (Nếu có ID)
             const addressPromise = (orderData.DeliveryAddressId && orderData.DeliveryAddressId > 0)
-                ? $.ajax({ url: '/Customer/GetCustomerAddressById', type: 'GET', data: { addressId: orderData.DeliveryAddressId } })
+                ? $.ajax({ url: '/Admin/Customer/GetCustomerAddressById', type: 'GET', data: { addressId: orderData.DeliveryAddressId } })
                 : Promise.resolve(null); // Nếu null (nhận tại quầy) thì trả về null ngay
 
             // 3. Thực thi cả 2 song song (Promise.all)
@@ -937,7 +937,7 @@
         ========================================================= */
         async function openOrderModal(id, isLocked) {
             try {
-                const res = await $.get('/Order/GetOrder', { id });
+                const res = await $.get('/Admin/Order/GetOrder', { id });
                 if (!res.success) return;
 
                 const d = res.data;
@@ -1008,7 +1008,7 @@
                 ConnectionId: currentSignalRConnectionId
             };
 
-            $.post('/Order/UpdateStatus', payload)
+            $.post('/Admin/Order/UpdateStatus', payload)
                 .done(res => {
                     if (!res.success) {
                         Swal.fire('Thất bại', res.message, 'error');

@@ -1,4 +1,4 @@
-﻿@{
+@{
     ViewBag.Title = "WarehouseList";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
@@ -381,7 +381,7 @@
                     cancelButtonText: 'Hủy'
                 }).then(async (result) => {
                     if (result.isConfirmed) {
-                        const res = await $.post('/Warehouse/DeleteWarehouse', { id: id });
+                        const res = await $.post('/Admin/Warehouse/DeleteWarehouse', { id: id });
                         if (res.success) {
                             Swal.fire({ icon: 'success', title: 'Đã xóa', timer: 1500, showConfirmButton: false });
                             tblWarehouses.ajax.reload(null, false);
@@ -421,7 +421,7 @@
         async function loadBranches() {
             try {
                 // SỬA Ở ĐÂY: Xử lý object trả về để lấy mảng
-                const res = await $.get('/Branch/GetAllBranch'); // URL api lấy list branch
+                const res = await $.get('/Admin/Branch/GetAllBranch'); // URL api lấy list branch
 
                 // Kiểm tra: nếu res là mảng thì dùng res, nếu là object chứa data thì dùng res.data
                 const branches = Array.isArray(res) ? res : (res.data || res.result || []);

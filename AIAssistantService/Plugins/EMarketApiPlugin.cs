@@ -97,6 +97,14 @@ namespace AIAssistantService.Plugins
                 }
                 return $"Error {response.StatusCode}: {await response.Content.ReadAsStringAsync()}";
             }
+            catch (Polly.CircuitBreaker.BrokenCircuitException)
+            {
+                return "Lỗi ngắt mạch (Circuit Breaker): Hệ thống EMarket đang quá tải hoặc tạm thời không khả dụng, vui lòng thử lại sau.";
+            }
+            catch (Polly.Timeout.TimeoutRejectedException)
+            {
+                return "Lỗi Timeout: Hệ thống EMarket phản hồi quá chậm, vui lòng thử lại sau.";
+            }
             catch (Exception ex) { return $"Failed to execute API call: {ex.Message}"; }
         }
 
@@ -114,6 +122,14 @@ namespace AIAssistantService.Plugins
                     return SmartRefineJson(url, raw);
                 }
                 return $"Error {response.StatusCode}: {await response.Content.ReadAsStringAsync()}";
+            }
+            catch (Polly.CircuitBreaker.BrokenCircuitException)
+            {
+                return "Lỗi ngắt mạch (Circuit Breaker): Hệ thống EMarket đang quá tải hoặc tạm thời không khả dụng, vui lòng thử lại sau.";
+            }
+            catch (Polly.Timeout.TimeoutRejectedException)
+            {
+                return "Lỗi Timeout: Hệ thống EMarket phản hồi quá chậm, vui lòng thử lại sau.";
             }
             catch (Exception ex) { return $"Failed to execute API call: {ex.Message}"; }
         }

@@ -571,7 +571,7 @@
         }
 
         async function loadProductImageAndFinishGalery(productId) {
-            $.getJSON('/Product/GetAllProductImageByProductId', { productId: productId }, async function (gallery) {
+            $.getJSON('/Admin/Product/GetAllProductImageByProductId', { productId: productId }, async function (gallery) {
 
                 if (gallery.data && gallery.data.length > 0) {
 
@@ -690,7 +690,7 @@
 
             function deleteProduct(id) {
                 $.ajax({
-                    url: '/Product/DeleteProduct',
+                    url: '/Admin/Product/DeleteProduct',
                     type: 'POST',
                     data: {
                         id: id,
@@ -1321,7 +1321,7 @@ Requires jQuery and Bootstrap modal. */
             // ---------------------------
             function loadExistingProductImages(productId) {
                 $previewZone.empty();
-                $.get('/Product/GetAllProductImageByProductId', { productId: productId })
+                $.get('/Admin/Product/GetAllProductImageByProductId', { productId: productId })
                     .done(function (res) {
                         if (!res || !res.data) return;
                         res.data.forEach(function (img) {
@@ -1380,7 +1380,7 @@ Requires jQuery and Bootstrap modal. */
 
 
                 $.ajax({
-                    url: '/Product/UploadTempImage',
+                    url: '/Admin/Product/UploadTempImage',
                     method: 'POST',
                     data: fd,
                     processData: false,
@@ -1405,7 +1405,7 @@ Requires jQuery and Bootstrap modal. */
 
 
                 $.ajax({
-                    url: '/Product/CreateProductImage',
+                    url: '/Admin/Product/CreateProductImage',
                     method: 'POST',
                     data: fd,
                     processData: false,
@@ -1430,7 +1430,7 @@ Requires jQuery and Bootstrap modal. */
                 if (!imageId) return;
 
                 
-                $.post('/Product/DeleteProductImage', { id: imageId })
+                $.post('/Admin/Product/DeleteProductImage', { id: imageId })
                     .done(function (res) {
                         if (res && res.success) $div.remove();
                         else Swal.fire('Lỗi', 'Xóa ảnh thất bại', 'error');
@@ -1453,7 +1453,7 @@ Requires jQuery and Bootstrap modal. */
                     window.deleteTempImageOnServer(fileName).then(function () { $div.remove(); }).catch(function () { $div.remove(); });
                 } else {
                     // send request if endpoint exists; otherwise just remove preview & keep server cleanup for cron
-                    $.post('/Product/DeleteTempImage', { fileName: fileName })
+                    $.post('/Admin/Product/DeleteTempImage', { fileName: fileName })
                         .always(function () {
                             $div.remove();
                         });
@@ -1595,7 +1595,7 @@ Requires jQuery and Bootstrap modal. */
                     if (isAdd && tempFiles.length > 0) {
                         // move temp files
                         $.ajax({
-                            url: '/Product/MoveTempImages',
+                            url: '/Admin/Product/MoveTempImages',
                             method: 'POST',
                             data: { productId: newProductId, files: tempFiles },
                             traditional: true // array param support
@@ -1641,7 +1641,7 @@ Requires jQuery and Bootstrap modal. */
             // expose helper to delete temp on server manually (optional)
             window.deleteTempImageOnServer = function (fileName) {
                 return $.ajax({
-                    url: '/Product/DeleteTempImage',
+                    url: '/Admin/Product/DeleteTempImage',
                     method: 'POST',
                     data: { fileName: fileName}
                 });

@@ -229,7 +229,7 @@
                 processing: true,
                 serverSide: false,
                 ajax: {
-                    url: '/Customer/GetAllCustomerFiltered',
+                    url: '/Admin/Customer/GetAllCustomerFiltered',
                     data: function (d) {
                         d.keyword = $("#txtSearch").val() ?? "";
                     },
@@ -338,7 +338,7 @@
 
             // CALL API: Lấy địa chỉ
             try {
-                const res = await $.get('/Customer/GetCustomerAddress', { customerId: customer.CustomerId });
+                const res = await $.get('/Admin/Customer/GetCustomerAddress', { customerId: customer.CustomerId });
                 if (res.addresses && res.addresses.length > 0) {
                     // Ưu tiên lấy mặc định, không thì lấy cái đầu tiên
                     const addr = res.addresses.find(x => x.IsDefault) || res.addresses[0];
@@ -374,7 +374,7 @@
 
             // 2. Fetch Address để fill vào form
             try {
-                const res = await $.get('/Customer/GetCustomerAddress', { customerId: customer.CustomerId });
+                const res = await $.get('/Admin/Customer/GetCustomerAddress', { customerId: customer.CustomerId });
                 if (res.addresses && res.addresses.length > 0) {
                     const addr = res.addresses.find(x => x.IsDefault) || res.addresses[0];
                     $('#AddressId').val(addr.AddressId); // Lưu ID để update
@@ -468,7 +468,7 @@
                 confirmButtonText: 'Xóa ngay'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    $.post('/Customer/DeleteCustomer', { id: id }, function (res) {
+                    $.post('/Admin/Customer/DeleteCustomer', { id: id }, function (res) {
                         if (res.success) {
                             tblCustomers.ajax.reload();
                             Swal.fire('Đã xóa', 'Khách hàng đã bị xóa.', 'success');

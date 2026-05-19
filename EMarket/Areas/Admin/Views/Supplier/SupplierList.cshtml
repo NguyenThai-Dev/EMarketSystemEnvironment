@@ -210,7 +210,7 @@
                 responsive: true,
                 searching: false,
                 ajax: {
-                    url: '/Supplier/GetfilteredSupplier',
+                    url: '/Admin/Supplier/GetfilteredSupplier',
                     data: function (d) {
                         d.supplierName = $("#txtSearch").val() ?? "";
                     },
@@ -421,7 +421,7 @@
                     cancelButtonColor: '#6c757d',
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        $.post('/Supplier/DeleteSupplier', { id: id }, function (res) {
+                        $.post('/Admin/Supplier/DeleteSupplier', { id: id }, function (res) {
                             if (res.success) {
                                 tblSuppliers.ajax.reload(null, false);
                                 Swal.fire({

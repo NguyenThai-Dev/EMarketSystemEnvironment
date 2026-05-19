@@ -1,4 +1,4 @@
-﻿using EMarket.Models;
+using EMarket.Models;
 using EMarket.Modules.SalesModule.DTOs;
 using EMarket.Modules.SalesModule.Services.Interfaces;
 using PayOS;
@@ -175,6 +175,20 @@ namespace EMarket.Modules.SalesModule.Services.Implementations
             {
                 Debug.WriteLine($"[PAYOS ERROR] Xác thực API thất bại: {ex.Message}");
                 throw;
+            }
+        }
+
+        public async Task<bool> CheckPayOSPaymentStatusAsync(long orderCode)
+        {
+            try
+            {
+                var paymentInfo = await _payOS.PaymentRequests.GetAsync(orderCode);
+                return paymentInfo.Status == PaymentLinkStatus.Paid;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[PAYOS ERROR] Lỗi khi kiểm tra trạng thái đơn {orderCode}: {ex.Message}");
+                return false;
             }
         }
     }

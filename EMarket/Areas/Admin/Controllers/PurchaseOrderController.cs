@@ -1,9 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using EMarket.Areas.Admin.Data;
 using EMarket.Filters;
 using EMarket.Modules.InventoryModule.DTOs;
 using EMarket.Modules.InventoryModule.Services.Interfaces;
@@ -82,17 +83,34 @@ namespace EMarket.Areas.Admin.Controllers
             return Json(new { success = true, data = data }, JsonRequestBehavior.AllowGet);
         }
 
-        // ===================== GET FILTERED LIST =====================
+        // ===================== GET FILTERED LIST (SERVER-SIDE DATATABLE) =====================
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> GetAllPurchaseOrder(string keyword, int? supplierId, int? branchId, int? warehouseId,
-            string status, string paymentStatus, DateTime? fromDate, DateTime? toDate)
+        public async Task<ActionResult> GetAllPurchaseOrder(PurchaseOrderDataTableRequestDTO request)
         {
-            var data = await _purchaseService.GetFilteredPurchasesAsync(
-                keyword, supplierId, branchId, warehouseId, status, paymentStatus, fromDate, toDate
-            );
+            if (request == null) return Json(new { error = "Request mapping failed" });
 
-            return Json(new { data });
+            try
+            {
+                var result = await _purchaseService.GetPurchaseOrdersDataTableAsync(
+                    request.start, request.length,
+                    request.Keyword, request.SupplierId, request.BranchId, request.WarehouseId,
+                    request.Status, request.PaymentStatus,
+                    request.FromDate, request.ToDate
+                );
+
+                return Json(new
+                {
+                    draw = request.draw,
+                    recordsTotal = result.total,
+                    recordsFiltered = result.filtered,
+                    data = result.data
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { error = ex.Message });
+            }
         }
 
         [HttpGet]

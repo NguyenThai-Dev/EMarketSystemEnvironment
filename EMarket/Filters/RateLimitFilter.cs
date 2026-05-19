@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Web;
 using System.Web.Mvc;
 using System.Runtime.Caching;
@@ -24,6 +24,12 @@ namespace EMarket.Filters
 
             string ip = request.UserHostAddress;
             string actionName = filterContext.ActionDescriptor.ActionName;
+
+            // Bỏ qua API lấy log hệ thống vì SignalR có thể trigger liên tục
+            if (actionName.Equals("GetLatestSystemEvents", StringComparison.OrdinalIgnoreCase))
+            {
+                return;
+            }
             string cacheKey = $"GlobalRate_{ip}_{actionName}";
 
             var requestCount = Cache[cacheKey] as int?;

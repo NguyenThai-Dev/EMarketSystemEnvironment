@@ -385,22 +385,12 @@
         }
 
         $(function () {
+            let logTableTimeout = null;
+
             $(document).on('onSignalR_UpdateLogTable', function (e, res) {
                 console.log("View đã bắt được sự kiện từ Layout:", res);
 
-                let targetTable = (res.type === "Audit") ? tblAudit : tblApp;
-
-                if (targetTable) {
-                    // Logic thêm dòng mới giữ nguyên
-                    var newRow = targetTable.row.add(res.data).draw(false).node();
-                    $(newRow).addClass('highlight-new-row');
-                    setTimeout(function () {
-                        $(newRow).removeClass('highlight-new-row');
-                    }, 3000);
-                    targetTable.page('first').draw(false);
-                }
-
-                // Cập nhật Card số liệu
+                // Cập nhật Card số liệu ngay lập tức để user thấy có động tĩnh
                 updateStatCards(res.type);
 
                 if (res.type === "Audit") {
@@ -409,14 +399,20 @@
                     $(totalId).text(currentTotal + 1);
                 }
 
-                // Toastr báo riêng cho trang này
-                let toastCls = (res.type === "AppLog" && (res.data.LogLevel === "ERROR" || res.data.LogLevel === "FATAL"))
-                    ? 'error' : 'success';
+                // Toastr báo notification
+                let toastCls = (res.type === "AppLog") ? 'error' : 'success';
+                toastr[toastCls](`Hệ thống vừa ghi nhận 1 ${res.type} mới!`);
 
-                // Lấy tên bảng hoặc Logger name an toàn hơn
-                let loggerName = res.data.TableName || (res.data.Logger ? res.data.Logger.split('.').pop() : 'System');
-
-                toastr[toastCls](`Mới: ${res.type} - ${loggerName}`);
+                // Thay vì add row (bị lỗi do res.data chỉ là ID) hoặc gọi AJAX liên tục, ta dùng Debounce 3s
+                if (logTableTimeout) {
+                    clearTimeout(logTableTimeout);
+                }
+                
+                logTableTimeout = setTimeout(function() {
+                    // Reload DataTables mà không làm mất trang hiện tại (false)
+                    if (tblAudit) tblAudit.ajax.reload(null, false);
+                    if (tblApp) tblApp.ajax.reload(null, false);
+                }, 3000);
             });
 
             function updateStatCards(type) {

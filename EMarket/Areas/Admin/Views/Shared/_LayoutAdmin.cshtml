@@ -504,6 +504,17 @@
             });
         });
 
+        // --- DEBOUNCE LOGIC FOR SIGNALR FETCH ---
+        let logFetchTimeout = null;
+        function debounceLoadSystemEvents() {
+            if (logFetchTimeout) {
+                clearTimeout(logFetchTimeout);
+            }
+            logFetchTimeout = setTimeout(function() {
+                loadSystemEvents();
+            }, 3000); // Chờ 3 giây, nếu không có log mới thì mới fetch 1 lần
+        }
+
     $(function () {
         loadSystemEvents();
 
@@ -513,13 +524,14 @@
             logHub.client.onNewLogReceived = function (res) {
                 console.log("Layout nhận tín hiệu onNewLogReceived:", res.type);
 
-                loadSystemEvents();
+                // Thay vì loadSystemEvents() gọi ngay, dùng debounce
+                debounceLoadSystemEvents();
 
                 $(document).trigger('onSignalR_UpdateLogTable', [res]);
 
                 const isAtLogPage = window.location.pathname.toLowerCase().includes("systemlog");
                 if (!isAtLogPage && typeof toastr !== 'undefined') {
-                    if (res.type === "AppLog" && (res.data.LogLevel === "ERROR" || res.data.LogLevel === "FATAL")) {
+                    if (res.type === "AppLog" && (res.data && (res.data.LogLevel === "ERROR" || res.data.LogLevel === "FATAL"))) {
                         toastr.error("Hệ thống phát sinh lỗi mới!");
                     }
                 }

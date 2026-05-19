@@ -1,4 +1,4 @@
-﻿@using EMarket.Modules.UserModule.Services.Interfaces
+@using EMarket.Modules.UserModule.Services.Interfaces
 @using EMarket.Modules.UserModule.DTOs
 @{
     ViewBag.Title = "Hồ sơ cá nhân";
@@ -204,7 +204,7 @@
 
                 try {
                     const res = await $.ajax({
-                        url: '/User/UpdateMyProfile',
+                        url: '/Admin/User/UpdateMyProfile',
                         type: 'POST',
                         data: formData,
                         processData: false,
@@ -239,7 +239,7 @@
                 $(this).prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span> Đang gửi...');
 
                 try {
-                    const res = await $.post('/Login/RequestOtp', { email: currentEmail });
+                    const res = await $.post('/Admin/Login/RequestOtp', { email: currentEmail });
                     if (res.success) {
                         Swal.fire({ icon: 'success', title: 'Đã gửi!', text: 'Vui lòng kiểm tra mã OTP.', timer: 2000 });
                         $('#step1').hide();
@@ -266,7 +266,7 @@
 
                 Swal.showLoading();
                 try {
-                    const res = await $.post('/User/VerifyAndChangeEmail', {
+                    const res = await $.post('/Admin/User/VerifyAndChangeEmail', {
                         otp: otp,
                         newEmail: newEmail
                     });

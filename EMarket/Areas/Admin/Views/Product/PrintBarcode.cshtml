@@ -1,4 +1,4 @@
-﻿@{
+@{
     ViewBag.Title = "Print Barcode";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
@@ -92,7 +92,7 @@
             $("#txtProductSearch").autocomplete({
                 minLength: 2,
                 source: function (request, response) {
-                    $.get('/Product/SearchProductByName', { keyword: request.term }, res => {
+                    $.get('/Admin/Product/SearchProductByName', { keyword: request.term }, res => {
                         response(res.data.map(p => ({
                             label: p.Name,
                             value: p.Name,

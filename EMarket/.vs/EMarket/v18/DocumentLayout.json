@@ -3,75 +3,123 @@
   "WorkspaceRootPath": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|d:\\bai_tap_cac_mon\\nghien_cuu_khoa_hoc\\emarket\\areas\\admin\\views\\product\\productlist.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:areas\\admin\\views\\product\\productlist.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\areas\\admin\\views\\order\\orderlist.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:areas\\admin\\views\\order\\orderlist.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\areas\\admin\\controllers\\productcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:areas\\admin\\controllers\\productcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\areas\\admin\\views\\order\\posemarket.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:areas\\admin\\views\\order\\posemarket.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\modules\\productmodule\\services\\interfaces\\iproductservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:modules\\productmodule\\services\\interfaces\\iproductservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|d:\\bai_tap_cac_mon\\nghien_cuu_khoa_hoc\\emarket\\areas\\admin\\views\\purchaseorder\\purchaseorderlist.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:areas\\admin\\views\\purchaseorder\\purchaseorderlist.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\modules\\productmodule\\services\\implementations\\productservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:modules\\productmodule\\services\\implementations\\productservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|d:\\bai_tap_cac_mon\\nghien_cuu_khoa_hoc\\emarket\\modules\\inventorymodule\\services\\implementations\\supplierdebtandpaymentservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:modules\\inventorymodule\\services\\implementations\\supplierdebtandpaymentservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\forecast\\services\\implementations\\aiservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:forecast\\services\\implementations\\aiservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|d:\\bai_tap_cac_mon\\nghien_cuu_khoa_hoc\\emarket\\areas\\admin\\views\\supplier\\supplierdebtandpayment.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:areas\\admin\\views\\supplier\\supplierdebtandpayment.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\duong\\AppData\\Roaming\\Microsoft\\UserSecrets\\91f90293-9db4-4560-b25c-fd47f4668ea3\\secrets.xml||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|d:\\bai_tap_cac_mon\\nghien_cuu_khoa_hoc\\emarket\\areas\\admin\\controllers\\purchaseordercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:areas\\admin\\controllers\\purchaseordercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\web.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
-      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:web.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|d:\\bai_tap_cac_mon\\nghien_cuu_khoa_hoc\\emarket\\modules\\inventorymodule\\services\\implementations\\purchaseservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:modules\\inventorymodule\\services\\implementations\\purchaseservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\modules\\dashboardmodule\\services\\implementations\\dashboardservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:modules\\dashboardmodule\\services\\implementations\\dashboardservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|d:\\bai_tap_cac_mon\\nghien_cuu_khoa_hoc\\emarket\\modules\\inventorymodule\\services\\interfaces\\ipurchaseservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:modules\\inventorymodule\\services\\interfaces\\ipurchaseservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\areas\\admin\\views\\promotion\\promotionmanagement.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:areas\\admin\\views\\promotion\\promotionmanagement.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|d:\\bai_tap_cac_mon\\nghien_cuu_khoa_hoc\\emarket\\areas\\admin\\views\\quotation\\quotationmanagement.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:areas\\admin\\views\\quotation\\quotationmanagement.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\modules\\usermodule\\services\\implementations\\loginservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:modules\\usermodule\\services\\implementations\\loginservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\modules\\usermodule\\services\\interfaces\\iloginservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:modules\\usermodule\\services\\interfaces\\iloginservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\areas\\admin\\views\\user\\profile.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:areas\\admin\\views\\user\\profile.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\modules\\usermodule\\services\\interfaces\\iuserservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:modules\\usermodule\\services\\interfaces\\iuserservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\modules\\usermodule\\services\\implementations\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:modules\\usermodule\\services\\implementations\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\areas\\admin\\views\\aianalysis\\_aichatbox.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:areas\\admin\\views\\aianalysis\\_aichatbox.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\areas\\admin\\controllers\\aianalysiscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:areas\\admin\\controllers\\aianalysiscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\events\\implementations\\telegramservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:events\\implementations\\telegramservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\areas\\admin\\views\\purchaseorder\\purchaseorderlist.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:areas\\admin\\views\\purchaseorder\\purchaseorderlist.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\modules\\quotationmodule\\services\\implementations\\quotationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:modules\\quotationmodule\\services\\implementations\\quotationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\filters\\requireloginfilter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:filters\\requireloginfilter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\areas\\admin\\controllers\\customercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:areas\\admin\\controllers\\customercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\filters\\emarketauthorizeattribute.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:filters\\emarketauthorizeattribute.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\modules\\salesmodule\\services\\implementations\\paymentservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:modules\\salesmodule\\services\\implementations\\paymentservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\areas\\admin\\views\\logs\\systemlog.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:areas\\admin\\views\\logs\\systemlog.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\areas\\admin\\controllers\\ordercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:areas\\admin\\controllers\\ordercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\areas\\admin\\views\\shared\\_layoutadmin.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:areas\\admin\\views\\shared\\_layoutadmin.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\assets\\js\\pos_paymenthub.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:assets\\js\\pos_paymenthub.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\web.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:web.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\duong\\AppData\\Roaming\\Microsoft\\UserSecrets\\91f90293-9db4-4560-b25c-fd47f4668ea3\\secrets.xml||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\apicontrollers\\admin\\salesadminapicontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:apicontrollers\\admin\\salesadminapicontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\modules\\salesmodule\\services\\interfaces\\ipaymentservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:modules\\salesmodule\\services\\interfaces\\ipaymentservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\hubs\\orderhub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:hubs\\orderhub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\modules\\salesmodule\\services\\interfaces\\iorderservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:modules\\salesmodule\\services\\interfaces\\iorderservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\global.asax.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:global.asax.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\areas\\admin\\views\\product\\productlist.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:areas\\admin\\views\\product\\productlist.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\areas\\admin\\views\\product\\productcategorylist.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{532F243F-8146-436C-99FB-0C6B3DB55FC7}|EMarket.csproj|solutionrelative:areas\\admin\\views\\product\\productcategorylist.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     }
   ],
   "DocumentGroupContainers": [
@@ -80,8 +128,8 @@
       "VerticalTabListWidth": 256,
       "DocumentGroups": [
         {
-          "DockedWidth": 298,
-          "SelectedChildIndex": 3,
+          "DockedWidth": 204,
+          "SelectedChildIndex": 24,
           "Children": [
             {
               "$type": "Bookmark",
@@ -93,224 +141,376 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "ProductController.cs",
-              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Controllers\\ProductController.cs",
-              "RelativeDocumentMoniker": "Areas\\Admin\\Controllers\\ProductController.cs",
-              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Controllers\\ProductController.cs",
-              "RelativeToolTip": "Areas\\Admin\\Controllers\\ProductController.cs",
-              "ViewState": "AgIAAEEAAAAAAAAAAAAowEkAAAA1AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-11T07:31:42.54Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "ProductList.cshtml",
-              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\Product\\ProductList.cshtml",
-              "RelativeDocumentMoniker": "Areas\\Admin\\Views\\Product\\ProductList.cshtml",
-              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\Product\\ProductList.cshtml",
-              "RelativeToolTip": "Areas\\Admin\\Views\\Product\\ProductList.cshtml",
-              "ViewState": "AgIAANUFAAAAAAAAAAAUwNwFAAAbAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-05-11T07:31:42.69Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "Web.config",
-              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Web.config",
-              "RelativeDocumentMoniker": "Web.config",
-              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Web.config",
-              "RelativeToolTip": "Web.config",
-              "ViewState": "AgIAAL0AAAAAAAAAAAAAANsAAAAlAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000601|",
-              "WhenOpened": "2026-05-11T07:31:42.806Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "secrets.xml",
-              "DocumentMoniker": "C:\\Users\\duong\\AppData\\Roaming\\Microsoft\\UserSecrets\\91f90293-9db4-4560-b25c-fd47f4668ea3\\secrets.xml",
-              "ToolTip": "C:\\Users\\duong\\AppData\\Roaming\\Microsoft\\UserSecrets\\91f90293-9db4-4560-b25c-fd47f4668ea3\\secrets.xml",
-              "ViewState": "AgIAAAsAAAAAAAAAAAAIwBIAAAAwAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003576|",
-              "WhenOpened": "2026-05-11T07:31:42.814Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "IProductService.cs",
-              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Modules\\ProductModule\\Services\\Interfaces\\IProductService.cs",
-              "RelativeDocumentMoniker": "Modules\\ProductModule\\Services\\Interfaces\\IProductService.cs",
-              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Modules\\ProductModule\\Services\\Interfaces\\IProductService.cs",
-              "RelativeToolTip": "Modules\\ProductModule\\Services\\Interfaces\\IProductService.cs",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAAABEAAAAlAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-11T07:31:42.817Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "PromotionManagement.cshtml",
-              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\Promotion\\PromotionManagement.cshtml",
-              "RelativeDocumentMoniker": "Areas\\Admin\\Views\\Promotion\\PromotionManagement.cshtml",
-              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\Promotion\\PromotionManagement.cshtml",
-              "RelativeToolTip": "Areas\\Admin\\Views\\Promotion\\PromotionManagement.cshtml",
-              "ViewState": "AgIAABgBAAAAAAAAAAAUwCcBAAAcAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-05-11T07:31:42.818Z"
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 4,
-              "Title": "AIService.cs",
-              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Forecast\\Services\\Implementations\\AIService.cs",
-              "RelativeDocumentMoniker": "Forecast\\Services\\Implementations\\AIService.cs",
-              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Forecast\\Services\\Implementations\\AIService.cs",
-              "RelativeToolTip": "Forecast\\Services\\Implementations\\AIService.cs",
-              "ViewState": "AgIAAAwAAAAAAAAAAAArwBgAAAAdAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-11T07:31:42.819Z"
+              "Title": "SupplierDebtAndPayment.cshtml",
+              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\Supplier\\SupplierDebtAndPayment.cshtml",
+              "RelativeDocumentMoniker": "Areas\\Admin\\Views\\Supplier\\SupplierDebtAndPayment.cshtml",
+              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\Supplier\\SupplierDebtAndPayment.cshtml",
+              "RelativeToolTip": "Areas\\Admin\\Views\\Supplier\\SupplierDebtAndPayment.cshtml",
+              "ViewState": "AgIAAPsBAAAAAAAAAAAewP8BAABHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-19T09:05:18.974Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "ProductService.cs",
-              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Modules\\ProductModule\\Services\\Implementations\\ProductService.cs",
-              "RelativeDocumentMoniker": "Modules\\ProductModule\\Services\\Implementations\\ProductService.cs",
-              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Modules\\ProductModule\\Services\\Implementations\\ProductService.cs",
-              "RelativeToolTip": "Modules\\ProductModule\\Services\\Implementations\\ProductService.cs",
-              "ViewState": "AgIAAFMBAAAAAAAAAAAmwFYBAAAyAAAAAAAAAA==",
+              "Title": "SupplierDebtAndPaymentService.cs",
+              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Modules\\InventoryModule\\Services\\Implementations\\SupplierDebtAndPaymentService.cs",
+              "RelativeDocumentMoniker": "Modules\\InventoryModule\\Services\\Implementations\\SupplierDebtAndPaymentService.cs",
+              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Modules\\InventoryModule\\Services\\Implementations\\SupplierDebtAndPaymentService.cs",
+              "RelativeToolTip": "Modules\\InventoryModule\\Services\\Implementations\\SupplierDebtAndPaymentService.cs",
+              "ViewState": "AgIAAF4AAAAAAAAAAAAAAF4AAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-11T07:31:42.819Z"
+              "WhenOpened": "2026-05-19T09:04:49.338Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "DashboardService.cs",
-              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Modules\\DashboardModule\\Services\\Implementations\\DashboardService.cs",
-              "RelativeDocumentMoniker": "Modules\\DashboardModule\\Services\\Implementations\\DashboardService.cs",
-              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Modules\\DashboardModule\\Services\\Implementations\\DashboardService.cs",
-              "RelativeToolTip": "Modules\\DashboardModule\\Services\\Implementations\\DashboardService.cs",
-              "ViewState": "AgIAAEIAAAAAAAAAAADgv0YAAAA/AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-11T07:31:42.82Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 12,
-              "Title": "RequireLoginFilter.cs",
-              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Filters\\RequireLoginFilter.cs",
-              "RelativeDocumentMoniker": "Filters\\RequireLoginFilter.cs",
-              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Filters\\RequireLoginFilter.cs",
-              "RelativeToolTip": "Filters\\RequireLoginFilter.cs",
-              "ViewState": "AgIAABUAAAAAAAAAAAAYwCMAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-11T07:31:42.821Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 13,
-              "Title": "EMarketAuthorizeAttribute.cs",
-              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Filters\\EMarketAuthorizeAttribute.cs",
-              "RelativeDocumentMoniker": "Filters\\EMarketAuthorizeAttribute.cs",
-              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Filters\\EMarketAuthorizeAttribute.cs",
-              "RelativeToolTip": "Filters\\EMarketAuthorizeAttribute.cs",
-              "ViewState": "AgIAAEEAAAAAAAAAAAAgwFcAAAANAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-11T07:31:42.821Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 14,
-              "Title": "SystemLog.cshtml",
-              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\Logs\\SystemLog.cshtml",
-              "RelativeDocumentMoniker": "Areas\\Admin\\Views\\Logs\\SystemLog.cshtml",
-              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\Logs\\SystemLog.cshtml",
-              "RelativeToolTip": "Areas\\Admin\\Views\\Logs\\SystemLog.cshtml",
-              "ViewState": "AgIAAFABAAAAAAAAAAAAAFsBAABLAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-05-11T07:31:42.822Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "AIAnalysisController.cs",
-              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Controllers\\AIAnalysisController.cs",
-              "RelativeDocumentMoniker": "Areas\\Admin\\Controllers\\AIAnalysisController.cs",
-              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Controllers\\AIAnalysisController.cs",
-              "RelativeToolTip": "Areas\\Admin\\Controllers\\AIAnalysisController.cs",
-              "ViewState": "AgIAAGcAAAAAAAAAAAAuwHYAAABBAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-11T07:31:42.823Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 15,
-              "Title": "_LayoutAdmin.cshtml",
-              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\Shared\\_LayoutAdmin.cshtml",
-              "RelativeDocumentMoniker": "Areas\\Admin\\Views\\Shared\\_LayoutAdmin.cshtml",
-              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\Shared\\_LayoutAdmin.cshtml",
-              "RelativeToolTip": "Areas\\Admin\\Views\\Shared\\_LayoutAdmin.cshtml",
-              "ViewState": "AgIAAJcAAAAAAAAAAIAwwLIAAABGAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-05-11T07:31:42.823Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 17,
-              "Title": "HomeController.cs",
-              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Controllers\\HomeController.cs",
-              "RelativeDocumentMoniker": "Controllers\\HomeController.cs",
-              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Controllers\\HomeController.cs",
-              "RelativeToolTip": "Controllers\\HomeController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAATAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-11T07:31:42.824Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 16,
-              "Title": "Index.cshtml",
-              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Views\\Home\\Index.cshtml",
-              "RelativeDocumentMoniker": "Views\\Home\\Index.cshtml",
-              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Views\\Home\\Index.cshtml",
-              "RelativeToolTip": "Views\\Home\\Index.cshtml",
-              "ViewState": "AgIAAG4BAAAAAAAAAADwv4gBAAAKAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-05-11T07:31:42.825Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "_AIChatBox.cshtml",
-              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\AIAnalysis\\_AIChatBox.cshtml",
-              "RelativeDocumentMoniker": "Areas\\Admin\\Views\\AIAnalysis\\_AIChatBox.cshtml",
-              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\AIAnalysis\\_AIChatBox.cshtml",
-              "RelativeToolTip": "Areas\\Admin\\Views\\AIAnalysis\\_AIChatBox.cshtml",
-              "ViewState": "AgIAAAAEAAAAAAAAAAAMwBgEAAAXAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-05-11T07:31:42.826Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 2,
               "Title": "PurchaseOrderList.cshtml",
               "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\PurchaseOrder\\PurchaseOrderList.cshtml",
               "RelativeDocumentMoniker": "Areas\\Admin\\Views\\PurchaseOrder\\PurchaseOrderList.cshtml",
               "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\PurchaseOrder\\PurchaseOrderList.cshtml",
               "RelativeToolTip": "Areas\\Admin\\Views\\PurchaseOrder\\PurchaseOrderList.cshtml",
-              "ViewState": "AgIAAM8BAAAAAAAAAAAgwKABAAAdAAAAAAAAAA==",
+              "ViewState": "AgIAABMAAAAAAAAAAAAYwB8AAACQAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-05-11T07:31:42.826Z"
+              "WhenOpened": "2026-05-19T08:48:01.129Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "PurchaseOrderController.cs",
+              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Controllers\\PurchaseOrderController.cs",
+              "RelativeDocumentMoniker": "Areas\\Admin\\Controllers\\PurchaseOrderController.cs",
+              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Controllers\\PurchaseOrderController.cs",
+              "RelativeToolTip": "Areas\\Admin\\Controllers\\PurchaseOrderController.cs",
+              "ViewState": "AgIAAEoAAAAAAAAAAAAjwF4AAABUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-19T08:47:46.429Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "IPurchaseService.cs",
+              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Modules\\InventoryModule\\Services\\Interfaces\\IPurchaseService.cs",
+              "RelativeDocumentMoniker": "Modules\\InventoryModule\\Services\\Interfaces\\IPurchaseService.cs",
+              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Modules\\InventoryModule\\Services\\Interfaces\\IPurchaseService.cs",
+              "RelativeToolTip": "Modules\\InventoryModule\\Services\\Interfaces\\IPurchaseService.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAA8AAAA+AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-19T08:41:00.767Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "PurchaseService.cs",
+              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Modules\\InventoryModule\\Services\\Implementations\\PurchaseService.cs",
+              "RelativeDocumentMoniker": "Modules\\InventoryModule\\Services\\Implementations\\PurchaseService.cs",
+              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Modules\\InventoryModule\\Services\\Implementations\\PurchaseService.cs",
+              "RelativeToolTip": "Modules\\InventoryModule\\Services\\Implementations\\PurchaseService.cs",
+              "ViewState": "AgIAADQCAAAAAAAAAAAQwEYCAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-19T08:40:48.174Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "ILoginService.cs",
+              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Modules\\UserModule\\Services\\Interfaces\\ILoginService.cs",
+              "RelativeDocumentMoniker": "Modules\\UserModule\\Services\\Interfaces\\ILoginService.cs",
+              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Modules\\UserModule\\Services\\Interfaces\\ILoginService.cs",
+              "RelativeToolTip": "Modules\\UserModule\\Services\\Interfaces\\ILoginService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAcAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-18T08:41:24.961Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "LoginService.cs",
+              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Modules\\UserModule\\Services\\Implementations\\LoginService.cs",
+              "RelativeDocumentMoniker": "Modules\\UserModule\\Services\\Implementations\\LoginService.cs",
+              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Modules\\UserModule\\Services\\Implementations\\LoginService.cs",
+              "RelativeToolTip": "Modules\\UserModule\\Services\\Implementations\\LoginService.cs",
+              "ViewState": "AgIAABQBAAAAAAAAAAAjwCQBAAA7AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-18T08:41:18.942Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "Profile.cshtml",
+              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\User\\Profile.cshtml",
+              "RelativeDocumentMoniker": "Areas\\Admin\\Views\\User\\Profile.cshtml",
+              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\User\\Profile.cshtml",
+              "RelativeToolTip": "Areas\\Admin\\Views\\User\\Profile.cshtml",
+              "ViewState": "AgIAANwAAAAAAAAAAADgv/EAAABFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-18T08:40:42.587Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "IUserService.cs",
+              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Modules\\UserModule\\Services\\Interfaces\\IUserService.cs",
+              "RelativeDocumentMoniker": "Modules\\UserModule\\Services\\Interfaces\\IUserService.cs",
+              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Modules\\UserModule\\Services\\Interfaces\\IUserService.cs",
+              "RelativeToolTip": "Modules\\UserModule\\Services\\Interfaces\\IUserService.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAACEAAAAnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-18T08:40:00.665Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "UserService.cs",
+              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Modules\\UserModule\\Services\\Implementations\\UserService.cs",
+              "RelativeDocumentMoniker": "Modules\\UserModule\\Services\\Implementations\\UserService.cs",
+              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Modules\\UserModule\\Services\\Implementations\\UserService.cs",
+              "RelativeToolTip": "Modules\\UserModule\\Services\\Implementations\\UserService.cs",
+              "ViewState": "AgIAACoDAAAAAAAAAAAAwCcDAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-18T08:32:14.073Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "CustomerController.cs",
+              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Controllers\\CustomerController.cs",
+              "RelativeDocumentMoniker": "Areas\\Admin\\Controllers\\CustomerController.cs",
+              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Controllers\\CustomerController.cs",
+              "RelativeToolTip": "Areas\\Admin\\Controllers\\CustomerController.cs",
+              "ViewState": "AgIAAB0AAAAAAAAAAAAMwCwAAAA/AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-17T06:41:26.569Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "QuotationManagement.cshtml",
+              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\Quotation\\QuotationManagement.cshtml",
+              "RelativeDocumentMoniker": "Areas\\Admin\\Views\\Quotation\\QuotationManagement.cshtml",
+              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\Quotation\\QuotationManagement.cshtml",
+              "RelativeToolTip": "Areas\\Admin\\Views\\Quotation\\QuotationManagement.cshtml",
+              "ViewState": "AgIAAEoEAAAAAAAAAAAUwFUEAAA4AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-17T06:30:39.652Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "QuotationService.cs",
+              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Modules\\QuotationModule\\Services\\Implementations\\QuotationService.cs",
+              "RelativeDocumentMoniker": "Modules\\QuotationModule\\Services\\Implementations\\QuotationService.cs",
+              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Modules\\QuotationModule\\Services\\Implementations\\QuotationService.cs",
+              "RelativeToolTip": "Modules\\QuotationModule\\Services\\Implementations\\QuotationService.cs",
+              "ViewState": "AgIAALkAAAAAAAAAAAAuwMQAAAA0AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-17T06:29:41.442Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "POS_PaymentHub.js",
+              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\assets\\js\\POS_PaymentHub.js",
+              "RelativeDocumentMoniker": "assets\\js\\POS_PaymentHub.js",
+              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\assets\\js\\POS_PaymentHub.js",
+              "RelativeToolTip": "assets\\js\\POS_PaymentHub.js",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2026-05-17T05:48:47.518Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 25,
+              "Title": "OrderHub.cs",
+              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Hubs\\OrderHub.cs",
+              "RelativeDocumentMoniker": "Hubs\\OrderHub.cs",
+              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Hubs\\OrderHub.cs",
+              "RelativeToolTip": "Hubs\\OrderHub.cs",
+              "ViewState": "AgIAAE0AAAAAAAAAAAAswGgAAAA5AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-17T04:33:42.653Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "PaymentService.cs",
+              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Modules\\SalesModule\\Services\\Implementations\\PaymentService.cs",
+              "RelativeDocumentMoniker": "Modules\\SalesModule\\Services\\Implementations\\PaymentService.cs",
+              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Modules\\SalesModule\\Services\\Implementations\\PaymentService.cs",
+              "RelativeToolTip": "Modules\\SalesModule\\Services\\Implementations\\PaymentService.cs",
+              "ViewState": "AgIAAH8AAAAAAAAAAAAAwJEAAAAEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-17T04:31:44.12Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "IPaymentService.cs",
+              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Modules\\SalesModule\\Services\\Interfaces\\IPaymentService.cs",
+              "RelativeDocumentMoniker": "Modules\\SalesModule\\Services\\Interfaces\\IPaymentService.cs",
+              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Modules\\SalesModule\\Services\\Interfaces\\IPaymentService.cs",
+              "RelativeToolTip": "Modules\\SalesModule\\Services\\Interfaces\\IPaymentService.cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAkwBEAAABHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-17T04:29:12.882Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 26,
+              "Title": "IOrderService.cs",
+              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Modules\\SalesModule\\Services\\Interfaces\\IOrderService.cs",
+              "RelativeDocumentMoniker": "Modules\\SalesModule\\Services\\Interfaces\\IOrderService.cs",
+              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Modules\\SalesModule\\Services\\Interfaces\\IOrderService.cs",
+              "RelativeToolTip": "Modules\\SalesModule\\Services\\Interfaces\\IOrderService.cs",
+              "ViewState": "AgIAABgAAAAAAAAAAAAwwCUAAAA5AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-17T04:29:06.417Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "OrderController.cs",
+              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Controllers\\OrderController.cs",
+              "RelativeDocumentMoniker": "Areas\\Admin\\Controllers\\OrderController.cs",
+              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Controllers\\OrderController.cs",
+              "RelativeToolTip": "Areas\\Admin\\Controllers\\OrderController.cs",
+              "ViewState": "AgIAAAMBAAAAAAAAAAAMwEwBAAA0AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-17T04:28:02.36Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "SalesAdminApiController.cs",
+              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\ApiControllers\\Admin\\SalesAdminApiController.cs",
+              "RelativeDocumentMoniker": "ApiControllers\\Admin\\SalesAdminApiController.cs",
+              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\ApiControllers\\Admin\\SalesAdminApiController.cs",
+              "RelativeToolTip": "ApiControllers\\Admin\\SalesAdminApiController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-17T04:27:36.341Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "POSEMarket.cshtml",
+              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\Order\\POSEMarket.cshtml",
+              "RelativeDocumentMoniker": "Areas\\Admin\\Views\\Order\\POSEMarket.cshtml",
+              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\Order\\POSEMarket.cshtml",
+              "RelativeToolTip": "Areas\\Admin\\Views\\Order\\POSEMarket.cshtml",
+              "ViewState": "AgIAADgNAAAAAAAAAAAewPoMAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-17T04:25:57.458Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "OrderList.cshtml",
+              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\Order\\OrderList.cshtml",
+              "RelativeDocumentMoniker": "Areas\\Admin\\Views\\Order\\OrderList.cshtml",
+              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\Order\\OrderList.cshtml",
+              "RelativeToolTip": "Areas\\Admin\\Views\\Order\\OrderList.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-17T04:25:56.756Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 27,
+              "Title": "Global.asax.cs",
+              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Global.asax.cs",
+              "RelativeDocumentMoniker": "Global.asax.cs",
+              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Global.asax.cs",
+              "RelativeToolTip": "Global.asax.cs",
+              "ViewState": "AgIAAGsAAAAAAAAAAAAUwHwAAAAkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-17T04:14:57.386Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "TelegramService.cs",
+              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Events\\Implementations\\TelegramService.cs",
+              "RelativeDocumentMoniker": "Events\\Implementations\\TelegramService.cs",
+              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Events\\Implementations\\TelegramService.cs",
+              "RelativeToolTip": "Events\\Implementations\\TelegramService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-17T04:08:57.132Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "Web.config",
+              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Web.config",
+              "RelativeDocumentMoniker": "Web.config",
+              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Web.config",
+              "RelativeToolTip": "Web.config",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAAhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000601|",
+              "WhenOpened": "2026-05-15T16:37:56.305Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "secrets.xml",
+              "DocumentMoniker": "C:\\Users\\duong\\AppData\\Roaming\\Microsoft\\UserSecrets\\91f90293-9db4-4560-b25c-fd47f4668ea3\\secrets.xml",
+              "ToolTip": "C:\\Users\\duong\\AppData\\Roaming\\Microsoft\\UserSecrets\\91f90293-9db4-4560-b25c-fd47f4668ea3\\secrets.xml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003576|",
+              "WhenOpened": "2026-05-15T16:36:54.862Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "_AIChatBox.cshtml",
+              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\AIAnalysis\\_AIChatBox.cshtml",
+              "RelativeDocumentMoniker": "Areas\\Admin\\Views\\AIAnalysis\\_AIChatBox.cshtml",
+              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\AIAnalysis\\_AIChatBox.cshtml",
+              "RelativeToolTip": "Areas\\Admin\\Views\\AIAnalysis\\_AIChatBox.cshtml",
+              "ViewState": "AgIAAP8CAAAAAAAAAAAawBEDAAAxAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-15T16:36:38.292Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 29,
+              "Title": "ProductCategoryList.cshtml",
+              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\Product\\ProductCategoryList.cshtml",
+              "RelativeDocumentMoniker": "Areas\\Admin\\Views\\Product\\ProductCategoryList.cshtml",
+              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\Product\\ProductCategoryList.cshtml",
+              "RelativeToolTip": "Areas\\Admin\\Views\\Product\\ProductCategoryList.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-15T16:22:56.621Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 28,
+              "Title": "ProductList.cshtml",
+              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\Product\\ProductList.cshtml",
+              "RelativeDocumentMoniker": "Areas\\Admin\\Views\\Product\\ProductList.cshtml",
+              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\EMarket\\Areas\\Admin\\Views\\Product\\ProductList.cshtml",
+              "RelativeToolTip": "Areas\\Admin\\Views\\Product\\ProductList.cshtml",
+              "ViewState": "AgIAAEoCAAAAAAAAAAAMwF4CAAAzAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-15T16:10:07.905Z"
             }
           ]
         },
         {
-          "DockedWidth": 268,
+          "DockedWidth": 362,
           "SelectedChildIndex": -1,
           "Children": [
             {

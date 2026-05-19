@@ -279,7 +279,7 @@
 
     .ai-message.ai-user {
         flex-direction: row-reverse;
-        justify-content: flex-end;
+        justify-content: flex-start;
     }
 
     .ai-avatar {
@@ -706,7 +706,7 @@
 
 <script>
     (function () {
-        const EXTERNAL_AI_URL = "https://localhost:5001/api/chat/ask";
+       const EXTERNAL_AI_URL = "@System.Web.Configuration.WebConfigurationManager.AppSettings["ChatServiceUrl"]";
         const INTERNAL_API_BASE = "/Admin/AIAnalysis";
         var chartInstance;
 
@@ -783,7 +783,7 @@
                     currentMode = isChecked ? 'ai' : 'system';
                     var label = $('#mode-label-text');
 
-                    if (isChecked) label.text("AI Prophet").css('color', 'var(--primary)');
+                    if (isChecked) label.text("AI").css('color', 'var(--primary)');
                     else label.text("System").css('color', 'var(--text-secondary)');
 
                     renderQuickActions();
@@ -1013,20 +1013,29 @@
                         headers: {
                             "Authorization": "Bearer " + localStorage.getItem('access_token')
                         },
-                        data: JSON.stringify({ prompt: txt, userName: window.CURRENTUSERNAME }),
+                        data: JSON.stringify({ prompt: txt, userName: window.CURRENTUSERNAME, userId: window.CURRENTUSERID }),
                         timeout: 10000,
                         success: function (res) {
                             removeLoading();
                             let rawContent = res.answer || res.response || res;
+
+                            if (rawContent && rawContent.trim() === 'ERR_OUT_OF_SCOPE') {
+                                appendMessage("Xin lỗi, tôi chỉ có thể hỗ trợ các nghiệp vụ liên quan đến hệ thống EMarket. Các câu hỏi ngoài lề sẽ không được phản hồi.", 'bot');
+                                return;
+                            }
+
                             let htmlContent = window.marked ? marked.parse(rawContent) : rawContent;
                             appendMessage(htmlContent, 'bot');
                         },
-                        error: function () {
+                        error: function (xhr, status, error) {
                             removeLoading();
-                            if (xhr.status === 429) {
-                                appendMessage("Mình sống chậm lại chút nhé.", 'bot');
+                            if (xhr && xhr.status === 429) {
+                                appendMessage("Hệ thống AI đang quá tải (Rate Limit), vui lòng thử lại sau.", 'bot');
+                            } else if (xhr && xhr.status === 0) {
+                                appendMessage("Không thể kết nối đến dịch vụ AI. Vui lòng kiểm tra xem server AI đã được khởi động chưa.", 'bot');
                             } else {
-                                appendMessage("Lỗi kết nối AI.", 'bot');
+                                let errorCode = xhr ? xhr.status : "Unknown";
+                                appendMessage("Hệ thống AI đang gặp sự cố kết nối. (Mã lỗi: " + errorCode + ")", 'bot');
                             }
                         }
                     });

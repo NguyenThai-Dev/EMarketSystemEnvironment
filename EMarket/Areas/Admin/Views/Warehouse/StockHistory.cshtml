@@ -276,7 +276,7 @@
         });
 
         function populateWarehouse() {
-            $.get('/Warehouse/GetAllWarehouses', function (res) {
+            $.get('/Admin/Warehouse/GetAllWarehouses', function (res) {
                 if (res.success) {
                     let html = '<option value="">-- Tất cả kho --</option>';
                     res.warehouses.forEach(w => {
@@ -331,7 +331,7 @@
                 searching: false,
                 order: [[6, 'desc']], // Sort theo cột Thời gian giảm dần
                 ajax: {
-                    url: '/Warehouse/GetStockMovements', // API của bạn
+                    url: '/Admin/Warehouse/GetStockMovements', // API của bạn
                     type: 'POST',
                     data: function (d) {
                         return {
@@ -509,7 +509,7 @@
         function initStockModalEvents() {
             // 1. Load Branch khi mở trang (hoặc khi mở modal lần đầu)
             // Giả sử API trả về: [{ BranchId: 1, Name: "Chi nhánh HCM" }, ...]
-            $.get('/Branch/GetAllBranch', function (res) {
+            $.get('/Admin/Branch/GetAllBranch', function (res) {
                 if (res.success) {
                     let html = '<option value="">-- Chọn chi nhánh --</option>';
                     res.data.forEach(b => {
@@ -531,7 +531,7 @@
                     return;
                 }
 
-                $.get('/Warehouse/GetFilteredWarehouse', { branchId: branchId }, function (res) {
+                $.get('/Admin/Warehouse/GetFilteredWarehouse', { branchId: branchId }, function (res) {
                     let html = '<option value="">-- Chọn kho --</option>';
                     if (res.success && res.data.length > 0) {
                         res.data.forEach(w => {
@@ -551,7 +551,7 @@
 
             $('#currentStock').val('Đang kiểm tra...');
 
-            $.get('/Warehouse/GetStockQuantity', { productId, warehouseId })
+            $.get('/Admin/Warehouse/GetStockQuantity', { productId, warehouseId })
                 .done(function (qty) {
                     $('#currentStock').val((qty || 0).toLocaleString('vi-VN'));
                 });

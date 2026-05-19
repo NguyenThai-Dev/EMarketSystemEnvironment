@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Diagnostics;
@@ -513,6 +513,91 @@ namespace EMarket.Modules.InventoryModule.Services.Implementations
             var list = await query.OrderByDescending(x => x.purchase_order_id).ToListAsync();
             return await MapPurchaseAsync(list);
         }
+
+        // ------------------------------------------------------------
+        // SERVER-SIDE DATATABLE (Pagination tại DB level)
+        // ------------------------------------------------------------
+        public async Task<(int total, int filtered, List<PurchaseOrderDTO> data)> GetPurchaseOrdersDataTableAsync(
+            int start, int length,
+            string keyword, int? supplierId, int? branchId, int? warehouseId,
+            string status, string paymentStatus,
+            DateTime? fromDate, DateTime? toDate)
+        {
+            // 1. TOTAL (toàn bộ, không filter)
+            int total = await _db.PurchaseOrders.AsNoTracking().CountAsync();
+
+            // 2. XÂY DỰNG FILTERED QUERY
+            var query = _db.PurchaseOrders.AsNoTracking().AsQueryable();
+
+            bool matchedExactPOId = false;
+
+            if (!string.IsNullOrWhiteSpace(keyword))
+            {
+                // Nếu keyword là số nguyên → tìm chính xác theo PO ID
+                if (int.TryParse(keyword.Trim(), out int poId))
+                {
+                    query = query.Where(x => x.purchase_order_id == poId);
+                    matchedExactPOId = true;
+                }
+                else
+                    query = query.Where(x => x.notes.Contains(keyword));
+            }
+
+            if (supplierId.HasValue && supplierId.Value > 0)
+                query = query.Where(x => x.supplier_id == supplierId.Value);
+
+            if (branchId.HasValue && branchId.Value > 0)
+            {
+                var warehouseOfBranch = await _db.Warehouses
+                    .Where(w => w.branch_id == branchId.Value)
+                    .Select(w => w.warehouse_id)
+                    .ToListAsync();
+                query = query.Where(x => warehouseOfBranch.Contains(x.warehouse_id));
+            }
+
+            if (warehouseId.HasValue && warehouseId.Value > 0)
+                query = query.Where(x => x.warehouse_id == warehouseId.Value);
+
+            if (!string.IsNullOrEmpty(status))
+                query = query.Where(x => x.status == status);
+
+            if (!string.IsNullOrEmpty(paymentStatus))
+                query = query.Where(x => x.payment_status == paymentStatus);
+
+            // Nếu search exact PO ID thì bỏ qua date filter
+            if (!matchedExactPOId)
+            {
+                if (fromDate.HasValue)
+                {
+                    query = query.Where(x =>
+                        DbFunctions.TruncateTime(x.order_date)
+                        >= DbFunctions.TruncateTime(fromDate));
+                }
+
+                if (toDate.HasValue)
+                {
+                    query = query.Where(x =>
+                        DbFunctions.TruncateTime(x.order_date)
+                        <= DbFunctions.TruncateTime(toDate));
+                }
+            }
+
+            // 3. FILTERED COUNT (đếm trên DB, không load dữ liệu)
+            int filtered = await query.CountAsync();
+
+            // 4. PAGINATE tại DB level
+            var page = await query
+                .OrderByDescending(x => x.purchase_order_id)
+                .Skip(start)
+                .Take(length > 0 ? length : 10)
+                .ToListAsync();
+
+            // 5. MAP sang DTO (chỉ cho trang hiện tại)
+            var data = await MapPurchaseAsync(page);
+
+            return (total, filtered, data);
+        }
+
 
         private async Task<List<PurchaseOrderDTO>> MapPurchaseAsync(List<PurchaseOrder> orders)
         {

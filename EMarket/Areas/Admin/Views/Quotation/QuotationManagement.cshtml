@@ -1,4 +1,4 @@
-﻿@{
+@{
     ViewBag.Title = "Quản lý Báo giá";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 
@@ -1091,37 +1091,54 @@
                     $('#newNote').val(d.Note);
                     $('#newExpiryDate').val(formatDateISO(d.ExpiryDate)); // Cần hàm helper format yyyy-MM-dd
 
-                    // Gán thông tin Khách hàng
-                    state.customer = {
-                        id: d.CustomerId,
-                        name: d.CustomerName,
-                        phone: d.CustomerPhone
-                        // Lưu ý: API GetDetail nên trả về thêm PointBalance của khách nếu muốn hiển thị điểm chuẩn
-                    };
-
-                    // Update UI Khách hàng
-                    $('#txtCustomerSearch').val(d.CustomerName);
-                    $('#customerSuggest').hide();
-                    $('#customerInfoBox').removeClass('d-none');
-                    $('#lblCustName').text(d.CustomerName);
-                    $('#lblCustPhone').text(d.CustomerPhone);
-                    $('#lblCustRank').text('---'); // API Detail chưa có rank, có thể để tạm
-                    $('#lblCustPoint').text('?');  // API Detail chưa có point
-
-                    // Gán thông tin Giảm giá & Điểm
-                    // Giả định: ManualDiscount trong DB chính là tiền quy đổi từ điểm (nếu có dùng điểm)
-                    // Nếu logic DB của bạn: manual_discount lưu cả tiền giảm tay + tiền điểm -> Cần tách ra nếu muốn hiển thị đúng.
-                    // Ở đây ta làm đơn giản: Nếu DiscountReason có chứa chữ "điểm", ta cố gắng parse số điểm ra.
+                    // Gán thông tin Khách hàng (Sử dụng ID để fetch full info nếu có)
+                    if (d.CustomerId) {
+                        $.get('/Admin/Customer/GetCustomerById', { id: d.CustomerId }, function (cusRes) {
+                            if (cusRes && cusRes.customers) {
+                                let c = cusRes.customers;
+                                // Build đối tượng customer khớp với cấu trúc selectCustomer cần
+                                let fullCus = {
+                                    id: c.CustomerId,
+                                    name: c.FullName || d.CustomerName,
+                                    phone: c.Phone || d.CustomerPhone,
+                                    email: c.Email,
+                                    type: c.CustomerType,
+                                    point: c.PointBalance,
+                                    avatar: c.UserImg,
+                                    createdAt: c.CreatedAt
+                                };
+                                selectCustomer(fullCus);
+                            } else {
+                                // Fallback nếu không fetch được
+                                state.customer = { id: d.CustomerId, name: d.CustomerName, phone: d.CustomerPhone };
+                                $('#txtCustomerSearch').val(d.CustomerName);
+                                $('#customerSuggest').hide();
+                                $('#customerInfoBox').removeClass('d-none');
+                                $('#lblCustName').text(d.CustomerName);
+                                $('#lblCustPhone').text(d.CustomerPhone);
+                                $('#lblCustRank').text('---');
+                                $('#lblCustPoint').text('0');  
+                            }
+                        });
+                    } else {
+                        state.customer = null;
+                        $('#txtCustomerSearch').val(d.CustomerName || '');
+                        $('#customerSuggest').hide();
+                        if(d.CustomerName) {
+                            $('#customerInfoBox').removeClass('d-none');
+                            $('#lblCustName').text(d.CustomerName);
+                            $('#lblCustPhone').text(d.CustomerPhone);
+                            $('#lblCustRank').text('Khách lẻ');
+                            $('#lblCustPoint').text('0');
+                        } else {
+                            $('#customerInfoBox').addClass('d-none');
+                        }
+                    }
 
                     state.pointsUsed = 0;
                     state.discount = 0; // Giảm giá tay
 
-                    // Logic phục hồi điểm (Basic)
-                    // Nếu bạn đã lưu cột PointsUsed trong DB thì lấy thẳng ra gán vào state.pointsUsed
-                    // Nếu chưa, tạm thời coi ManualDiscount là giảm giá tay hoàn toàn.
-
-                    // Gán giá trị giảm giá tay vào ô input
-                    // (Nếu ManualDiscount trong DB bao gồm cả điểm, bạn cần trừ tiền điểm ra trước khi gán vào ô này)
+                    
                     $('#txtManualDiscount').val(d.ManualDiscount);
 
                     // Gán danh sách sản phẩm
@@ -1137,7 +1154,7 @@
                     }
 
                     // 4. Mở Modal Create & Render lại
-                    renderQuoteGrid(); // Hàm này sẽ tự gọi calculateTotals()
+                    renderQuoteGrid();
 
                     // Đổi tiêu đề Modal cho hợp ngữ cảnh
                     $('#modalCreate .modal-title').html('<i class="fa fa-edit me-2"></i>Cập nhật Báo Giá #' + d.QuotationCode);

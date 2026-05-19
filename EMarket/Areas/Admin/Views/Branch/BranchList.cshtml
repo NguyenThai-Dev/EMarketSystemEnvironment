@@ -1,4 +1,4 @@
-﻿@{
+@{
     ViewBag.Title = "BranchList";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
@@ -229,7 +229,7 @@
                 serverSide: false,
                 searching: false,
                 ajax: {
-                    url: '/Branch/GetFilteredBranch',
+                    url: '/Admin/Branch/GetFilteredBranch',
                     type: 'GET',
                     data: d => {
                         d.branchName = $('#txtSearch').val() ?? '';
@@ -346,7 +346,7 @@
                     cancelButtonText: 'Hủy'
                 }).then(async (result) => {
                     if (result.isConfirmed) {
-                        const res = await $.post('/Branch/DeleteBranch', { id: id });
+                        const res = await $.post('/Admin/Branch/DeleteBranch', { id: id });
                         if (res.success) {
                             Swal.fire({ icon: 'success', title: 'Đã xóa', timer: 1500, showConfirmButton: false });
                             tblBranches.ajax.reload(null, false);

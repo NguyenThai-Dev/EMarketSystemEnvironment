@@ -336,6 +336,12 @@
             // Load Dropdown Supplier
             await populateDropdown("#ddlSupplier", '@Url.Action("GetSuppliersForDropdown", "PurchaseOrder")', "-- Nhà cung cấp --");
 
+            // Set default date range: 1 tháng qua → hôm nay
+            const today = new Date().toISOString().split('T')[0];
+            const lastMonth = new Date(new Date().setMonth(new Date().getMonth() - 1)).toISOString().split('T')[0];
+            $('#txtFromDate').val(lastMonth);
+            $('#txtToDate').val(today);
+
             // Load Current User (để set supplier nếu là NCC đăng nhập)
             try {
                 const userRes = await $.get('/Admin/Login/GetCurrentUser');
@@ -388,10 +394,9 @@
                         data: 'PurchaseOrderId',
                         render: d =>
                             `<a href="/Admin/PurchaseOrder/PurchaseOrderList/${d}"
-                            target="_blank"
-                            rel="noopener"
-                            class="fw-bold text-primary text-decoration-none">
-                            #${d}
+                            class="fw-bold text-primary text-decoration-none"
+                            title="Xem phiếu nhập PO-${d}">
+                            <i class="fas fa-external-link-alt me-1 small"></i>#${d}
                          </a>`
                     },
                     { data: 'SupplierName', className: 'fw-bold' },

@@ -1,34 +1,29 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Net;
-using System.Net.Mail;
 using System.Threading.Tasks;
 using System.Web;
-using System.Web.UI.WebControls;
+using EMarket.Events.Interfaces;
 using EMarket.Models;
-using EMarket.Modules.SystemConfigModule.Services.Interfaces;
 using EMarket.Modules.UserModule.DTOs;
 using EMarket.Modules.UserModule.Services.Interfaces;
+using SimpleInjector.Lifestyles;
 
 namespace EMarket.Modules.UserModule.Services.Implementations
 {
     public class LoginService : ILoginService
     {
         private readonly EMarket_DBEntities _db;
-        private readonly ISystemConfigService _systemConfigService;
-        private readonly string _fromEmail = System.Configuration.ConfigurationManager.AppSettings["FromEmail"];
-        private readonly string _appPassword = System.Configuration.ConfigurationManager.AppSettings["AppPassword"];
-        private readonly string _fromName = System.Configuration.ConfigurationManager.AppSettings["SmtpFromName"];
+        private readonly IEmailService _emailService;
         private readonly HttpContext _context;
 
 
-        public LoginService(EMarket_DBEntities db, ISystemConfigService systemConfigService)
+        public LoginService(EMarket_DBEntities db, IEmailService emailService)
         {
             _db = db;
+            _emailService = emailService;
             _context = HttpContext.Current;
-            _systemConfigService = systemConfigService;
         }
 
 
@@ -265,38 +260,6 @@ namespace EMarket.Modules.UserModule.Services.Implementations
             return emails;
         }
 
-        // 1. Đổi void thành Task
-        private async Task SendOtpEmail(string toEmail, string otp)
-        {
-            var dbEmail = await _systemConfigService.GetMailHost();
-            var dbPassword = await _systemConfigService.GetMailHostPass();
-            var dbDisplayName = await _systemConfigService.GetEmailDisplayNameAsync();
-
-            string finalEmail = !string.IsNullOrEmpty(dbEmail) ? dbEmail : _fromEmail;
-            string finalPassword = !string.IsNullOrEmpty(dbPassword) ? dbPassword : _appPassword;
-            string finalName = !string.IsNullOrEmpty(dbDisplayName) ? dbDisplayName : _fromName;
-
-            using (var message = new MailMessage())
-            {
-                message.From = new MailAddress(finalEmail, finalName);
-                message.To.Add(toEmail);
-                message.Subject = "OTP Reset Password";
-                message.Body = $"Mã OTP của bạn là: {otp}. Hết hạn sau 2 phút.";
-
-                using (var client = new SmtpClient("smtp.gmail.com", 587))
-                {
-                    client.EnableSsl = true;
-                    client.UseDefaultCredentials = false;
-                    client.Credentials = new NetworkCredential(finalEmail, finalPassword);
-                    client.DeliveryMethod = SmtpDeliveryMethod.Network;
-
-                    // 3. Sử dụng SendMailAsync thay vì Send (Đồng bộ)
-                    // Việc dùng Send (đồng bộ) trong một hàm async là cực kỳ tối kỵ vì nó gây block thread
-                    await client.SendMailAsync(message);
-                }
-            }
-        }
-
         private async Task SaveOtpAsync(string email, string otp)
         {
             var record = new ForgotPasswordOtp
@@ -319,11 +282,32 @@ namespace EMarket.Modules.UserModule.Services.Implementations
             // Tạo OTP ngẫu nhiên 6 số
             var otp = new Random().Next(100000, 999999).ToString();
 
-            // Gửi Email
-            await SendOtpEmail(email, otp);
-
-            // Lưu DB
+            // Lưu DB trước (nhanh) — không block bởi SMTP
             await SaveOtpAsync(email, otp);
+
+            // Gửi email qua SmtpEmailService (fire-and-forget)
+            // Tạo AsyncScope mới để tránh DbContext disposed sau khi request kết thúc
+            var body = $@"
+    <p>Xin chào,</p>
+    <p>Mã OTP của bạn là: <strong>{otp}</strong></p>
+    <p>Mã sẽ hết hạn sau <strong>2 phút</strong>. Vui lòng không chia sẻ mã này với bất kỳ ai.</p>
+";
+
+            _ = Task.Run(async () =>
+            {
+                using (AsyncScopedLifestyle.BeginScope(GlobalContainer.Container))
+                {
+                    try
+                    {
+                        var emailService = GlobalContainer.Container.GetInstance<IEmailService>();
+                        await emailService.SendAsync(email, "[EMarket] Mã OTP xác thực", body);
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"[LoginService] Gửi OTP email thất bại: {ex.Message}");
+                    }
+                }
+            });
         }
 
         public async Task ResetPasswordAsync(string email, string otp, string newPassword)

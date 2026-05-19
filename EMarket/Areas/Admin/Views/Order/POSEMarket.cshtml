@@ -3234,12 +3234,10 @@
                                 Description: "Chuyen khoan POS" 
                             };
 
-                            const response = await API.post('/api/admin/sales/payment/create-qr', requestData);
+                            const response = await API.post('/Admin/Order/CreatePayOSLink', requestData);
                             Util.hideLoading();
 
                             if (response && response.Success) {
-                                // response.QrCode là chuỗi text chuẩn VietQR do PayOS trả về
-                                // Mẹo: Dùng API gen ảnh QR từ chuỗi này để vẽ thẳng ra màn hình POS
                                 const qrImageUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(response.QrCode)}`;
 
                                 qrContainer.innerHTML = `
@@ -3260,7 +3258,7 @@
                                     // Gọi hàm ListenForPayment trong C#
                                     orderHub.server.listenForPayment(response.OrderCode.toString())
                                         .done(function () {
-                                            console.log(`[SignalR] Đã chui vào phòng chờ: PAYMENT_${response.OrderCode}`);
+                                            console.log(`[SignalR] Đã vào phòng chờ: PAYMENT_${response.OrderCode}`);
                                         })
                                         .fail(function (err) {
                                             console.error("[SignalR] Lỗi join phòng thanh toán:", err);
@@ -3286,14 +3284,19 @@
                     }
                 },
 
-                // Hàm giả lập (Gắn vào nút [DEV])
+                // Hàm xử lý khi webhook xác nhận thanh toán thành công
+                handlePaymentSuccess: () => {
+                    Util.hideLoading();
+                    Util.toast("Đã nhận tiền qua PayOS thành công!", "success");
+                    // Tự động submit đơn hàng
+                    Payment.submit();
+                },
+                
+                // Hàm giả lập (Gắn vào nút [DEV] nếu cần test thủ công)
                 simulateSuccess: () => {
                     Util.showLoading("Đang xác nhận giao dịch...");
                     setTimeout(() => {
-                        Util.hideLoading();
-                        Util.toast("Đã nhận tiền thành công!", "success");
-                        // Tự động submit đơn hàng
-                        Payment.submit();
+                        Payment.handlePaymentSuccess();
                     }, 1500); // Giả vờ đợi 1.5s
                 },
                 setQuickMoney: (amount) => {

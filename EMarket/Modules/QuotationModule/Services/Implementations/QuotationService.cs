@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -272,6 +272,12 @@ namespace EMarket.Modules.QuotationModule.Services.Implementations
                     await _db.SaveChangesAsync();
                     trans.Commit();
 
+                    // CHỈ gửi lại email báo giá mới nếu báo giá này đã từng được 'Sent'
+                    if (quotation.status == "Sent")
+                    {
+                        await SendQuotationEmailAsync(quotation);
+                    }
+
                     return true;
                 }
                 catch (Exception ex)
@@ -303,31 +309,7 @@ namespace EMarket.Modules.QuotationModule.Services.Implementations
             // 3. Logic gửi email khi SENT
             if (newStatus == "Sent")
             {
-                string customerEmail = null;
-
-                if (q.customer_id.HasValue && q.customer_id.Value > 0)
-                {
-                    // LẤY QUA CUSTOMER SERVICE
-                    customerEmail = await _customerService
-                        .GetCustomerEmailAsync(q.customer_id.Value);
-                }
-
-                if (!string.IsNullOrWhiteSpace(customerEmail))
-                {
-                    try
-                    {
-                        string subject = $"[EMarket] Báo giá đơn hàng #{q.quotation_code}";
-                        string htmlBody = await GenerateQuotationHtml(q);
-
-                        await _emailService.SendAsync(customerEmail, subject, htmlBody);
-                    }
-                    catch (Exception ex)
-                    {
-                        // Email là nghiệp vụ bắt buộc → fail toàn bộ
-                        throw new Exception(
-                            $"Không thể gửi email tới khách hàng ({customerEmail}): {ex.Message}", ex);
-                    }
-                }
+                await SendQuotationEmailAsync(q);
             }
 
             // 4. Update trạng thái
@@ -400,6 +382,31 @@ namespace EMarket.Modules.QuotationModule.Services.Implementations
         private string GenerateCode()
         {
             return "BG-" + DateTime.Now.ToString("yyyyMMdd-HHmmss");
+        }
+
+        private async Task SendQuotationEmailAsync(Quotation q)
+        {
+            if (!q.customer_id.HasValue || q.customer_id.Value <= 0)
+                return;
+
+            string customerEmail = await _customerService.GetCustomerEmailAsync(q.customer_id.Value);
+
+            if (!string.IsNullOrWhiteSpace(customerEmail))
+            {
+                try
+                {
+                    string subject = $"[EMarket] Báo giá đơn hàng #{q.quotation_code}";
+                    string htmlBody = await GenerateQuotationHtml(q);
+
+                    await _emailService.SendAsync(customerEmail, subject, htmlBody);
+                }
+                catch (Exception ex)
+                {
+                    // Nếu thực tế email không phải là bước bắt buộc tuyệt đối (tức là không muốn fail transaction),
+                    // có thể chỉ log lỗi ra. Hiện tại giữ nguyên ý định cũ là throw để báo lỗi.
+                    throw new Exception($"Không thể gửi email tới khách hàng ({customerEmail}): {ex.Message}", ex);
+                }
+            }
         }
 
         private async Task EnrichQuotationDTOAsync(QuotationDTO dto)

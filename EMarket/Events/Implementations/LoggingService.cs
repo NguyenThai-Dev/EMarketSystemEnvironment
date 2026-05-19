@@ -1,14 +1,15 @@
-﻿using System;
-using System.Configuration;
-using System.Data.SqlClient;
-using System.Threading.Tasks;
-using Dapper;
+﻿using Dapper;
 using EMarket.Events.Class;
 using EMarket.Events.Interfaces;
 using EMarket.Hubs;
 using EMarket.Models;
 using EMarket.Modules.UserModule.Services.Interfaces;
 using Microsoft.AspNet.SignalR;
+using System;
+using System.Configuration;
+using System.Data.SqlClient;
+using System.Threading.Tasks;
+using System.Transactions;
 
 namespace EMarket.Events.Implementations
 {
@@ -49,50 +50,71 @@ namespace EMarket.Events.Implementations
         public async Task SaveAuditLogAsync(AuditLogEvent ev)
         {
             const string sql = @"
-            INSERT INTO AuditLogs (user_id, ip_address, table_name, primary_key_id, action_type, old_values, new_values, created_at)
-            VALUES (@UserId, @IpAddress, @TableName, @PrimaryKeyId, @ActionType, @OldValues, @NewValues, @CreatedAt);
-            SELECT CAST(SCOPE_IDENTITY() as bigint);";
+        INSERT INTO AuditLogs 
+            (user_id, ip_address, table_name, primary_key_id, action_type, old_values, new_values, created_at)
+        OUTPUT INSERTED.audit_id
+        VALUES 
+            (@UserId, @IpAddress, @TableName, @PrimaryKeyId, @ActionType, @OldValues, @NewValues, @CreatedAt);";
 
-            using (var conn = new SqlConnection(_connectionString))
+            long auditId;
+
+            using (var scope = new TransactionScope(
+                TransactionScopeOption.Suppress,
+                TransactionScopeAsyncFlowOption.Enabled))
             {
-                var auditId = await conn.QuerySingleAsync<long>(sql, new
+                using (var conn = new SqlConnection(_connectionString))
                 {
-                    UserId = ev.UserId ?? (int?)null,
-                    IpAddress = ev.IpAddress,
-                    TableName = ev.TableName,
-                    PrimaryKeyId = ev.PrimaryKeyId,
-                    ActionType = ev.ActionType,
-                    OldValues = ev.OldValues,
-                    NewValues = ev.NewValues,
-                    CreatedAt = DateTime.Now
-                });
+                    auditId = await conn.QuerySingleAsync<long>(sql, new
+                    {
+                        UserId = ev.UserId,
+                        ev.IpAddress,
+                        ev.TableName,
+                        ev.PrimaryKeyId,
+                        ev.ActionType,
+                        ev.OldValues,
+                        ev.NewValues,
+                        CreatedAt = DateTime.Now
+                    });
+                }
 
-                // Gửi thông báo Real-time (SignalR/Socket) nếu cần
-                await NotifyNewLogAsync(auditId, "Audit");
+                scope.Complete();
             }
+
+            await NotifyNewLogAsync(auditId, "Audit");
         }
 
         public async Task SaveAppLogAsync(AppLogEvent ev)
         {
             const string sql = @"
-            INSERT INTO AppLogs (log_level, logger, message, exception, thread, created_at)
-            VALUES (@LogLevel, @Logger, @Message, @Exception, @Thread, @CreatedAt);
-            SELECT CAST(SCOPE_IDENTITY() as bigint);";
+        INSERT INTO AppLogs 
+            (log_level, logger, message, exception, thread, created_at)
+        OUTPUT INSERTED.log_id
+        VALUES 
+            (@LogLevel, @Logger, @Message, @Exception, @Thread, @CreatedAt);";
 
-            using (var conn = new SqlConnection(_connectionString))
+            long logId;
+
+            using (var scope = new TransactionScope(
+                TransactionScopeOption.Suppress,
+                TransactionScopeAsyncFlowOption.Enabled))
             {
-                var logId = await conn.QuerySingleAsync<long>(sql, new
-                {
-                    LogLevel = ev.LogLevel,
-                    Logger = ev.Logger,
-                    Message = ev.Message,
-                    Exception = ev.Exception,
-                    Thread = System.Threading.Thread.CurrentThread.ManagedThreadId.ToString(),
-                    CreatedAt = DateTime.Now
-                });
 
-                await NotifyNewLogAsync(logId, "AppLog");
+                using (var conn = new SqlConnection(_connectionString))
+                {
+                    logId = await conn.QuerySingleAsync<long>(sql, new
+                    {
+                        ev.LogLevel,
+                        ev.Logger,
+                        ev.Message,
+                        ev.Exception,
+                        Thread = System.Threading.Thread.CurrentThread.ManagedThreadId.ToString(),
+                        CreatedAt = DateTime.Now
+                    });
+                }
+
+                scope.Complete();
             }
+            await NotifyNewLogAsync(logId, "AppLog");
         }
 
         public async Task NotifyNewLogAsync(object payload, string logType)

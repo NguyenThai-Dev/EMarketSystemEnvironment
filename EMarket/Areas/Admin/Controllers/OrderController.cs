@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
@@ -10,6 +10,9 @@ using EMarket.Modules.SalesModule.Services.Interfaces;
 using EMarket.Modules.SystemConfigModule.Services.Interfaces;
 using EMarket.Modules.UserModule.Services.Interfaces;
 using Newtonsoft.Json;
+using PayOS;
+using PayOS.Models.V2.PaymentRequests;
+using PayOS.Models.Webhooks;
 
 namespace EMarket.Areas.Admin.Controllers
 {
@@ -18,12 +21,14 @@ namespace EMarket.Areas.Admin.Controllers
         private readonly IOrderService _service;
         private readonly IUserContext _userContext;
         private readonly ISystemConfigService _systemConfigService;
+        private readonly IPaymentService _paymentService;
 
-        public OrderController(IOrderService service, IUserContext userContext, ISystemConfigService systemConfigService)
+        public OrderController(IOrderService service, IUserContext userContext, ISystemConfigService systemConfigService, IPaymentService paymentService)
         {
             _service = service;
             _userContext = userContext;
             _systemConfigService = systemConfigService;
+            _paymentService = paymentService;
         }
 
         [EMarketAuthorize(Module = "SalesModule")]
@@ -254,6 +259,123 @@ namespace EMarket.Areas.Admin.Controllers
             catch (Exception ex)
             {
                 return Json(new { success = false, message = "Lỗi Server: " + ex.Message });
+            }
+        }
+
+        [HttpPost]
+        [EMarketAuthorize(Module = "SalesModule")]
+        public async Task<JsonResult> CreatePayOSLink(CreateQrRequestDTO model) // Đưa model lên làm tham số
+        {
+            try
+            {
+                if (model == null || model.Amount <= 0)
+                {
+                    return Json(new { Success = false, Message = "Dữ liệu không hợp lệ!" });
+                }
+
+                var result = await _paymentService.CreatePayOSLinkAsync(model);
+                
+                // Nếu tạo link thành công, khởi chạy một Background Task ngầm để tự động kiểm tra trạng thái
+                // Điều này giúp loại bỏ sự phụ thuộc vào Webhook nếu đang dev trên Localhost
+                if (result != null && result.Success && result.OrderCode > 0)
+                {
+                    long orderCode = result.OrderCode;
+                    decimal amount = model.Amount;
+
+                    Task.Run(async () =>
+                    {
+                        for (int i = 0; i < 60; i++) // Liên tục kiểm tra trong vòng 3 phút (60 lần * 3s)
+                        {
+                            try
+                            {
+                                // Khởi tạo Client riêng vì DbContext/Service hiện tại sẽ bị dispose khi request kết thúc
+                                string clientId = System.Configuration.ConfigurationManager.AppSettings["PayOSClientId"];
+                                string apiKey = System.Configuration.ConfigurationManager.AppSettings["PayOSApiKey"];
+                                string checksumKey = System.Configuration.ConfigurationManager.AppSettings["ChecksumKey"];
+                                
+                                var payOSClient = new PayOSClient(clientId, apiKey, checksumKey);
+                                var paymentInfo = await payOSClient.PaymentRequests.GetAsync(orderCode);
+                                
+                                if (paymentInfo.Status == PaymentLinkStatus.Paid)
+                                {
+                                    // Thông báo thành công qua SignalR
+                                    var hubContext = Microsoft.AspNet.SignalR.GlobalHost.ConnectionManager.GetHubContext<EMarket.Hubs.OrderHub>();
+                                    hubContext.Clients.Group("PAYMENT_" + orderCode).orderChanged(new
+                                    {
+                                        status = "PAID",
+                                        orderCode = orderCode,
+                                        amount = amount
+                                    });
+                                    break; // Thoát vòng lặp khi đã thanh toán thành công
+                                }
+                            }
+                            catch
+                            {
+                                // Bỏ qua lỗi tạm thời (ví dụ: mất mạng lúc gọi API)
+                            }
+                            
+                            // Đợi 3 giây trước khi gọi lại
+                            await Task.Delay(3000);
+                        }
+                    });
+                }
+
+                return Json(result);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Success = false, Message = "Lỗi Server: " + ex.Message });
+            }
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<ActionResult> PayOSWebhook() 
+        {
+            try
+            {
+                // ASP.NET MVC 5 mặc định không bind được JSON nested phức tạp của SDK PayOS vào tham số hàm.
+                // Do đó BẮT BUỘC phải đọc thủ công từ InputStream.
+                string json;
+                Request.InputStream.Position = 0;
+                using (var reader = new StreamReader(Request.InputStream))
+                {
+                    json = await reader.ReadToEndAsync();
+                }
+
+                if (string.IsNullOrEmpty(json))
+                {
+                    return Json(new { success = false, message = "Empty request body" });
+                }
+
+                var webhookBody = JsonConvert.DeserializeObject<Webhook>(json);
+
+                if (webhookBody == null)
+                {
+                    return Json(new { success = false, message = "Webhook data is null after deserialize" });
+                }
+
+                // Thực hiện verify dữ liệu từ webhook
+                var verifiedData = await _paymentService.VerifyPayOSWebhookAsync(webhookBody);
+
+                // Notify via SignalR đến Client
+                var hubContext = Microsoft.AspNet.SignalR.GlobalHost.ConnectionManager.GetHubContext<EMarket.Hubs.OrderHub>();
+                hubContext.Clients.Group("PAYMENT_" + verifiedData.OrderCode).orderChanged(new
+                {
+                    status = "PAID",
+                    orderCode = verifiedData.OrderCode,
+                    amount = verifiedData.Amount
+                });
+
+                // PayOS yêu cầu phản hồi lại kết quả để họ biết đã gửi thành công
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                // Nên dùng một thư viện Log (như NLog, Serilog) thay vì chỉ Debug.WriteLine 
+                // để khi deploy lên Server vẫn xem được lỗi nếu có sự cố.
+                Debug.WriteLine($"[PAYOS WEBHOOK ERROR] {ex.Message}");
+                return Json(new { success = false, message = ex.Message });
             }
         }
     }

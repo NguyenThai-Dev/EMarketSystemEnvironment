@@ -524,12 +524,12 @@
         // --- HELPERS ---
         async function loadMasterData() {
             // Load Roles
-            const roles = await $.get('/Role/GetAllRole');
+            const roles = await $.get('/Admin/Role/GetAllRole');
             let roleOpt = '<option value="">-- Chọn vai trò --</option>';
             roles.data.forEach(r => roleOpt += `<option value="${r.RoleId}">${r.Name}</option>`);
             $('#RoleId').html(roleOpt);
 
-            const dropdowns = await $.get('/Product/LoadDropdowns');
+            const dropdowns = await $.get('/Admin/Product/LoadDropdowns');
 
             // Load Branches
             const branches = dropdowns.branches;

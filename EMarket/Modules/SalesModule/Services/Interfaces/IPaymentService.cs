@@ -1,4 +1,4 @@
-﻿using EMarket.Modules.SalesModule.DTOs;
+using EMarket.Modules.SalesModule.DTOs;
 using PayOS.Models.Webhooks; 
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -16,5 +16,6 @@ namespace EMarket.Modules.SalesModule.Services.Interfaces
         // 2. Nhóm Tích hợp Cổng thanh toán (Đã che giấu logic thư viện ngoài)
         Task<CreateQrResponseDTO> CreatePayOSLinkAsync(CreateQrRequestDTO request);
         Task<WebhookData> VerifyPayOSWebhookAsync(Webhook webhookBody);
+        Task<bool> CheckPayOSPaymentStatusAsync(long orderCode);
     }
 }

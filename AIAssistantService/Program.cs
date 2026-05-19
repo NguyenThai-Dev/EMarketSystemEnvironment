@@ -2,6 +2,7 @@ using System.Threading.RateLimiting;
 using AIAssistantService;
 using AIAssistantService.Plugins;
 using Microsoft.SemanticKernel;
+using Microsoft.Extensions.Http.Resilience;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +15,7 @@ builder.Services.AddCors(options =>
     });
 });
 
-// 2. Cấu hình Key Rotation (Xoay tua API) - Đăng ký Singleton là chính xác
+// 2. Cấu hình Key Rotation - Đăng ký Singleton
 builder.Services.AddSingleton<IApiKeyProvider, GroqApiKeyProvider>();
 
 // 3. Cấu hình HttpClient cho EMARKET
@@ -24,11 +25,13 @@ builder.Services.AddHttpContextAccessor();
 // Đăng ký TokenForwardingHandler
 builder.Services.AddTransient<TokenForwardingHandler>();
 
+var domainEMarket = builder.Configuration["DomainSettings:DomainEMarket"] ?? "";
+var domainGroq = builder.Configuration["DomainSettings:DomainGroq"] ?? "";
 // 3. Cấu hình HttpClient cho EMARKET
 builder.Services.AddHttpClient("EMarketClient", client =>
 {
-    client.BaseAddress = new Uri("https://localhost:44339/");
-    client.Timeout = TimeSpan.FromMinutes(10);
+    client.BaseAddress = new Uri(domainEMarket);
+    // client.Timeout được xử lý bởi Polly Resilience Pipeline
     client.DefaultRequestHeaders.Add("Accept-Charset", "utf-8");
 })
 .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
@@ -36,14 +39,38 @@ builder.Services.AddHttpClient("EMarketClient", client =>
     ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
 })
 // Ép EMarketClient phải đi qua trạm thu phí để lấy Token
-.AddHttpMessageHandler<TokenForwardingHandler>();
+.AddHttpMessageHandler<TokenForwardingHandler>()
+.AddStandardResilienceHandler(options =>
+{
+    options.TotalRequestTimeout.Timeout = TimeSpan.FromSeconds(30);
+    options.AttemptTimeout.Timeout = TimeSpan.FromSeconds(10);
+
+    options.CircuitBreaker.SamplingDuration = TimeSpan.FromSeconds(30);
+
+    options.CircuitBreaker.FailureRatio = 0.5;
+    options.CircuitBreaker.BreakDuration = TimeSpan.FromSeconds(15);
+    options.Retry.MaxRetryAttempts = 3;
+    options.Retry.Delay = TimeSpan.FromSeconds(2);
+});
 
 // 3.5 Cấu hình HttpClient cho GROQ (Chuẩn OpenAI tương thích)
 builder.Services.AddHttpClient("GroqClient", client =>
 {
     // Endpoint chuẩn của Groq cho các request tương thích OpenAI
-    client.BaseAddress = new Uri("https://api.groq.com/openai/v1/");
-    client.Timeout = TimeSpan.FromMinutes(5);
+    client.BaseAddress = new Uri(domainGroq);
+    // client.Timeout được xử lý bởi Polly Resilience Pipeline
+})
+.AddStandardResilienceHandler(options =>
+{
+    options.TotalRequestTimeout.Timeout = TimeSpan.FromSeconds(60);
+    options.AttemptTimeout.Timeout = TimeSpan.FromSeconds(20);
+
+    // QUAN TRỌNG: Phải ít nhất 40s (20s * 2). 
+    options.CircuitBreaker.SamplingDuration = TimeSpan.FromSeconds(60);
+
+    options.CircuitBreaker.FailureRatio = 0.5;
+    options.CircuitBreaker.BreakDuration = TimeSpan.FromSeconds(30);
+    options.Retry.MaxRetryAttempts = 2;
 });
 
 // 4. History Services
@@ -64,7 +91,7 @@ builder.Services.AddTransient<Kernel>(sp =>
         //modelId: "llama-3.3-70b-versatile",
         modelId: "meta-llama/llama-4-scout-17b-16e-instruct",
         apiKey: keyProvider.GetApiKey(), // Bốc key xoay tua ở đây
-        endpoint: new Uri("https://api.groq.com/openai/v1")
+        endpoint: new Uri(domainGroq)
     );
 #pragma warning restore SKEXP0001
 

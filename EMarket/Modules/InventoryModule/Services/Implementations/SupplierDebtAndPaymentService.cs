@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Diagnostics;
@@ -61,45 +61,46 @@ namespace EMarket.Modules.InventoryModule.Services.Implementations
             var query = from debt in _db.SupplierDebts.AsNoTracking()
                         join po in _db.PurchaseOrders.AsNoTracking() on debt.purchase_order_id equals po.purchase_order_id
                         where po.status == "Completed" // Chỉ lấy đơn đã hoàn tất
-                        select debt;
+                        select new { debt, po };
 
             // --- 2. Filter Logic cơ bản ---
             if (supplierId.HasValue && supplierId.Value > 0)
             {
-                query = query.Where(x => x.supplier_id == supplierId.Value);
+                query = query.Where(x => x.debt.supplier_id == supplierId.Value);
             }
 
             if (!string.IsNullOrWhiteSpace(status))
             {
-                query = query.Where(x => x.status == status);
+                query = query.Where(x => x.debt.status == status);
             }
 
-            if (fromDate.HasValue)
-            {
-                query = query.Where(x => x.updated_at >= fromDate.Value);
-            }
-
-            if (toDate.HasValue)
-            {
-                // Tối ưu: Lấy đến cuối ngày của toDate
-                var endOfDate = toDate.Value.Date.AddDays(1).AddTicks(-1);
-                query = query.Where(x => x.updated_at <= endOfDate);
-            }
-
+            bool isExactPOIdSearch = false;
             // --- 3. Xử lý Keyword (Search theo mã PO) ---
             if (!string.IsNullOrWhiteSpace(keyword))
             {
                 keyword = keyword.Trim();
                 if (int.TryParse(keyword, out int poId))
                 {
-                    query = query.Where(x => x.purchase_order_id == poId);
+                    query = query.Where(x => x.debt.purchase_order_id == poId);
+                    isExactPOIdSearch = true;
+                }
+            }
+
+            if (!isExactPOIdSearch)
+            {
+                if (fromDate.HasValue)
+                {
+                    var startDate = fromDate.Value.Date;
+                    query = query.Where(x => x.debt.due_date >= startDate);
                 }
             }
 
             // --- 4. Lấy dữ liệu về RAM ---
             var rawData = await query
-                .OrderByDescending(x => x.updated_at)
+                .OrderByDescending(x => x.po.order_date)
+                .Select(x => x.debt)
                 .ToListAsync();
+
 
             // --- 5. Resolve tên nhà cung cấp (Batch Fetch) ---
             var supplierIds = rawData.Select(x => x.supplier_id).Distinct().ToList();

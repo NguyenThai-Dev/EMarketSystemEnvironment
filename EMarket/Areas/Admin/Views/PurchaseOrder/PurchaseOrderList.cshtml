@@ -28,7 +28,8 @@
                             </a>
                         </div>
                         <div class="search-input">
-                            <a class="btn btn-searchset"><img src="~/assets/img/icons/search-white.svg" alt="img" /></a>
+                            <input type="text" id="txtKeyword" class="form-control" placeholder="Tìm PO-ID, ghi chú..." />
+                            @*<a class="btn btn-searchset" id="btnQuickSearch"><img src="~/assets/img/icons/search-white.svg" alt="img" /></a>*@
                         </div>
                     </div>
                     @Html.Partial("~/Areas/Admin/Views/Partial/_ExportButtons.cshtml", "tblOrders")
@@ -48,14 +49,6 @@
                             <div class="col-lg col-sm-6 col-12">
                                 <div class="form-group">
                                     <select id="ddlBranch" class="select form-control">
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-lg col-sm-6 col-12">
-                                <div class="form-group">
-                                    <select id="ddlWarehouse" class="select form-control">
-                                        <option value="">-- Kho --</option>
                                     </select>
                                 </div>
                             </div>
@@ -82,10 +75,23 @@
                                 </div>
                             </div>
 
-                            <div class="col-lg-1 col-sm-6 col-12">
+                            <div class="col-lg-4 col-sm-6 col-12">
                                 <div class="form-group">
-                                    <a class="btn btn-filters ms-auto">
+                                    <div class="input-group">
+                                        <input type="date" id="fromDate" class="form-control" title="Từ ngày" />
+                                        <span class="input-group-text">đến</span>
+                                        <input type="date" id="toDate" class="form-control" title="Đến ngày" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-1 col-sm-6 col-12">
+                                <div class="form-group d-flex">
+                                    <a class="btn btn-filters ms-auto me-2" id="btnSearch" title="Tìm kiếm">
                                         <img src="~/assets/img/icons/search-whites.svg" alt="img" />
+                                    </a>
+                                    <a class="btn btn-danger" id="btnReset" title="Làm mới bộ lọc" style="background: #ff9f43; border: none;">
+                                        <i class="fa fa-undo text-white"></i>
                                     </a>
                                 </div>
                             </div>
@@ -406,7 +412,7 @@
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     @*Script xử lý drop down*@
-    <script>
+<script>
         const focusPurchaseOrderId = @(
         ViewBag.FocusPurchaseOrderId != null
         ? ViewBag.FocusPurchaseOrderId.ToString()
@@ -487,6 +493,7 @@ function loadWarehouses(branchId) {
         if (userRes.success && userRes.data.SupplierId) {
             logined = true;
             window.CURRENTUSERNAME = userRes.data.FullName;
+            window.CURRENTUSERID = userRes.data.UserId;
             const supplierId = userRes.data.SupplierId;
             // Đặt giá trị mặc định
             $("#ddlSupplier").val(supplierId).trigger('change');
@@ -721,7 +728,6 @@ function loadWarehouses(branchId) {
 
             $.extend(true, $.fn.dataTable.defaults, {
                 dom: 't<"bottom_controls"lp>',
-
                 language: {
                     search: "",
                     searchPlaceholder: "Tìm kiếm...",
@@ -731,26 +737,55 @@ function loadWarehouses(branchId) {
                 },
             });
 
+
             let hasFocusedPO = false;
+
+            // Giá trị mặc định date range (7 ngày qua)
+            const today = new Date().toISOString().split('T')[0];
+            const lastWeek = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+
+            // Set default date values
+            $("#fromDate").val(lastWeek);
+            $("#toDate").val(today);
+
+            function resetFilters() {
+                $("#ddlSupplier, #ddlBranch, #ddlWarehouse, #ddlStatus, #ddlPayment").val('').trigger('change');
+                $("#fromDate").val(lastWeek);
+                $("#toDate").val(today);
+                $("#txtKeyword").val('');
+                if (tblOrders) tblOrders.ajax.reload();
+            }
 
             tblOrders = $('#tblOrders').DataTable({
                 processing: true,
-                serverSide: false,
+                serverSide: true,
                 responsive: true,
                 searching: false,
+                pageLength: 10,
+                dom: 't<"bottom_controls"lp>',
+                order: [[1, 'desc']],
 
                 ajax: {
-                    url: '/PurchaseOrder/GetAllPurchaseOrder',
+                    url: '/Admin/PurchaseOrder/GetAllPurchaseOrder',
                     type: 'POST',
                     data: function (d) {
-                        d.keyword = $("#txtKeyword").val() ?? "";
-                        d.supplierId = $("#ddlSupplier").val();
-                        d.warehouseId = $("#ddlWarehouse").val();
-                        d.branchId = $("#ddlBranch").val();
-                        d.status = $("#ddlStatus").val();
-                        d.paymentStatus = $("#ddlPayment").val();
+                        return {
+                            draw: d.draw,
+                            start: d.start,
+                            length: d.length,
+                            Keyword: $("#txtKeyword").val() || '',
+                            SupplierId: $("#ddlSupplier").val() || '',
+                            BranchId: $("#ddlBranch").val() || '',
+                            WarehouseId: $("#ddlWarehouse").val() || '',
+                            Status: $("#ddlStatus").val() || '',
+                            PaymentStatus: $("#ddlPayment").val() || '',
+                            FromDate: $("#fromDate").val() || lastWeek,
+                            ToDate: $("#toDate").val() || today
+                        };
                     },
-                    dataSrc: "data"
+                    dataSrc: function (json) {
+                        return json.data || [];
+                    }
                 },
 
                 columns: [
@@ -840,8 +875,8 @@ function loadWarehouses(branchId) {
                     }
                 ],
 
+                
                 drawCallback: function () {
-                    $('.dataTables_filter input').attr('id', 'txtKeyword').attr('placeholder', 'Tìm kiếm');
                     if (!focusPurchaseOrderId || hasFocusedPO) return;
 
                     const api = this.api();
@@ -858,43 +893,61 @@ function loadWarehouses(branchId) {
                         setTimeout(() => {
                             rowNode.scrollIntoView({
                                 behavior: 'smooth',
-                                block: 'center' // 'center' giúp nhìn rõ hơn là 'start'
+                                block: 'center'
                             });
                         }, 200);
 
                         setTimeout(() => {
                             const freshRow = api.row(rowNode);
 
-                            // Kiểm tra chắc chắn row này có tồn tại và hợp lệ
                             if (freshRow.length > 0) {
-                                // Gọi thẳng hàm toggle, không cần qua tryExpandPurchaseRow cho đỡ rối
                                 togglePurchaseDetail(freshRow, data);
                             }
-                        }, 800); // Giảm xuống 800ms cho nhanh hơn chút
+                        }, 800);
 
                         hasFocusedPO = true;
                     });
                 }
             });
 
+            $('#tblOrders_filter').remove();
+            $('input[aria-controls="tblOrders"][type="search"]').closest('.dataTables_filter').remove();
+            $('input[aria-controls="tblOrders"][type="search"]').remove();
+
+            // Focus vào PO cụ thể khi được navigate từ SupplierDebtAndPayment
             if (focusPurchaseOrderId) {
-                tblOrders.search(focusPurchaseOrderId).draw();
+                // Xóa date filter để đảm bảo PO cũ vẫn tìm được dù ngoài khoảng 7 ngày mặc định
+                $("#fromDate").val('');
+                $("#toDate").val('');
+                $("#txtKeyword").val(focusPurchaseOrderId);
+                tblOrders.ajax.reload();
             }
 
-            // Filter events
-            $("#ddlSupplier, #ddlBranch, #ddlStatus, #ddlPayment, #ddlWarehouse")
-                .on("keyup change", function () {
-                    tblOrders.ajax.reload();
-                });
+            // Filter events — tất cả dropdown khi thay đổi reload table
+            $("#ddlSupplier, #ddlBranch, #ddlStatus, #ddlPayment, #ddlWarehouse").on("change", function () {
+                tblOrders.ajax.reload();
+            });
 
-            let typingTimer;                // Biến giữ thời gian đợi
+            // Nút tìm kiếm nhanh và tìm kiếm trong filter panel
+            $("#btnSearch, #btnQuickSearch").on('click', function () {
+                tblOrders.ajax.reload();
+            });
 
+            // Reset filter
+            $("#btnReset").on('click', resetFilters);
+
+            // Debounce khi gõ vào ô keyword
+            let typingTimer;
             $(document).on('input', '#txtKeyword', function () {
                 clearTimeout(typingTimer);
-
                 typingTimer = setTimeout(function () {
                     tblOrders.ajax.reload();
-                }, 300);
+                }, 400);
+            });
+
+            // Date filter — reload khi thay đổi
+            $("#fromDate, #toDate").on('change', function () {
+                tblOrders.ajax.reload();
             });
 
             $('#tblOrders tbody').on('click', 'tr', function (e) {
@@ -937,7 +990,7 @@ function loadWarehouses(branchId) {
                     });
 
                     $.ajax({
-                        url: "/PurchaseOrder/Delete",
+                        url: "/Admin/PurchaseOrder/Delete",
                         type: "POST",
                         data: { id: id },
                         success: function (res) {
@@ -973,7 +1026,7 @@ function loadWarehouses(branchId) {
             });
 
         });
-    </script>
+</script>
 
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
     <script>
@@ -1104,7 +1157,7 @@ function loadWarehouses(branchId) {
                 const supplierId = $("#SupplierId").val() || null;
 
                 return $.ajax({
-                    url: "/Product/GetAllProduct",
+                    url: "/Admin/Product/GetAllProduct",
                     type: "POST",
                     data: {
                         keyWord: keyword,
@@ -1509,7 +1562,7 @@ function loadWarehouses(branchId) {
                 }
 
                 try {
-                    const data = await $.get('/PurchaseOrder/GetPurchaseOrder', { id });
+                    const data = await $.get('/Admin/PurchaseOrder/GetPurchaseOrder', { id });
 
                     if (!data) {
                         Swal.fire({
@@ -1563,7 +1616,7 @@ function loadWarehouses(branchId) {
                 }
 
                 try {
-                    const data = await $.get('/PurchaseOrder/GetPurchaseOrder', { id: id });
+                    const data = await $.get('/Admin/PurchaseOrder/GetPurchaseOrder', { id: id });
 
                     if (!data) {
                         Swal.fire({ icon: 'warning', title: 'Không tìm thấy phiếu nhập', text: 'Vui lòng kiểm tra lại mã phiếu.' });
@@ -1665,7 +1718,7 @@ function loadWarehouses(branchId) {
                 var model = collectFormData();
 
                 $.ajax({
-                    url: '/PurchaseOrder/SavePurchaseOrder',
+                    url: '/Admin/PurchaseOrder/SavePurchaseOrder',
                     type: 'POST',
                     data: model,
                     success: function (res) {

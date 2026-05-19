@@ -1,4 +1,4 @@
-﻿@{
+@{
     ViewBag.Title = "ProductCategoryList";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
@@ -112,7 +112,7 @@
                 responsive: true,
                 searching: false,
                 ajax: {
-                    url: '/Product/GetFilteredProductCategory',
+                    url: '/Admin/Product/GetFilteredProductCategory',
                     data: function (d) {
                         d.categoryName = $("#txtSearch").val() ?? "";
                     },
@@ -272,7 +272,7 @@
                 }).then(r => {
                     if (!r.isConfirmed) return;
 
-                    $.post('/Product/DeleteProductCategory', { id }, res => {
+                    $.post('/Admin/Product/DeleteProductCategory', { id }, res => {
                         if (res.success) {
                             $('#tblProductCategories').DataTable().ajax.reload(null, false);
 
