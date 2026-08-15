@@ -11,7 +11,5 @@ Hệ thống có thể dùng cho cửa hàng hoặc mô hình bán lẻ nhỏ, g
 
 ## Ghi chú
 
-Tôi đã thất bại với đề tài nghiên cứu khoa học loại D. Nếu bạn cần tham khảo, bạn có thể sử dụng mã nguồn này.
-
 Nếu cần thêm chi tiết hoặc muốn trao đổi thêm, vui lòng liên hệ qua email: `nguyenhaphuongthai.dev@gmail.com`.
 
