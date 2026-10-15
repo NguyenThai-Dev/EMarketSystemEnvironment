@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Floating AI Bubble — hiển thị trên mọi UI layer, draggable -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/floatingBubbleRoot"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <!-- Glow ring (visible when AI is thinking) -->
+    <View
+        android:id="@+id/viewGlowRing"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_gravity="center"
+        android:background="@drawable/bg_ai_glow_ring"
+        android:alpha="0"
+        android:visibility="visible" />
+
+    <!-- Pulse ring (subtle idle animation) -->
+    <View
+        android:id="@+id/viewPulseRing"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_gravity="center"
+        android:background="@drawable/bg_ai_pulse_ring"
+        android:alpha="0" />
+
+    <!-- Main Bubble FAB -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAiBubble"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_chat"
+        android:contentDescription="AI Assistant"
+        app:tint="@color/white"
+        app:backgroundTint="@color/primary"
+        app:fabSize="normal"
+        app:elevation="10dp"
+        app:hoveredFocusedTranslationZ="4dp"
+        app:pressedTranslationZ="6dp" />
+
+    <!-- Unread dot badge -->
+    <View
+        android:id="@+id/dotUnread"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:layout_gravity="top|end"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"
+        android:background="@drawable/bg_ai_unread_dot"
+        android:visibility="gone" />
+
+</FrameLayout>

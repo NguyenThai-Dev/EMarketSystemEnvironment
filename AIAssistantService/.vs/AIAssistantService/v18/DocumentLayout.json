@@ -3,32 +3,35 @@
   "WorkspaceRootPath": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|d:\\bai_tap_cac_mon\\nghien_cuu_khoa_hoc\\aiassistantservice\\aihistoryservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|solutionrelative:aihistoryservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|d:\\bai_tap_cac_mon\\nghien_cuu_khoa_hoc\\aiassistantservice\\plugins\\emarketapiplugin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|solutionrelative:plugins\\emarketapiplugin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|d:\\bai_tap_cac_mon\\nghien_cuu_khoa_hoc\\aiassistantservice\\controllers\\chatcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|solutionrelative:controllers\\chatcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\duong\\AppData\\Roaming\\Microsoft\\UserSecrets\\01371756-1228-45bf-9787-40391bfb86dd\\secrets.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|d:\\bai_tap_cac_mon\\nghien_cuu_khoa_hoc\\aiassistantservice\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|d:\\bai_tap_cac_mon\\nghien_cuu_khoa_hoc\\aiassistantservice\\groqapikeyprovider.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|solutionrelative:groqapikeyprovider.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|d:\\bai_tap_cac_mon\\nghien_cuu_khoa_hoc\\aiassistantservice\\ipwhitelistmiddleware.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|solutionrelative:ipwhitelistmiddleware.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|d:\\bai_tap_cac_mon\\nghien_cuu_khoa_hoc\\aiassistantservice\\tokenforwardinghandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|solutionrelative:tokenforwardinghandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|d:\\bai_tap_cac_mon\\nghien_cuu_khoa_hoc\\aiassistantservice\\ipwhitelistmiddleware.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|solutionrelative:ipwhitelistmiddleware.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|d:\\bai_tap_cac_mon\\nghien_cuu_khoa_hoc\\aiassistantservice\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|d:\\bai_tap_cac_mon\\nghien_cuu_khoa_hoc\\aiassistantservice\\plugins\\emarketapiplugin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|solutionrelative:plugins\\emarketapiplugin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|d:\\bai_tap_cac_mon\\nghien_cuu_khoa_hoc\\aiassistantservice\\aihistoryservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|solutionrelative:aihistoryservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|d:\\bai_tap_cac_mon\\nghien_cuu_khoa_hoc\\aiassistantservice\\controllers\\chatcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BE5FD452-507A-457E-8779-41B3727E5AEF}|AIAssistantService.csproj|solutionrelative:controllers\\chatcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -38,7 +41,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 298,
-          "SelectedChildIndex": 5,
+          "SelectedChildIndex": 8,
           "Children": [
             {
               "$type": "Bookmark",
@@ -50,6 +53,29 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "secrets.json",
+              "DocumentMoniker": "C:\\Users\\duong\\AppData\\Roaming\\Microsoft\\UserSecrets\\01371756-1228-45bf-9787-40391bfb86dd\\secrets.json",
+              "ToolTip": "C:\\Users\\duong\\AppData\\Roaming\\Microsoft\\UserSecrets\\01371756-1228-45bf-9787-40391bfb86dd\\secrets.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAACWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-10-10T05:06:01.179Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\appsettings.json",
+              "RelativeDocumentMoniker": "appsettings.json",
+              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\appsettings.json",
+              "RelativeToolTip": "appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-10-10T05:05:19.176Z"
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 4,
               "Title": "TokenForwardingHandler.cs",
               "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\TokenForwardingHandler.cs",
@@ -58,11 +84,12 @@
               "RelativeToolTip": "TokenForwardingHandler.cs",
               "ViewState": "AgIAAAMAAAAAAAAAAAAAABMAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-17T01:35:06.267Z"
+              "WhenOpened": "2026-05-17T01:35:06.267Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 3,
               "Title": "IpWhitelistMiddleware.cs",
               "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\IpWhitelistMiddleware.cs",
               "RelativeDocumentMoniker": "IpWhitelistMiddleware.cs",
@@ -70,36 +97,24 @@
               "RelativeToolTip": "IpWhitelistMiddleware.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAZAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-15T16:04:51.547Z"
+              "WhenOpened": "2026-05-15T16:04:51.547Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "GroqApiKeyProvider.cs",
-              "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\GroqApiKeyProvider.cs",
-              "RelativeDocumentMoniker": "GroqApiKeyProvider.cs",
-              "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\GroqApiKeyProvider.cs",
-              "RelativeToolTip": "GroqApiKeyProvider.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAfAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-15T16:04:46.949Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 6,
               "Title": "AiHistoryService.cs",
               "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\AiHistoryService.cs",
               "RelativeDocumentMoniker": "AiHistoryService.cs",
               "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\AiHistoryService.cs",
               "RelativeToolTip": "AiHistoryService.cs",
-              "ViewState": "AgIAAAUBAAAAAAAAAAAiwDUBAAAmAAAAAAAAAA==",
+              "ViewState": "AgIAANYAAAAAAAAAAAAUwDUBAAAmAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-15T11:47:44.756Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-15T11:47:44.756Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 7,
               "Title": "ChatController.cs",
               "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\Controllers\\ChatController.cs",
               "RelativeDocumentMoniker": "Controllers\\ChatController.cs",
@@ -111,15 +126,16 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 0,
               "Title": "EMarketApiPlugin.cs",
               "DocumentMoniker": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\Plugins\\EMarketApiPlugin.cs",
               "RelativeDocumentMoniker": "Plugins\\EMarketApiPlugin.cs",
               "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\Plugins\\EMarketApiPlugin.cs",
               "RelativeToolTip": "Plugins\\EMarketApiPlugin.cs",
-              "ViewState": "AgIAALwCAAAAAAAAAAAwwNUCAAAZAAAAAAAAAA==",
+              "ViewState": "AgIAAEQDAAAAAAAAAAAAANcCAAAZAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-11T07:37:24.106Z"
+              "WhenOpened": "2026-05-11T07:37:24.106Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -129,9 +145,10 @@
               "RelativeDocumentMoniker": "Program.cs",
               "ToolTip": "D:\\Bai_Tap_Cac_Mon\\Nghien_Cuu_Khoa_Hoc\\AIAssistantService\\Program.cs",
               "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAAFQAAAAAAAAAAAAAAGUAAAADAAAAAAAAAA==",
+              "ViewState": "AgIAACAAAAAAAAAAAAAQwDwAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-11T07:34:08.71Z"
+              "WhenOpened": "2026-05-11T07:34:08.71Z",
+              "EditorCaption": ""
             }
           ]
         },

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginVertical="2dp"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/tvReceiptItemName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:textColor="#111111"
+        android:textSize="12sp"
+        tools:text="Sữa tươi tiệt trùng Vinamilk 1L" />
+
+    <TextView
+        android:id="@+id/tvReceiptItemQty"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textColor="#111111"
+        android:textSize="12sp"
+        tools:text="2" />
+
+    <TextView
+        android:id="@+id/tvReceiptItemPrice"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.5"
+        android:gravity="end"
+        android:textColor="#111111"
+        android:textSize="12sp"
+        tools:text="76,000 ₫" />
+
+</LinearLayout>

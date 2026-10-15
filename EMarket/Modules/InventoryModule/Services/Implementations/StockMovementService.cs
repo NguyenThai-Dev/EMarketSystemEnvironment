@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 using EMarket.Models;
 using EMarket.Modules.InventoryModule.DTOs;
 using EMarket.Modules.InventoryModule.Services.Interfaces;
+using EMarket.Modules.ProductModule.DTOs;
 using EMarket.Modules.ProductModule.Services.Interfaces;
+using EMarket.Modules.UserModule.DTOs;
 using EMarket.Modules.UserModule.Services.Interfaces;
 
 namespace EMarket.Modules.InventoryModule.Services.Implementations
@@ -142,12 +144,17 @@ namespace EMarket.Modules.InventoryModule.Services.Implementations
                 .ToList();
 
             // --- Product ---
-            var productDict = (await _productService.GetProductsByIdsAsync(productIds))
-                .ToDictionary(k => k.ProductId, v => v);
+            var productList = await _productService.GetProductsByIdsAsync(productIds) ?? new List<ProductDTO>();
+            var productDict = productList
+                .Where(k => k.ProductId.HasValue)
+                .GroupBy(k => k.ProductId.Value)
+                .ToDictionary(g => g.Key, g => g.First());
 
             // --- User ---
-            var userDict = (await _userService.GetUsersByUserIdsAsync(userIds))
-                .ToDictionary(k => k.UserId, v => v.FullName);
+            var userList = await _userService.GetUsersByUserIdsAsync(userIds) ?? new List<CurrentUserDTO>();
+            var userDict = userList
+                .GroupBy(k => k.UserId)
+                .ToDictionary(g => g.Key, g => g.First().FullName);
 
             // --- Warehouse (same module → DB OK) ---
             var warehouseDict = await _db.Warehouses

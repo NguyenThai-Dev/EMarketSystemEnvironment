@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Focused -->
+    <item android:color="@color/primary" android:state_focused="true" />
+    <!-- Error (let Material handle) -->
+    <item android:color="@color/error" android:state_activated="true" />
+    <!-- Default -->
+    <item android:color="@color/md_outline_variant" />
+</selector>

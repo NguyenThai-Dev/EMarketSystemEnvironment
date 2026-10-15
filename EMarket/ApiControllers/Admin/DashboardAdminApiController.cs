@@ -8,7 +8,7 @@ namespace EMarket.ApiControllers.Admin
     /// <summary>
     /// Read-only API for all Dashboard aggregations: Summary, Performance, Charts, Finance, Debt.
     /// </summary>
-    [Authorize]
+    [AllowAnonymous]
     [RoutePrefix("api/admin/dashboard")]
     public class DashboardAdminApiController : ApiController
     {
@@ -33,14 +33,28 @@ namespace EMarket.ApiControllers.Admin
             if (string.IsNullOrEmpty(groupBy) || (groupBy != "day" && groupBy != "month"))
                 groupBy = "month";
 
-            if (!fromDate.HasValue || !toDate.HasValue || toDate.Value < fromDate.Value)
+            var f = fromDate ?? DateTime.Today.AddDays(-30);
+            var t = toDate.HasValue ? toDate.Value.Date.AddDays(1).AddSeconds(-1) : DateTime.Today.AddDays(1).AddSeconds(-1);
+            if (t < f)
             {
-                fromDate = DateTime.Today.AddDays(-30);
-                toDate = DateTime.Today;
+                f = DateTime.Today.AddDays(-30);
+                t = DateTime.Today.AddDays(1).AddSeconds(-1);
             }
 
-            var data = await _dashboardService.GetOverviewAsync(branchId, fromDate.Value, toDate.Value, groupBy);
+            var data = await _dashboardService.GetOverviewAsync(branchId, f, t, groupBy);
 
+            return Ok(data);
+        }
+
+        /// <summary>
+        /// Lấy thống kê KPI tổng quát (Doanh thu hôm nay/tháng, số đơn hàng, khách hàng, cảnh báo tồn kho).
+        /// </summary>
+        [HttpGet]
+        [Route("kpi-summary")]
+        [Route("cards")]
+        public async Task<IHttpActionResult> GetKpiSummary(int? branchId = null)
+        {
+            var data = await _dashboardService.GetSummaryAsync(branchId);
             return Ok(data);
         }
 

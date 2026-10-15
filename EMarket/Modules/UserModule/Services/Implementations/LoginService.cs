@@ -341,8 +341,41 @@ namespace EMarket.Modules.UserModule.Services.Implementations
 
         public async Task<LoginResponseDTO> LoginByEmailAsync(string email)
         {
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                return new LoginResponseDTO
+                {
+                    Status = Enums.LoginStatus.InvalidCredential
+                };
+            }
+
+            var cleanEmail = email.Trim().ToLower();
+
+            // 1. Tìm chính xác tuyệt đối theo Email
             var user = await _db.Users
-                .FirstOrDefaultAsync(x => x.email == email);
+                .FirstOrDefaultAsync(x => x.email.ToLower() == cleanEmail);
+
+            // 2. Hỗ trợ nếu DB lưu nhiều email/alias (phân cách bằng dấu phẩy hoặc chấm phẩy)
+            if (user == null)
+            {
+                user = await _db.Users
+                    .FirstOrDefaultAsync(x => x.email != null && x.email.ToLower().Contains(cleanEmail));
+            }
+
+            // 3. Cơ chế xử lý Domain Alias của Google (Cùng 1 tài khoản có 2 tên miền, ví dụ domain cũ và domain mới)
+            // Khớp theo phần tên người dùng (local-part trước dấu @) hoặc theo username
+            if (user == null && cleanEmail.Contains("@"))
+            {
+                var localPart = cleanEmail.Substring(0, cleanEmail.IndexOf('@')).Trim();
+                if (!string.IsNullOrEmpty(localPart))
+                {
+                    user = await _db.Users
+                        .FirstOrDefaultAsync(x =>
+                            (x.email != null && x.email.ToLower().StartsWith(localPart + "@")) ||
+                            (x.username != null && x.username.ToLower() == localPart));
+                }
+            }
+
             if (user == null)
             {
                 return new LoginResponseDTO

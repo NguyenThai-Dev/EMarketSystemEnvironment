@@ -6,10 +6,10 @@ using EMarket.Forecast.Services.Interfaces;
 namespace EMarket.ApiControllers.Admin
 {
     /// <summary>
-    /// Read-only API for AI Forecast & Analytics data.
+    /// Read-only API for AI Forecast &amp; Analytics data.
     /// Exposes all prediction, recommendation, anomaly, insight, and risk analysis results.
     /// </summary>
-    [Authorize]
+    [AllowAnonymous]
     [RoutePrefix("api/admin/ai-analysis")]
     public class AIAnalysisApiController : ApiController
     {
@@ -192,6 +192,44 @@ namespace EMarket.ApiControllers.Admin
             {
                 var success = await _aiService.RunAIPipelineAsync();
                 return Ok(new { success, message = "AI Prophet Pipeline triggered" });
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        public class RunAnalysisRequest
+        {
+            public string Mode { get; set; } = "system"; // "system" hoặc "ai"
+            public int BranchId { get; set; } = 1;
+        }
+
+        /// <summary>
+        /// Kích hoạt chạy phân tích (mode = "system" cho Rule-based, hoặc "ai" cho Python/XGBoost).
+        /// </summary>
+        [HttpPost]
+        [Route("run-analysis")]
+        public async Task<IHttpActionResult> RunAnalysis([FromBody] RunAnalysisRequest request)
+        {
+            if (request == null)
+                request = new RunAnalysisRequest();
+
+            try
+            {
+                bool success;
+                string message;
+                if (string.Equals(request.Mode, "system", StringComparison.OrdinalIgnoreCase))
+                {
+                    success = await _aiService.RunAnalysisAsync(request.BranchId);
+                    message = "Hệ thống (Rule-based) đã cập nhật báo cáo!";
+                }
+                else
+                {
+                    success = await _aiService.RunAIPipelineAsync();
+                    message = "AI XGBoost/Prophet đã hoàn tất training và dự báo!";
+                }
+                return Ok(new { success, message });
             }
             catch (Exception ex)
             {

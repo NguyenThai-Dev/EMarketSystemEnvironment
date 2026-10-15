@@ -27,12 +27,45 @@ namespace AIAssistantService.Controllers
         public async Task<IActionResult> Ask([FromBody] ChatRequest request)
         {
             var authHeader = Request.Headers["Authorization"].FirstOrDefault();
-            if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer ") || authHeader.StartsWith("Bearer null"))
+            if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer ") || authHeader.StartsWith("Bearer null") || authHeader.StartsWith("Bearer undefined"))
             {
                 return Unauthorized(new { message = "Bạn chưa đăng nhập hoặc phiên làm việc đã hết hạn." });
             }
 
-            string sessionId = request.UserName ?? "Unauthorized";
+            string token = authHeader.Substring("Bearer ".Length).Trim();
+            if (string.IsNullOrEmpty(token) || token == "null" || token == "undefined")
+            {
+                return Unauthorized(new { message = "Bạn chưa đăng nhập hoặc phiên làm việc đã hết hạn." });
+            }
+
+            // Giải mã JWT để lấy Username / UserId định danh nếu request body không truyền
+            string? tokenUserName = null;
+            string? tokenUserId = null;
+            try
+            {
+                var tokenHandler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+                if (tokenHandler.CanReadToken(token))
+                {
+                    var jwt = tokenHandler.ReadJwtToken(token);
+                    tokenUserName = jwt.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Name || c.Type == "name" || c.Type == "unique_name")?.Value;
+                    tokenUserId = jwt.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.NameIdentifier || c.Type == "sub")?.Value;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[JWT PARSE WARNING]: {ex.Message}");
+            }
+
+            string sessionId = !string.IsNullOrWhiteSpace(request.UserName) && !request.UserName.Equals("Unauthorized", StringComparison.OrdinalIgnoreCase)
+                ? request.UserName.Trim()
+                : (!string.IsNullOrWhiteSpace(tokenUserName)
+                    ? tokenUserName.Trim()
+                    : (!string.IsNullOrWhiteSpace(request.UserId?.ToString()) && request.UserId > 0
+                        ? $"User_{request.UserId}"
+                        : (!string.IsNullOrWhiteSpace(tokenUserId)
+                            ? $"User_{tokenUserId}"
+                            : "WebAdmin")));
+
             string today = DateTime.Now.ToString("dddd, dd/MM/yyyy HH:mm");
 
             // 1. Hệ thống Prompt cho AI Orchestrator (Zero Hallucination)
@@ -132,14 +165,41 @@ V. CẤM KỴ TUYỆT ĐỐI (STRICTLY FORBIDDEN)
             {
                 // Gọi API Semantic Kernel. Nếu cần gọi tool, Kernel sẽ tự động gọi EMarketApiPlugin.
                 var aiResponse = await chatService.GetChatMessageContentAsync(chatHistory, executionSettings, _kernel);
-                finalResponseText = aiResponse.Content ?? "Tôi không thể xử lý yêu cầu này vào lúc này.";
                 
+                finalResponseText = aiResponse.Content ?? "";
+
+                // Trường hợp Content null: trích xuất các phần tử TextContent từ Items
+                if (string.IsNullOrWhiteSpace(finalResponseText) && aiResponse.Items != null)
+                {
+                    var textParts = aiResponse.Items.OfType<Microsoft.SemanticKernel.TextContent>()
+                        .Select(t => t.Text)
+                        .Where(t => !string.IsNullOrWhiteSpace(t));
+                    finalResponseText = string.Join("\n", textParts);
+                }
+
+                // Nếu vẫn rỗng: kiểm tra xem có FunctionCall nào chưa hoàn tất không
+                if (string.IsNullOrWhiteSpace(finalResponseText))
+                {
+                    var pendingCalls = aiResponse.Items?.OfType<Microsoft.SemanticKernel.FunctionCallContent>().ToList();
+                    if (pendingCalls != null && pendingCalls.Count > 0)
+                    {
+                        var toolNames = string.Join(", ", pendingCalls.Select(p => p.FunctionName));
+                        finalResponseText = $"Hệ thống đang xử lý truy vấn thông tin ({toolNames}). Vui lòng hỏi lại với chi tiết cụ thể hơn (ví dụ: ngày cụ thể, tên chi nhánh, mã sản phẩm).";
+                    }
+                    else
+                    {
+                        finalResponseText = "Báo cáo sếp, hệ thống đã ghi nhận yêu cầu nhưng chưa nhận được phản hồi số liệu rõ ràng từ mô hình AI. Vui lòng thử lại hoặc nêu rõ câu hỏi hơn.";
+                    }
+                }
+                
+                Console.WriteLine($"[CHAT] AI Response generated: {finalResponseText[..Math.Min(120, finalResponseText.Length)]}...");
+
                 // Đảm bảo aiResponse được add vào chatHistory để lưu log
                 chatHistory.Add(aiResponse);
             }
             catch (Exception ex)
             {
-                finalResponseText = $"Xin lỗi, có lỗi trong quá trình phân tích: {ex.Message}";
+                finalResponseText = $"Xin lỗi sếp, có lỗi trong quá trình phân tích: {ex.Message}";
                 Console.WriteLine($"[ERROR]: {ex.Message}");
                 chatHistory.AddAssistantMessage(finalResponseText);
             }
@@ -191,5 +251,6 @@ V. CẤM KỴ TUYỆT ĐỐI (STRICTLY FORBIDDEN)
     {
         public required string Prompt { get; set; }
         public string? UserName { get; set; }
+        public int? UserId { get; set; }
     }
 }

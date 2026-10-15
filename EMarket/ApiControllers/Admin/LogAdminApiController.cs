@@ -24,31 +24,71 @@ namespace EMarket.ApiControllers.Admin
 
         /// <summary>
         /// Truy vấn Audit Log (Ai làm gì, khi nào) với phân trang và bộ lọc.
+        /// GET: dùng query string.
+        /// POST: nhận AuditLogFilter từ request body.
         /// </summary>
-        [HttpGet, Route("audit")]
+        [HttpGet]
+        [Route("audit")]
         public async Task<IHttpActionResult> GetAuditLogs(
-            int start = 0, int length = 10, string tableName = null,
-            string action = null, string search = null,
-            DateTime? fromDate = null, DateTime? toDate = null)
+            int start = 0,
+            int length = 10,
+            string tableName = null,
+            string action = null,
+            string search = null,
+            DateTime? fromDate = null,
+            DateTime? toDate = null)
         {
             var filter = new AuditLogFilter
             {
-                Start = start, Length = length,
-                TableName = tableName, Action = action,
-                Search = search, FromDate = fromDate, ToDate = toDate
+                Start = start,
+                Length = length,
+                TableName = tableName,
+                Action = action,
+                Search = search,
+                FromDate = fromDate,
+                ToDate = toDate
             };
+
             var result = await _logService.GetAuditLogsForTableAsync(filter);
-            return Ok(new { data = result.Data, total = result.Total });
+
+            return Ok(new
+            {
+                data = result.Data,
+                total = result.Total
+            });
+        }
+
+        /// <summary>
+        /// Truy vấn Audit Log bằng POST.
+        /// Dùng cho Android/Retrofit hoặc client gửi JSON body.
+        /// </summary>
+        [HttpPost]
+        [Route("audit")]
+        public async Task<IHttpActionResult> PostAuditLogs(AuditLogFilter filter)
+        {
+            filter = filter ?? new AuditLogFilter();
+
+            var result = await _logService.GetAuditLogsForTableAsync(filter);
+
+            return Ok(new
+            {
+                data = result.Data,
+                total = result.Total
+            });
         }
 
         /// <summary>
         /// Lấy chi tiết một bản ghi Audit Log theo ID.
         /// </summary>
-        [HttpGet, Route("audit/{id:long}")]
+        [HttpGet]
+        [Route("audit/{id:long}")]
         public async Task<IHttpActionResult> GetAuditLogDetail(long id)
         {
             var d = await _logService.GetAuditLogDetailAsync(id);
-            return d == null ? (IHttpActionResult)NotFound() : Ok(d);
+
+            return d == null
+                ? (IHttpActionResult)NotFound()
+                : Ok(d);
         }
 
         #endregion
@@ -57,41 +97,84 @@ namespace EMarket.ApiControllers.Admin
 
         /// <summary>
         /// Truy vấn Application Log (Error, Warning, Info) với phân trang và bộ lọc.
+        /// GET: dùng query string.
+        /// POST: nhận AppLogFilter từ request body.
         /// </summary>
-        [HttpGet, Route("app")]
+        [HttpGet]
+        [Route("app")]
         public async Task<IHttpActionResult> GetAppLogs(
-            int start = 0, int length = 10, string logLevel = null,
-            string logger = null, string search = null,
-            DateTime? fromDate = null, DateTime? toDate = null)
+            int start = 0,
+            int length = 10,
+            string logLevel = null,
+            string logger = null,
+            string search = null,
+            DateTime? fromDate = null,
+            DateTime? toDate = null)
         {
             var filter = new AppLogFilter
             {
-                Start = start, Length = length,
-                LogLevel = logLevel, Logger = logger,
-                Search = search, FromDate = fromDate, ToDate = toDate
+                Start = start,
+                Length = length,
+                LogLevel = logLevel,
+                Logger = logger,
+                Search = search,
+                FromDate = fromDate,
+                ToDate = toDate
             };
+
             var result = await _logService.GetAppLogsForTableAsync(filter);
-            return Ok(new { data = result.Data, total = result.Total });
+
+            return Ok(new
+            {
+                data = result.Data,
+                total = result.Total
+            });
+        }
+
+        /// <summary>
+        /// Truy vấn Application Log bằng POST.
+        /// Dùng cho Android/Retrofit hoặc client gửi JSON body.
+        /// </summary>
+        [HttpPost]
+        [Route("app")]
+        public async Task<IHttpActionResult> PostAppLogs(AppLogFilter filter)
+        {
+            filter = filter ?? new AppLogFilter();
+
+            var result = await _logService.GetAppLogsForTableAsync(filter);
+
+            return Ok(new
+            {
+                data = result.Data,
+                total = result.Total
+            });
         }
 
         /// <summary>
         /// Lấy chi tiết một bản ghi Application Log theo ID.
         /// </summary>
-        [HttpGet, Route("app/{id:long}")]
+        [HttpGet]
+        [Route("app/{id:long}")]
         public async Task<IHttpActionResult> GetAppLogDetail(long id)
         {
             var d = await _logService.GetAppLogDetailAsync(id);
-            return d == null ? (IHttpActionResult)NotFound() : Ok(d);
+
+            return d == null
+                ? (IHttpActionResult)NotFound()
+                : Ok(d);
         }
 
         #endregion
+
 
         #region Statistics & Events
 
         /// <summary>
         /// Lấy thống kê tổng hợp log (Tổng số, Error count, Warning count...).
         /// </summary>
-        [HttpGet, Route("statistics")]
+        [HttpGet]
+        [Route("statistics")]
+        [Route("stats")]
         public async Task<IHttpActionResult> GetLogStatistics()
         { return Ok(await _logService.GetLogStatisticsAsync()); }
 

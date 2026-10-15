@@ -1,4 +1,4 @@
-﻿using EMarket.Models;
+using EMarket.Models;
 using EMarket.Modules.InventoryModule.DTOs;
 using EMarket.Modules.InventoryModule.Services.Interfaces;
 using EMarket.Modules.ProductModule.Services.Interfaces;
@@ -67,7 +67,16 @@ namespace EMarket.Modules.InventoryModule.Services.Implementations
                         LotId = i.lot_id,
                         WarehouseId = i.warehouse_id,
                         Quantity = i.quantity ?? 0,
-                        LastUpdate = i.last_update ?? defaultDate
+                        LastUpdate = i.last_update ?? defaultDate,
+                        WarehouseName = i.Warehouse != null ? i.Warehouse.name : null,
+                        BranchName = (i.Warehouse != null && i.Warehouse.Branch != null) ? i.Warehouse.Branch.name : null,
+                        BatchCode = i.ProductLot != null ? i.ProductLot.batch_code : null,
+                        ProductId = i.ProductLot != null ? i.ProductLot.product_id : 0,
+                        ProductName = (i.ProductLot != null && i.ProductLot.Product != null) ? i.ProductLot.Product.name : null,
+                        Barcode = (i.ProductLot != null && i.ProductLot.Product != null) ? i.ProductLot.Product.barcode : null,
+                        Price = (i.ProductLot != null && i.ProductLot.Product != null) ? i.ProductLot.Product.price : null,
+                        ProductImage = (i.ProductLot != null && i.ProductLot.Product != null) ? i.ProductLot.Product.image : null,
+                        Unit = (i.ProductLot != null && i.ProductLot.Product != null) ? i.ProductLot.Product.unit : null
                     })
                     .ToListAsync();
             }
@@ -104,14 +113,16 @@ namespace EMarket.Modules.InventoryModule.Services.Implementations
                     LotId = i.lot_id,
                     WarehouseId = i.warehouse_id,
                     Quantity = i.quantity ?? 0,
-
-                    WarehouseName = i.Warehouse != null
-                        ? i.Warehouse.name
-                        : null,
-
-                    BranchName = i.Warehouse != null && i.Warehouse.Branch != null
-                        ? i.Warehouse.Branch.name
-                        : null
+                    LastUpdate = i.last_update ?? defaultDate,
+                    WarehouseName = i.Warehouse != null ? i.Warehouse.name : null,
+                    BranchName = (i.Warehouse != null && i.Warehouse.Branch != null) ? i.Warehouse.Branch.name : null,
+                    BatchCode = i.ProductLot != null ? i.ProductLot.batch_code : null,
+                    ProductId = i.ProductLot != null ? i.ProductLot.product_id : 0,
+                    ProductName = (i.ProductLot != null && i.ProductLot.Product != null) ? i.ProductLot.Product.name : null,
+                    Barcode = (i.ProductLot != null && i.ProductLot.Product != null) ? i.ProductLot.Product.barcode : null,
+                    Price = (i.ProductLot != null && i.ProductLot.Product != null) ? i.ProductLot.Product.price : null,
+                    ProductImage = (i.ProductLot != null && i.ProductLot.Product != null) ? i.ProductLot.Product.image : null,
+                    Unit = (i.ProductLot != null && i.ProductLot.Product != null) ? i.ProductLot.Product.unit : null
                 })
                 .ToListAsync();
 
@@ -155,17 +166,16 @@ namespace EMarket.Modules.InventoryModule.Services.Implementations
                     LotId = i.lot_id,
                     WarehouseId = i.warehouse_id,
                     Quantity = i.quantity ?? 0,
-
-                    WarehouseName = i.Warehouse != null
-                        ? i.Warehouse.name
-                        : null,
-
-                    BranchName = i.Warehouse != null && i.Warehouse.Branch != null
-                        ? i.Warehouse.Branch.name
-                        : null,
-                    BatchCode = i.ProductLot != null
-                        ? i.ProductLot.batch_code
-                        : null
+                    LastUpdate = i.last_update ?? defaultDate,
+                    WarehouseName = i.Warehouse != null ? i.Warehouse.name : null,
+                    BranchName = (i.Warehouse != null && i.Warehouse.Branch != null) ? i.Warehouse.Branch.name : null,
+                    BatchCode = i.ProductLot != null ? i.ProductLot.batch_code : null,
+                    ProductId = i.ProductLot != null ? i.ProductLot.product_id : 0,
+                    ProductName = (i.ProductLot != null && i.ProductLot.Product != null) ? i.ProductLot.Product.name : null,
+                    Barcode = (i.ProductLot != null && i.ProductLot.Product != null) ? i.ProductLot.Product.barcode : null,
+                    Price = (i.ProductLot != null && i.ProductLot.Product != null) ? i.ProductLot.Product.price : null,
+                    ProductImage = (i.ProductLot != null && i.ProductLot.Product != null) ? i.ProductLot.Product.image : null,
+                    Unit = (i.ProductLot != null && i.ProductLot.Product != null) ? i.ProductLot.Product.unit : null
                 })
                 .ToListAsync();
 
@@ -215,7 +225,16 @@ namespace EMarket.Modules.InventoryModule.Services.Implementations
                         LotId = i.lot_id,
                         WarehouseId = i.warehouse_id,
                         Quantity = i.quantity ?? 0,
-                        LastUpdate = i.last_update ?? defaultDate
+                        LastUpdate = i.last_update ?? defaultDate,
+                        WarehouseName = i.Warehouse != null ? i.Warehouse.name : null,
+                        BranchName = (i.Warehouse != null && i.Warehouse.Branch != null) ? i.Warehouse.Branch.name : null,
+                        BatchCode = i.ProductLot != null ? i.ProductLot.batch_code : null,
+                        ProductId = i.ProductLot != null ? i.ProductLot.product_id : 0,
+                        ProductName = (i.ProductLot != null && i.ProductLot.Product != null) ? i.ProductLot.Product.name : null,
+                        Barcode = (i.ProductLot != null && i.ProductLot.Product != null) ? i.ProductLot.Product.barcode : null,
+                        Price = (i.ProductLot != null && i.ProductLot.Product != null) ? i.ProductLot.Product.price : null,
+                        ProductImage = (i.ProductLot != null && i.ProductLot.Product != null) ? i.ProductLot.Product.image : null,
+                        Unit = (i.ProductLot != null && i.ProductLot.Product != null) ? i.ProductLot.Product.unit : null
                     })
                     .ToListAsync();
 
@@ -278,7 +297,16 @@ namespace EMarket.Modules.InventoryModule.Services.Implementations
                         LotId = i.lot_id,
                         WarehouseId = i.warehouse_id,
                         Quantity = i.quantity ?? 0,
-                        LastUpdate = i.last_update ?? defaultDate
+                        LastUpdate = i.last_update ?? defaultDate,
+                        WarehouseName = i.Warehouse != null ? i.Warehouse.name : null,
+                        BranchName = (i.Warehouse != null && i.Warehouse.Branch != null) ? i.Warehouse.Branch.name : null,
+                        BatchCode = i.ProductLot != null ? i.ProductLot.batch_code : null,
+                        ProductId = i.ProductLot != null ? i.ProductLot.product_id : 0,
+                        ProductName = (i.ProductLot != null && i.ProductLot.Product != null) ? i.ProductLot.Product.name : null,
+                        Barcode = (i.ProductLot != null && i.ProductLot.Product != null) ? i.ProductLot.Product.barcode : null,
+                        Price = (i.ProductLot != null && i.ProductLot.Product != null) ? i.ProductLot.Product.price : null,
+                        ProductImage = (i.ProductLot != null && i.ProductLot.Product != null) ? i.ProductLot.Product.image : null,
+                        Unit = (i.ProductLot != null && i.ProductLot.Product != null) ? i.ProductLot.Product.unit : null
                     })
                     .FirstOrDefaultAsync();
             }
@@ -325,8 +353,15 @@ namespace EMarket.Modules.InventoryModule.Services.Implementations
                         WarehouseId = i.warehouse_id,
                         LotId = i.lot_id,
                         Quantity = i.quantity ?? -1,
-                        WarehouseName = w.name
-
+                        WarehouseName = w.name,
+                        BranchName = w.Branch != null ? w.Branch.name : null,
+                        BatchCode = i.ProductLot != null ? i.ProductLot.batch_code : null,
+                        ProductId = i.ProductLot != null ? i.ProductLot.product_id : 0,
+                        ProductName = (i.ProductLot != null && i.ProductLot.Product != null) ? i.ProductLot.Product.name : null,
+                        Barcode = (i.ProductLot != null && i.ProductLot.Product != null) ? i.ProductLot.Product.barcode : null,
+                        Price = (i.ProductLot != null && i.ProductLot.Product != null) ? i.ProductLot.Product.price : null,
+                        ProductImage = (i.ProductLot != null && i.ProductLot.Product != null) ? i.ProductLot.Product.image : null,
+                        Unit = (i.ProductLot != null && i.ProductLot.Product != null) ? i.ProductLot.Product.unit : null
                     };
 
                 return await query.ToListAsync();

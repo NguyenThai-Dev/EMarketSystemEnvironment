@@ -1,3 +1,9 @@
+@using EMarket.Modules.UserModule.Services.Interfaces
+@{
+    var userContext = System.Web.Mvc.DependencyResolver.Current.GetService<IUserContext>();
+    var currentUserName = userContext?.FullName ?? userContext?.Username ?? "";
+    var currentUserId = userContext?.UserId ?? 0;
+}
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -710,6 +716,36 @@
         const INTERNAL_API_BASE = "/Admin/AIAnalysis";
         var chartInstance;
 
+        window.getAuthToken = function () {
+            var token = localStorage.getItem('access_token');
+            if (token && token !== 'null' && token !== 'undefined') return token;
+
+            var match = document.cookie.match(new RegExp('(^| )access_token=([^;]+)'));
+            if (match && match[2] && match[2] !== 'null' && match[2] !== 'undefined') {
+                var cToken = decodeURIComponent(match[2]);
+                localStorage.setItem('access_token', cToken);
+                return cToken;
+            }
+            return '';
+        };
+
+        window.CURRENTUSERNAME = window.CURRENTUSERNAME || "@Html.Raw(HttpUtility.JavaScriptStringEncode(currentUserName))";
+        window.CURRENTUSERID = window.CURRENTUSERID || @currentUserId;
+
+        if (!window.getAuthToken()) {
+            $.getJSON('/Admin/Login/GetCurrentUser', function (res) {
+                if (res && res.success) {
+                    if (res.token) {
+                        localStorage.setItem('access_token', res.token);
+                    }
+                    if (res.data) {
+                        window.CURRENTUSERNAME = res.data.FullName || res.data.Username;
+                        window.CURRENTUSERID = res.data.UserId;
+                    }
+                }
+            });
+        }
+
         if (window.marked) {
             marked.setOptions({
                 gfm: true,
@@ -1002,19 +1038,40 @@
                     var txt = $('#ai-user-input').val().trim();
                     if (!txt) return;
 
+                    var token = window.getAuthToken();
+                    if (!token) {
+                        // Tự động lấy token nếu chưa có trong storage
+                        $.getJSON('/Admin/Login/GetCurrentUser', function (res) {
+                            if (res && res.success && res.token) {
+                                localStorage.setItem('access_token', res.token);
+                                if (res.data) {
+                                    window.CURRENTUSERNAME = res.data.FullName || res.data.Username;
+                                    window.CURRENTUSERID = res.data.UserId;
+                                }
+                                window.sendMessage();
+                            } else {
+                                appendMessage("Bạn chưa đăng nhập hoặc phiên làm việc đã hết hạn. Vui lòng đăng nhập lại hệ thống.", 'bot');
+                            }
+                        });
+                        return;
+                    }
+
                     appendMessage(txt, 'user');
                     $('#ai-user-input').val('');
                     showLoading();
+
+                    var userName = window.CURRENTUSERNAME || "@Html.Raw(HttpUtility.JavaScriptStringEncode(currentUserName))";
+                    var userId = window.CURRENTUSERID || @currentUserId;
 
                     $.ajax({
                         url: EXTERNAL_AI_URL,
                         type: 'POST',
                         contentType: 'application/json',
                         headers: {
-                            "Authorization": "Bearer " + localStorage.getItem('access_token')
+                            "Authorization": "Bearer " + token
                         },
-                        data: JSON.stringify({ prompt: txt, userName: window.CURRENTUSERNAME, userId: window.CURRENTUSERID }),
-                        timeout: 10000,
+                        data: JSON.stringify({ prompt: txt, userName: userName, userId: userId }),
+                        timeout: 30000,
                         success: function (res) {
                             removeLoading();
                             let rawContent = res.answer || res.response || res;
@@ -1029,8 +1086,11 @@
                         },
                         error: function (xhr, status, error) {
                             removeLoading();
-                            if (xhr && xhr.status === 429) {
-                                appendMessage("Hệ thống AI đang quá tải (Rate Limit), vui lòng thử lại sau.", 'bot');
+                            if (xhr && xhr.status === 401) {
+                                localStorage.removeItem('access_token');
+                                appendMessage("Phiên xác thực đã hết hạn hoặc không hợp lệ. Vui lòng đăng nhập lại.", 'bot');
+                            } else if (xhr && xhr.status === 429) {
+                                appendMessage("Hệ thống AI đang quá tải (Rate Limit), vui lòng thử lại sau giây lát.", 'bot');
                             } else if (xhr && xhr.status === 0) {
                                 appendMessage("Không thể kết nối đến dịch vụ AI. Vui lòng kiểm tra xem server AI đã được khởi động chưa.", 'bot');
                             } else {

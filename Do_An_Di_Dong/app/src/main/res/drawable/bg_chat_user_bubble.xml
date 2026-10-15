@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Chat bubble for USER (right side, indigo) -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/chat_user_bg" />
+    <corners
+        android:topLeftRadius="@dimen/corner_large"
+        android:topRightRadius="@dimen/corner_large"
+        android:bottomLeftRadius="@dimen/corner_large"
+        android:bottomRightRadius="4dp" />
+</shape>

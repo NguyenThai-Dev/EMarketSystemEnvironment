@@ -15,8 +15,8 @@ builder.Services.AddCors(options =>
     });
 });
 
-// 2. Cấu hình Key Rotation - Đăng ký Singleton
-builder.Services.AddSingleton<IApiKeyProvider, GroqApiKeyProvider>();
+// 2. Cấu hình Key Rotation - Đăng ký Singleton cho Gemini
+builder.Services.AddSingleton<IApiKeyProvider, GeminiApiKeyProvider>();
 
 // 3. Cấu hình HttpClient cho EMARKET
 // Cho phép hệ thống truy cập vào HttpContext hiện tại
@@ -26,7 +26,13 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddTransient<TokenForwardingHandler>();
 
 var domainEMarket = builder.Configuration["DomainSettings:DomainEMarket"] ?? "";
-var domainGroq = builder.Configuration["DomainSettings:DomainGroq"] ?? "";
+var domainGemini = builder.Configuration["DomainSettings:DomainGemini"]
+    ?? builder.Configuration["DomainSettings:DomainGoogle"]
+    ?? "https://generativelanguage.googleapis.com/v1beta/openai/";
+
+var modelGemini = builder.Configuration["GeminiSettings:ModelId"]
+    ?? "gemini-2.5-flash";
+
 // 3. Cấu hình HttpClient cho EMARKET
 builder.Services.AddHttpClient("EMarketClient", client =>
 {
@@ -50,27 +56,24 @@ builder.Services.AddHttpClient("EMarketClient", client =>
     options.CircuitBreaker.FailureRatio = 0.5;
     options.CircuitBreaker.BreakDuration = TimeSpan.FromSeconds(15);
     options.Retry.MaxRetryAttempts = 3;
-    options.Retry.Delay = TimeSpan.FromSeconds(2);
+    options.Retry.Delay = TimeSpan.FromSeconds(10);
 });
 
-// 3.5 Cấu hình HttpClient cho GROQ (Chuẩn OpenAI tương thích)
-builder.Services.AddHttpClient("GroqClient", client =>
+// 3.5 Cấu hình HttpClient cho GEMINI (Chuẩn OpenAI tương thích của Google)
+builder.Services.AddHttpClient("GeminiClient", client =>
 {
-    // Endpoint chuẩn của Groq cho các request tương thích OpenAI
-    client.BaseAddress = new Uri(domainGroq);
-    // client.Timeout được xử lý bởi Polly Resilience Pipeline
+    client.BaseAddress = new Uri(domainGemini);
 })
 .AddStandardResilienceHandler(options =>
 {
     options.TotalRequestTimeout.Timeout = TimeSpan.FromSeconds(60);
-    options.AttemptTimeout.Timeout = TimeSpan.FromSeconds(20);
+    options.AttemptTimeout.Timeout = TimeSpan.FromSeconds(25);
 
-    // QUAN TRỌNG: Phải ít nhất 40s (20s * 2). 
     options.CircuitBreaker.SamplingDuration = TimeSpan.FromSeconds(60);
 
     options.CircuitBreaker.FailureRatio = 0.5;
     options.CircuitBreaker.BreakDuration = TimeSpan.FromSeconds(30);
-    options.Retry.MaxRetryAttempts = 2;
+    options.Retry.MaxRetryAttempts = 3;
 });
 
 // 4. History Services
@@ -84,14 +87,16 @@ builder.Services.AddScoped<EMarketApiPlugin>();
 builder.Services.AddTransient<Kernel>(sp =>
 {
     var keyProvider = sp.GetRequiredService<IApiKeyProvider>();
+    var httpClientFactory = sp.GetRequiredService<IHttpClientFactory>();
+    var geminiClient = httpClientFactory.CreateClient("GeminiClient");
     var kernelBuilder = Kernel.CreateBuilder();
 
 #pragma warning disable SKEXP0001
     kernelBuilder.AddOpenAIChatCompletion(
-        //modelId: "llama-3.3-70b-versatile",
-        modelId: "meta-llama/llama-4-scout-17b-16e-instruct",
-        apiKey: keyProvider.GetApiKey(), // Bốc key xoay tua ở đây
-        endpoint: new Uri(domainGroq)
+        modelId: modelGemini,
+        apiKey: keyProvider.GetApiKey(), // Bốc Gemini key xoay tua ở đây
+        endpoint: new Uri(domainGemini),
+        httpClient: geminiClient
     );
 #pragma warning restore SKEXP0001
 

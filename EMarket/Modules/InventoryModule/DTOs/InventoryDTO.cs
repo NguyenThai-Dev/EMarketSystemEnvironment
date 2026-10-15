@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace EMarket.Modules.InventoryModule.DTOs
 {
@@ -13,5 +13,12 @@ namespace EMarket.Modules.InventoryModule.DTOs
         public string BranchName { get; set; }
         public string WarehouseName { get; set; }
         public string BatchCode { get; set; }
+
+        public int ProductId { get; set; }
+        public string ProductName { get; set; }
+        public string Barcode { get; set; }
+        public decimal? Price { get; set; }
+        public string ProductImage { get; set; }
+        public string Unit { get; set; }
     }
 }

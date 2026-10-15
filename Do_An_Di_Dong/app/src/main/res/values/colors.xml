@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ======================================================== -->
+    <!-- MATERIAL3 SEED COLORS                                      -->
+    <!-- ======================================================== -->
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!-- ======================================================== -->
+    <!-- PRIMARY — Indigo                                           -->
+    <!-- ======================================================== -->
+    <color name="md_primary">#4F46E5</color>
+    <color name="md_primary_dark">#3730A3</color>
+    <color name="md_primary_light">#818CF8</color>
+    <color name="md_primary_container">#E0E7FF</color>
+    <color name="md_on_primary">#FFFFFF</color>
+    <color name="md_on_primary_container">#312E81</color>
+
+    <!-- ======================================================== -->
+    <!-- SURFACE & BACKGROUND                                       -->
+    <!-- ======================================================== -->
+    <color name="md_background">#F5F5F7</color>
+    <color name="md_surface">#FFFFFF</color>
+    <color name="md_surface_variant">#F3F4F6</color>
+    <color name="md_surface_container">#FFFFFF</color>
+    <color name="md_on_surface">#111827</color>
+    <color name="md_on_surface_variant">#6B7280</color>
+    <color name="md_outline">#E5E7EB</color>
+    <color name="md_outline_variant">#D1D5DB</color>
+
+    <!-- ======================================================== -->
+    <!-- SEMANTIC SEMANTIC TOKENS                                   -->
+    <!-- ======================================================== -->
+    <!-- Text -->
+    <color name="text_primary">#111827</color>
+    <color name="text_secondary">#6B7280</color>
+    <color name="text_tertiary">#9CA3AF</color>
+    <color name="text_on_primary">#FFFFFF</color>
+    <color name="text_link">#4F46E5</color>
+
+    <!-- Surfaces -->
+    <color name="background">#F5F5F7</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="surface_variant">#F3F4F6</color>
+    <color name="divider">#E5E7EB</color>
+    <color name="card_stroke">#E5E7EB</color>
+
+    <!-- Primary -->
+    <color name="primary">#4F46E5</color>
+    <color name="primary_dark">#3730A3</color>
+    <color name="primary_light">#818CF8</color>
+    <color name="primary_container">#E0E7FF</color>
+    <color name="on_primary">#FFFFFF</color>
+    <color name="on_primary_container">#312E81</color>
+    <color name="on_secondary_container">#92400E</color>
+
+    <!-- ======================================================== -->
+    <!-- STATUS COLORS                                              -->
+    <!-- ======================================================== -->
+    <!-- Success (Emerald) -->
+    <color name="success">#10B981</color>
+    <color name="success_dark">#059669</color>
+    <color name="success_container">#D1FAE5</color>
+    <color name="on_success_container">#065F46</color>
+
+    <!-- Warning (Amber) -->
+    <color name="warning">#F59E0B</color>
+    <color name="warning_dark">#D97706</color>
+    <color name="warning_container">#FEF3C7</color>
+    <color name="on_warning_container">#92400E</color>
+
+    <!-- Error (Red) -->
+    <color name="error">#EF4444</color>
+    <color name="error_dark">#DC2626</color>
+    <color name="error_container">#FEE2E2</color>
+    <color name="on_error_container">#991B1B</color>
+
+    <!-- Info (Blue) -->
+    <color name="info">#3B82F6</color>
+    <color name="info_dark">#2563EB</color>
+    <color name="info_container">#DBEAFE</color>
+    <color name="on_info_container">#1E3A8A</color>
+
+    <!-- ======================================================== -->
+    <!-- DASHBOARD KPI CARD COLORS                                  -->
+    <!-- ======================================================== -->
+    <color name="kpi_revenue_bg">#EEF2FF</color>
+    <color name="kpi_revenue_icon">#4F46E5</color>
+    <color name="kpi_orders_bg">#ECFDF5</color>
+    <color name="kpi_orders_icon">#10B981</color>
+    <color name="kpi_stock_bg">#FFF7ED</color>
+    <color name="kpi_stock_icon">#F59E0B</color>
+    <color name="kpi_products_bg">#EFF6FF</color>
+    <color name="kpi_products_icon">#3B82F6</color>
+
+    <!-- ======================================================== -->
+    <!-- CHAT BUBBLES                                               -->
+    <!-- ======================================================== -->
+    <color name="chat_user_bg">#4F46E5</color>
+    <color name="chat_user_text">#FFFFFF</color>
+    <color name="chat_bot_bg">#F3F4F6</color>
+    <color name="chat_bot_text">#111827</color>
+
+    <!-- ======================================================== -->
+    <!-- LOGIN SCREEN                                               -->
+    <!-- ======================================================== -->
+    <color name="login_gradient_start">#312E81</color>
+    <color name="login_gradient_end">#4F46E5</color>
+    <color name="login_form_surface">#FFFFFF</color>
+
+    <!-- ======================================================== -->
+    <!-- LEGACY ALIASES (keep for compatibility with old code)      -->
+    <!-- ======================================================== -->
+    <color name="danger">#EF4444</color>
+    <color name="card_bg">#FFFFFF</color>
+    <color name="accent">#818CF8</color>
+</resources>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ======================================================== -->
+    <!-- CORNER RADIUS                                              -->
+    <!-- ======================================================== -->
+    <dimen name="corner_small">8dp</dimen>
+    <dimen name="corner_medium">12dp</dimen>
+    <dimen name="corner_large">16dp</dimen>
+    <dimen name="corner_xl">24dp</dimen>
+    <dimen name="corner_full">50dp</dimen>
+
+    <!-- Aliases used by themes.xml -->
+    <dimen name="corner_card">16dp</dimen>
+    <dimen name="corner_input">12dp</dimen>
+    <dimen name="corner_button">12dp</dimen>
+    <dimen name="corner_chip">8dp</dimen>
+
+    <!-- ======================================================== -->
+    <!-- SPACING                                                    -->
+    <!-- ======================================================== -->
+    <dimen name="spacing_xs">4dp</dimen>
+    <dimen name="spacing_sm">8dp</dimen>
+    <dimen name="spacing_md">16dp</dimen>
+    <dimen name="spacing_lg">24dp</dimen>
+    <dimen name="spacing_xl">32dp</dimen>
+    <dimen name="spacing_2xl">48dp</dimen>
+
+    <!-- ======================================================== -->
+    <!-- PAGE LAYOUT                                                -->
+    <!-- ======================================================== -->
+    <dimen name="page_horizontal_padding">16dp</dimen>
+    <dimen name="page_top_padding">16dp</dimen>
+    <dimen name="card_padding">16dp</dimen>
+    <dimen name="card_content_spacing">12dp</dimen>
+
+    <!-- ======================================================== -->
+    <!-- COMPONENTS                                                 -->
+    <!-- ======================================================== -->
+    <dimen name="bottom_nav_height">64dp</dimen>
+    <dimen name="toolbar_height">56dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+
+    <!-- KPI Cards -->
+    <dimen name="kpi_card_icon_size">40dp</dimen>
+    <dimen name="kpi_card_icon_padding">8dp</dimen>
+    <dimen name="kpi_card_min_height">110dp</dimen>
+
+    <!-- Product item -->
+    <dimen name="product_image_size">72dp</dimen>
+    <dimen name="product_item_padding">14dp</dimen>
+
+    <!-- Chat bubbles -->
+    <dimen name="chat_bubble_max_width_fraction">0.75</dimen>
+    <dimen name="chat_bubble_padding_horizontal">14dp</dimen>
+    <dimen name="chat_bubble_padding_vertical">10dp</dimen>
+    <dimen name="chat_avatar_size">32dp</dimen>
+    <dimen name="chat_input_height">52dp</dimen>
+
+    <!-- Dividers -->
+    <dimen name="divider_height">1dp</dimen>
+    <dimen name="stroke_width">1dp</dimen>
+
+    <!-- Elevation -->
+    <dimen name="elevation_card">2dp</dimen>
+    <dimen name="elevation_bottom_nav">8dp</dimen>
+    <dimen name="elevation_fab">6dp</dimen>
+</resources>

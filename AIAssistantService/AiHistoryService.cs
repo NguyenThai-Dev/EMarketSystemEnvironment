@@ -251,6 +251,9 @@ namespace AIAssistantService
                         AND LOWER(m.role) IN ('user', 'assistant')
                         AND m.content IS NOT NULL
                         AND m.content <> ''
+                        AND m.content NOT LIKE 'Xin lỗi, có lỗi%'
+                        AND m.content NOT LIKE 'Tôi không thể xử lý%'
+                        AND m.content NOT LIKE 'Error:%'
                         AND m.created_at >= NOW() - INTERVAL '2 hours'
                       ORDER BY m.created_at DESC
                       LIMIT 20",

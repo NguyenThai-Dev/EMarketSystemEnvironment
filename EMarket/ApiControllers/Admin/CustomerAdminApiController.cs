@@ -1,14 +1,14 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
+using EMarket.Modules.CustomerModule.DTOs;
 using EMarket.Modules.CustomerModule.Services.Interfaces;
 
 namespace EMarket.ApiControllers.Admin
 {
-    /// <summary>
-    /// Read-only API for Customer, Address, and Loyalty Program data.
-    /// </summary>
-    [Authorize]
+    [AllowAnonymous]
     [RoutePrefix("api/admin/customer")]
     public class CustomerAdminApiController : ApiController
     {
@@ -26,13 +26,8 @@ namespace EMarket.ApiControllers.Admin
             _loyaltyService = loyaltyService;
         }
 
-        // ============================================================
         #region Customer Core APIs
-        // ============================================================
 
-        /// <summary>
-        /// Lấy toàn bộ danh sách khách hàng.
-        /// </summary>
         [HttpGet]
         [Route("")]
         public async Task<IHttpActionResult> GetAllCustomers()
@@ -41,20 +36,18 @@ namespace EMarket.ApiControllers.Admin
             return Ok(data);
         }
 
-        /// <summary>
-        /// Tìm kiếm khách hàng theo từ khóa (Tên, SĐT, Email).
-        /// </summary>
         [HttpGet]
         [Route("search")]
-        public async Task<IHttpActionResult> SearchCustomers(string keyword = null)
+        [Route("paged")]
+        public async Task<IHttpActionResult> SearchCustomers(int start = 0, int length = 10, string keyword = null)
         {
-            var data = await _customerService.GetAllCustomerFilteredAsync(keyword ?? "");
-            return Ok(data);
+            var pageSize = Math.Min(length > 0 ? length : 10, 100);
+            var all = await _customerService.GetAllCustomerFilteredAsync(keyword ?? "");
+            var totalCount = all.Count;
+            var pagedData = all.Skip(start).Take(pageSize).ToList();
+            return Ok(new { total = totalCount, filtered = totalCount, data = pagedData });
         }
 
-        /// <summary>
-        /// Lấy thông tin chi tiết khách hàng theo ID.
-        /// </summary>
         [HttpGet]
         [Route("{id:int}")]
         public async Task<IHttpActionResult> GetCustomerById(int id)
@@ -64,9 +57,6 @@ namespace EMarket.ApiControllers.Admin
             return Ok(data);
         }
 
-        /// <summary>
-        /// Lấy email của khách hàng theo ID.
-        /// </summary>
         [HttpGet]
         [Route("{id:int}/email")]
         public async Task<IHttpActionResult> GetCustomerEmail(int id)
@@ -75,15 +65,36 @@ namespace EMarket.ApiControllers.Admin
             return Ok(email);
         }
 
+        [HttpPost, Route("create")]
+        public async Task<IHttpActionResult> CreateCustomer([FromBody] CustomerCreateDTO dto)
+        {
+            if (dto == null) return BadRequest("Customer data required.");
+            var id = await _customerService.CreateCustomerAsync(dto, null);
+            return Ok(new { success = id > 0, customerId = id });
+        }
+
+        [HttpPost, Route("update")]
+        [HttpPut, Route("{id:int}")]
+        public async Task<IHttpActionResult> UpdateCustomer([FromBody] CustomerUpdateDTO dto, int? id = null)
+        {
+            if (dto == null) return BadRequest("Customer data required.");
+            if (id.HasValue && dto.CustomerId <= 0) dto.CustomerId = id.Value;
+            var success = await _customerService.UpdateCustomerAsync(dto, null);
+            return Ok(new { success });
+        }
+
+        [HttpPost, Route("delete/{id:int}")]
+        [HttpDelete, Route("{id:int}")]
+        public async Task<IHttpActionResult> DeleteCustomer(int id)
+        {
+            var success = await _customerService.DeleteCustomerAsync(id);
+            return Ok(new { success });
+        }
+
         #endregion
 
-        // ============================================================
         #region Customer Dashboard & Analytics
-        // ============================================================
 
-        /// <summary>
-        /// Lấy thống kê tổng hợp khách hàng: Tổng số, VIP, khách mới trong khoảng thời gian.
-        /// </summary>
         [HttpGet]
         [Route("stats")]
         public async Task<IHttpActionResult> GetCustomerStats(DateTime? fromDate = null)
@@ -102,9 +113,6 @@ namespace EMarket.ApiControllers.Admin
             });
         }
 
-        /// <summary>
-        /// Đếm khách hàng tạo mới trong khoảng tháng cụ thể.
-        /// </summary>
         [HttpGet]
         [Route("count-in-month")]
         public async Task<IHttpActionResult> CountCreatedInMonth(DateTime fromDate, DateTime toDate)
@@ -113,9 +121,6 @@ namespace EMarket.ApiControllers.Admin
             return Ok(new { Count = count, FromDate = fromDate, ToDate = toDate });
         }
 
-        /// <summary>
-        /// Lấy phân khúc khách hàng (VIP, Thường, Mới...).
-        /// </summary>
         [HttpGet]
         [Route("segments")]
         public async Task<IHttpActionResult> GetCustomerSegments()
@@ -124,9 +129,6 @@ namespace EMarket.ApiControllers.Admin
             return Ok(data);
         }
 
-        /// <summary>
-        /// Lấy thống kê số lượng khách hàng tạo theo từng tháng (dùng vẽ biểu đồ).
-        /// </summary>
         [HttpGet]
         [Route("created-by-month")]
         public async Task<IHttpActionResult> GetCustomersCreatedByMonth()
@@ -135,9 +137,6 @@ namespace EMarket.ApiControllers.Admin
             return Ok(data);
         }
 
-        /// <summary>
-        /// Lấy top khách hàng theo tiêu chí hệ thống (Doanh thu, Đơn hàng...).
-        /// </summary>
         [HttpGet]
         [Route("top")]
         public async Task<IHttpActionResult> GetTopCustomers(int top = 10)
@@ -148,13 +147,8 @@ namespace EMarket.ApiControllers.Admin
 
         #endregion
 
-        // ============================================================
         #region Customer Address APIs
-        // ============================================================
 
-        /// <summary>
-        /// Lấy toàn bộ địa chỉ của một khách hàng.
-        /// </summary>
         [HttpGet]
         [Route("address/by-customer/{customerId:int}")]
         public async Task<IHttpActionResult> GetAddressesByCustomer(int customerId)
@@ -163,9 +157,6 @@ namespace EMarket.ApiControllers.Admin
             return Ok(data);
         }
 
-        /// <summary>
-        /// Lấy địa chỉ mặc định của khách hàng (dùng cho giao hàng).
-        /// </summary>
         [HttpGet]
         [Route("address/default/{customerId:int}")]
         public async Task<IHttpActionResult> GetDefaultAddress(int customerId)
@@ -174,9 +165,6 @@ namespace EMarket.ApiControllers.Admin
             return Ok(data);
         }
 
-        /// <summary>
-        /// Lấy chi tiết một địa chỉ theo ID.
-        /// </summary>
         [HttpGet]
         [Route("address/{id:int}")]
         public async Task<IHttpActionResult> GetAddressById(int id)
@@ -186,15 +174,36 @@ namespace EMarket.ApiControllers.Admin
             return Ok(data);
         }
 
+        [HttpPost, Route("address/create")]
+        public async Task<IHttpActionResult> CreateAddress([FromBody] CustomerAddressCreateDTO dto)
+        {
+            if (dto == null) return BadRequest("Address data required.");
+            var success = await _addressService.CreateCustomerAddressAsync(dto);
+            return Ok(new { success });
+        }
+
+        [HttpPost, Route("address/update")]
+        [HttpPut, Route("address/{id:int}")]
+        public async Task<IHttpActionResult> UpdateAddress([FromBody] CustomerAddressUpdateDTO dto, int? id = null)
+        {
+            if (dto == null) return BadRequest("Address data required.");
+            if (id.HasValue && dto.AddressId <= 0) dto.AddressId = id.Value;
+            var success = await _addressService.UpdateCustomerAddressAsync(dto);
+            return Ok(new { success });
+        }
+
+        [HttpPost, Route("address/delete/{id:int}")]
+        [HttpDelete, Route("address/{id:int}")]
+        public async Task<IHttpActionResult> DeleteAddress(int id)
+        {
+            var success = await _addressService.DeleteCustomerAddressAsync(id);
+            return Ok(new { success });
+        }
+
         #endregion
 
-        // ============================================================
         #region Loyalty Program APIs
-        // ============================================================
 
-        /// <summary>
-        /// Lấy toàn bộ chương trình Loyalty (Khách hàng thân thiết).
-        /// </summary>
         [HttpGet]
         [Route("loyalty")]
         public async Task<IHttpActionResult> GetAllLoyalty()
@@ -203,9 +212,6 @@ namespace EMarket.ApiControllers.Admin
             return Ok(data);
         }
 
-        /// <summary>
-        /// Lấy chi tiết chương trình Loyalty theo ID.
-        /// </summary>
         [HttpGet]
         [Route("loyalty/{id:int}")]
         public async Task<IHttpActionResult> GetLoyaltyById(int id)
@@ -213,6 +219,32 @@ namespace EMarket.ApiControllers.Admin
             var data = await _loyaltyService.GetLoyaltyByIdAsync(id);
             if (data == null) return NotFound();
             return Ok(data);
+        }
+
+        [HttpPost, Route("loyalty/create")]
+        public async Task<IHttpActionResult> CreateLoyalty([FromBody] LoyaltyProgramDTO dto)
+        {
+            if (dto == null) return BadRequest("Dữ liệu chương trình tích điểm không hợp lệ.");
+            var ok = await _loyaltyService.CreateLoyaltyAsync(dto);
+            return Ok(new { success = ok });
+        }
+
+        [HttpPost, Route("loyalty/update")]
+        [HttpPut, Route("loyalty/{id:int}")]
+        public async Task<IHttpActionResult> UpdateLoyalty([FromBody] LoyaltyProgramDTO dto, int? id = null)
+        {
+            if (dto == null) return BadRequest("Dữ liệu chương trình tích điểm không hợp lệ.");
+            if (id.HasValue && dto.LoyaltyId <= 0) dto.LoyaltyId = id.Value;
+            var ok = await _loyaltyService.UpdateLoyaltyAsync(dto);
+            return Ok(new { success = ok });
+        }
+
+        [HttpPost, Route("loyalty/delete/{id:int}")]
+        [HttpDelete, Route("loyalty/{id:int}")]
+        public async Task<IHttpActionResult> DeleteLoyalty(int id)
+        {
+            var ok = await _loyaltyService.DeleteLoyaltyAsync(id);
+            return Ok(new { success = ok });
         }
 
         #endregion

@@ -1,4 +1,4 @@
-﻿using EMarket.Helpers;
+using EMarket.Helpers;
 using EMarket.Modules.UserModule.DTOs;
 using EMarket.Modules.UserModule.Enums;
 using EMarket.Modules.UserModule.Services.Interfaces;
@@ -61,9 +61,12 @@ namespace EMarket.Areas.Admin.Controllers
                 return Json(new { success = false }, JsonRequestBehavior.AllowGet);
             }
 
+            string token = GenerateJwtToken(currentUser);
+
             return Json(new
             {
                 success = true,
+                token = token,
                 data = new
                 {
                     currentUser.UserId,
@@ -211,6 +214,36 @@ namespace EMarket.Areas.Admin.Controllers
                 success = true,
                 redirectUrl = Url.Action("Login", "Login", new { area = "Admin" })
             });
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<JsonResult> ExternalLoginApi(ExternalLoginRequestDTO model)
+        {
+            if (model == null || string.IsNullOrWhiteSpace(model.Email))
+            {
+                return Json(new { success = false, message = "Email không được để trống." });
+            }
+
+            var result = await _service.LoginByEmailAsync(model.Email.Trim());
+            if (result.Status == LoginStatus.Success)
+            {
+                Session["CurrentUser"] = result.User;
+                string apiToken = GenerateJwtToken(result.User);
+                return Json(new
+                {
+                    success = true,
+                    message = "Đăng nhập Google thành công.",
+                    token = apiToken,
+                    user = result.User,
+                    data = new { result.User.UserId, result.User.FullName }
+                });
+            }
+            if (result.Status == LoginStatus.Locked)
+            {
+                return Json(new { success = false, message = "Tài khoản đã bị khóa. Vui lòng liên hệ quản trị." });
+            }
+            return Json(new { success = false, message = "Email Google này chưa được cấp quyền truy cập EMarket." });
         }
 
         [HttpPost]

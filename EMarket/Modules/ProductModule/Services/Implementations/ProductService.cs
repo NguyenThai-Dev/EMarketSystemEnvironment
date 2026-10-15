@@ -1,4 +1,4 @@
-﻿using ClosedXML.Excel;
+using ClosedXML.Excel;
 using Dapper;
 using EMarket.Events.Class;
 using EMarket.Models;
@@ -598,53 +598,113 @@ namespace EMarket.Modules.ProductModule.Services.Implementations
                 await _db.SaveChangesAsync(); // Lấy được product_id
 
                 // ===============================
-                // XỬ LÝ ẢNH (Logic mới)
+                // XỬ LÝ ẢNH (Logic an toàn)
                 // ===============================
-                string productFolder = HttpContext.Current.Server.MapPath($"~/Uploads/Products/{entity.product_id}");
-                Directory.CreateDirectory(productFolder);
+                string relativeFolder = $"~/Uploads/Products/{entity.product_id}";
+                string productFolder = null;
+                try
+                {
+                    productFolder = (HttpContext.Current != null)
+                        ? HttpContext.Current.Server.MapPath(relativeFolder)
+                        : System.Web.Hosting.HostingEnvironment.MapPath(relativeFolder);
+                }
+                catch
+                {
+                    productFolder = System.Web.Hosting.HostingEnvironment.MapPath(relativeFolder);
+                }
+
+                if (!string.IsNullOrEmpty(productFolder))
+                {
+                    Directory.CreateDirectory(productFolder);
+                }
 
                 string finalImageDbPath = null; // Biến lưu đường dẫn ảnh cuối cùng để update DB
                 bool imageHandled = false;      // Cờ đánh dấu đã xử lý xong ảnh chưa
 
-                // ===== CÁCH 1: KIỂM TRA ẢNH TỪ TEMP (dto.Image) =====
-                if (!string.IsNullOrWhiteSpace(dto.Image))
+                // ===== CÁCH 1: FILE UPLOAD TAY TỪ FORM (Ưu tiên nếu có file gửi kèm) =====
+                if (file != null && file.ContentLength > 0 && !string.IsNullOrEmpty(productFolder))
                 {
-                    string tempPath = HttpContext.Current.Server.MapPath($"~/Temp/Products/{dto.Image}");
-
-                    if (File.Exists(tempPath))
+                    try
                     {
-                        // Logic di chuyển file
-                        string destPath = Path.Combine(productFolder, dto.Image);
+                        string ext = Path.GetExtension(file.FileName);
+                        if (string.IsNullOrEmpty(ext)) ext = ".jpg";
+                        string fileName = Guid.NewGuid() + ext;
+                        string destPath = Path.Combine(productFolder, fileName);
 
-                        // Xử lý trùng tên
-                        if (File.Exists(destPath))
-                        {
-                            string ext = Path.GetExtension(dto.Image);
-                            string newName = Guid.NewGuid() + ext;
-                            destPath = Path.Combine(productFolder, newName);
-                            dto.Image = newName; // Cập nhật lại tên mới
-                        }
+                        file.SaveAs(destPath);
 
-                        File.Move(tempPath, destPath);
-
-                        // Ghi nhận đường dẫn
-                        finalImageDbPath = $"/Uploads/Products/{entity.product_id}/{dto.Image}";
-                        imageHandled = true; // Đánh dấu là đã có ảnh
+                        finalImageDbPath = $"/Uploads/Products/{entity.product_id}/{fileName}";
+                        imageHandled = true;
+                    }
+                    catch (Exception exFile)
+                    {
+                        System.Diagnostics.Trace.TraceError($"[CreateProductAsync Save File Error] {exFile}");
                     }
                 }
 
-                // ===== CÁCH 2: FALLBACK - FILE UPLOAD TAY =====
-                // Chỉ chạy nếu Cách 1 chưa xử lý được (imageHandled == false)
-                if (!imageHandled && file != null && file.ContentLength > 0)
+                // ===== CÁCH 2: KIỂM TRA ẢNH TỪ TEMP HOẶC ĐƯỜNG DẪN CÓ SẴN (dto.Image) =====
+                if (!imageHandled && !string.IsNullOrWhiteSpace(dto.Image))
                 {
-                    string ext = Path.GetExtension(file.FileName);
-                    string fileName = Guid.NewGuid() + ext;
-                    string destPath = Path.Combine(productFolder, fileName);
+                    string imgTrimmed = dto.Image.Trim();
 
-                    file.SaveAs(destPath);
+                    // Nếu đã là đường dẫn hoàn chỉnh hoặc URL thì lưu trực tiếp vào DB
+                    if (imgTrimmed.StartsWith("/Uploads/", StringComparison.OrdinalIgnoreCase) ||
+                        imgTrimmed.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
+                        imgTrimmed.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+                    {
+                        finalImageDbPath = imgTrimmed;
+                        imageHandled = true;
+                    }
+                    else
+                    {
+                        // Chỉ lấy tên file thuần để tránh lỗi Virtual Path / HttpException
+                        string fileNameOnly = Path.GetFileName(imgTrimmed);
+                        string tempRelative = $"~/Temp/Products/{fileNameOnly}";
+                        string tempPath = null;
 
-                    finalImageDbPath = $"/Uploads/Products/{entity.product_id}/{fileName}";
-                    imageHandled = true;
+                        try
+                        {
+                            tempPath = (HttpContext.Current != null)
+                                ? HttpContext.Current.Server.MapPath(tempRelative)
+                                : System.Web.Hosting.HostingEnvironment.MapPath(tempRelative);
+                        }
+                        catch
+                        {
+                            tempPath = System.Web.Hosting.HostingEnvironment.MapPath(tempRelative);
+                        }
+
+                        if (!string.IsNullOrEmpty(tempPath) && File.Exists(tempPath) && !string.IsNullOrEmpty(productFolder))
+                        {
+                            try
+                            {
+                                string destPath = Path.Combine(productFolder, fileNameOnly);
+
+                                if (File.Exists(destPath))
+                                {
+                                    string ext = Path.GetExtension(fileNameOnly);
+                                    string newName = Guid.NewGuid() + ext;
+                                    destPath = Path.Combine(productFolder, newName);
+                                    fileNameOnly = newName;
+                                }
+
+                                File.Move(tempPath, destPath);
+                                finalImageDbPath = $"/Uploads/Products/{entity.product_id}/{fileNameOnly}";
+                                imageHandled = true;
+                            }
+                            catch (Exception exMove)
+                            {
+                                System.Diagnostics.Trace.TraceError($"[CreateProductAsync Move Temp Error] {exMove}");
+                                finalImageDbPath = $"/Temp/Products/{fileNameOnly}";
+                                imageHandled = true;
+                            }
+                        }
+                        else
+                        {
+                            // Nếu không có file tạm thì lưu chuỗi tên ảnh
+                            finalImageDbPath = imgTrimmed;
+                            imageHandled = true;
+                        }
+                    }
                 }
 
                 // ===== CẬP NHẬT DB MỘT LẦN CUỐI =====
@@ -682,15 +742,24 @@ namespace EMarket.Modules.ProductModule.Services.Implementations
 
             if (!string.IsNullOrEmpty(dto.Image))
             {
-                // 1. Logic Xóa ảnh cũ
-                if (!string.IsNullOrEmpty(entity.image))
+                // 1. Logic Xóa ảnh cũ (chỉ xóa khi ảnh mới khác ảnh cũ)
+                if (!string.IsNullOrEmpty(entity.image) && !string.Equals(entity.image, dto.Image, StringComparison.OrdinalIgnoreCase))
                 {
                     string relativeFilePath = entity.image.TrimStart('~').TrimStart('/');
-                    string pathToDelete = System.IO.Path.Combine(rootPath, relativeFilePath);
+                    string resolvedRoot = !string.IsNullOrEmpty(rootPath)
+                        ? rootPath
+                        : (System.Web.Hosting.HostingEnvironment.MapPath("~") ?? System.Web.HttpContext.Current?.Server?.MapPath("~"));
 
-                    if (System.IO.File.Exists(pathToDelete))
+                    if (!string.IsNullOrEmpty(resolvedRoot))
                     {
-                        try { System.IO.File.Delete(pathToDelete); }
+                        try
+                        {
+                            string pathToDelete = System.IO.Path.Combine(resolvedRoot, relativeFilePath);
+                            if (System.IO.File.Exists(pathToDelete))
+                            {
+                                System.IO.File.Delete(pathToDelete);
+                            }
+                        }
                         catch { /* Log if needed */ }
                     }
                 }
@@ -842,9 +911,19 @@ namespace EMarket.Modules.ProductModule.Services.Implementations
                 return result;
 
             // Tạo folder Uploads/Products/[productId]/
-            string destFolder = HttpContext.Current.Server.MapPath(_productRoot + productId + "/");
+            string destFolder = null;
+            try
+            {
+                destFolder = HttpContext.Current != null
+                    ? HttpContext.Current.Server.MapPath(_productRoot + productId + "/")
+                    : System.Web.Hosting.HostingEnvironment.MapPath(_productRoot + productId + "/");
+            }
+            catch
+            {
+                destFolder = System.Web.Hosting.HostingEnvironment.MapPath(_productRoot + productId + "/");
+            }
 
-            if (!Directory.Exists(destFolder))
+            if (!string.IsNullOrEmpty(destFolder) && !Directory.Exists(destFolder))
                 Directory.CreateDirectory(destFolder);
 
             foreach (var rawName in tempFiles)
@@ -858,9 +937,19 @@ namespace EMarket.Modules.ProductModule.Services.Implementations
                     string fileName = Path.GetFileName(rawName);
 
                     // Source path
-                    string source = HttpContext.Current.Server.MapPath(_tempRoot + fileName);
+                    string source = null;
+                    try
+                    {
+                        source = HttpContext.Current != null
+                            ? HttpContext.Current.Server.MapPath(_tempRoot + fileName)
+                            : System.Web.Hosting.HostingEnvironment.MapPath(_tempRoot + fileName);
+                    }
+                    catch
+                    {
+                        source = System.Web.Hosting.HostingEnvironment.MapPath(_tempRoot + fileName);
+                    }
 
-                    if (!File.Exists(source))
+                    if (string.IsNullOrEmpty(source) || !File.Exists(source) || string.IsNullOrEmpty(destFolder))
                         continue;
 
                     // Destination path

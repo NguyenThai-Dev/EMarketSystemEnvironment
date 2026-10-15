@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -548,9 +548,12 @@ namespace EMarket.Modules.SalesModule.Services.Implementations
                 try
                 {
                     var parameters = new DynamicParameters();
-                    // Lấy BranchId và UserId từ Context (Session)
-                    parameters.Add("@branch_id", _userContext.CurrentBranchId);
-                    parameters.Add("@user_id", _userContext.UserId);
+                    // Lấy BranchId và UserId từ Request (nếu client Mobile truyền) hoặc Context (Session)
+                    int branchId = (request.BranchId.HasValue && request.BranchId.Value > 0) ? request.BranchId.Value : (_userContext.CurrentBranchId ?? 1);
+                    int userId = (request.UserId.HasValue && request.UserId.Value > 0) ? request.UserId.Value : (_userContext.UserId > 0 ? _userContext.UserId : 1);
+
+                    parameters.Add("@branch_id", branchId);
+                    parameters.Add("@user_id", userId);
 
                     parameters.Add("@customer_id", request.CustomerId);
                     parameters.Add("@total_amount", request.TotalAmount);
@@ -576,7 +579,6 @@ namespace EMarket.Modules.SalesModule.Services.Implementations
                     {
                         int newOrderId = (int)result.OrderId;
                         string status = request.Status;
-                        int branchId = _userContext.CurrentBranchId ?? 1;
 
                         await _orderRealtimeService.NotifyOrderCreatedAsync(newOrderId, status, branchId, request.ConnectionId);
 

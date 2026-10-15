@@ -140,14 +140,16 @@ namespace AIAssistantService.Plugins
             foreach (var arg in args)
             {
                 if (arg.Value is int i && i != 0) qs.Add($"{arg.Key}={i}");
-                else if (arg.Value is string s && !string.IsNullOrEmpty(s)) qs.Add($"{arg.Key}={s}");
+                else if (arg.Value is string s && !string.IsNullOrEmpty(s)) qs.Add($"{arg.Key}={Uri.EscapeDataString(s)}");
                 else if (arg.Value is double d && d != 0) qs.Add($"{arg.Key}={d}");
                 else if (arg.Value is long l && l != 0) qs.Add($"{arg.Key}={l}");
             }
             return qs.Count > 0 ? "?" + string.Join("&", qs) : "";
         }
 
-        // 1. AI Analysis
+        // ==========================================
+        // 1. AI Analysis (api/admin/ai-analysis)
+        // ==========================================
         [KernelFunction]
         [Description("Calls AI-driven features like inventory forecast, sales forecast, product insights, anomalies, and replenishment advice. Use this tool exclusively for any AI prediction or analysis queries. RETURNS detailed JSON metrics.")]
         public Task<string> GetAIAnalysis(
@@ -182,7 +184,9 @@ namespace AIAssistantService.Plugins
             return Task.FromResult("Error: Invalid action");
         }
 
-        // 2. Customer
+        // ==========================================
+        // 2. Customer Management (api/admin/customer)
+        // ==========================================
         [KernelFunction]
         [Description("Retrieves specific customer data. DO NOT list all customers. Only use 'search', 'by-id', 'stats', 'top'.")]
         public Task<string> GetCustomerData(
@@ -225,11 +229,13 @@ namespace AIAssistantService.Plugins
             };
         }
 
-        // 3. Dashboard
+        // ==========================================
+        // 3. Dashboard (api/admin/dashboard)
+        // ==========================================
         [KernelFunction]
         [Description("Retrieves high-level dashboard metrics, charts, and summaries. Use this tool heavily for generating insights instead of fetching raw lists.")]
         public Task<string> GetDashboardData(
-            [Description("The specific dashboard report. VALID VALUES: 'branch-performance', 'stock-chart', 'overview', 'people', 'warehouse', 'finance', 'debt', 'super-admin'")] string action,
+            [Description("The specific dashboard report. VALID VALUES: 'summary', 'cards', 'branch-performance', 'stock-chart', 'overview', 'people', 'warehouse', 'finance', 'debt', 'super-admin'")] string action,
             [Description("Filter metrics by a specific Branch ID. Defaults to 1.")] int branchId = 1,
             [Description("Filter metrics from this date ('YYYY-MM-DD').")] string fromDate = "",
             [Description("Filter metrics up to this date ('YYYY-MM-DD').")] string toDate = "",
@@ -240,6 +246,8 @@ namespace AIAssistantService.Plugins
         {
             return action switch
             {
+                "summary" => SafeGetAsync($"api/admin/dashboard/summary{BuildQs(("branchId", branchId), ("fromDate", fromDate), ("toDate", toDate), ("groupBy", groupBy))}"),
+                "cards" or "kpi-summary" => SafeGetAsync($"api/admin/dashboard/cards{BuildQs(("branchId", branchId))}"),
                 "branch-performance" => SafeGetAsync($"api/admin/dashboard/branch-performance{BuildQs(("branchId", branchId), ("fromDate", fromDate), ("toDate", toDate))}"),
                 "stock-chart" => SafeGetAsync($"api/admin/dashboard/stock-chart{BuildQs(("branchId", branchId))}"),
                 "overview" => SafeGetAsync($"api/admin/dashboard/overview{BuildQs(("branchId", branchId), ("fromDate", fromDate), ("toDate", toDate), ("groupBy", groupBy))}"),
@@ -252,21 +260,25 @@ namespace AIAssistantService.Plugins
             };
         }
 
-        // 4. Expense
+        // ==========================================
+        // 4. Expense Management (api/admin/expense)
+        // ==========================================
         [KernelFunction]
-        [Description("Retrieves financial expenses. DO NOT fetch full lists. Use 'detail', 'categories-all', or heavily filter lists.")]
+        [Description("Retrieves financial expenses. DO NOT fetch full lists. Use 'summary', 'detail', 'categories-all', or heavily filter lists.")]
         public Task<string> GetExpenseData(
-            [Description("The specific expense query. VALID VALUES: 'list', 'detail', 'categories-all', 'categories-active', 'category-by-id'")] string action,
+            [Description("The specific expense query. VALID VALUES: 'list', 'paged', 'summary', 'detail', 'categories-all', 'categories-active', 'category-by-id'")] string action,
             [Description("ID of the specific expense record or category.")] int id = 0,
             [Description("Filter expenses by branch ID.")] int branchId = 1,
             [Description("Filter expenses by Category ID.")] int categoryId = 0,
             [Description("Filter expenses from this date.")] string fromDate = "",
             [Description("Filter expenses up to this date.")] string toDate = "",
-            [Description("Filter expenses by status string.")] string status = "")
+            [Description("Filter expenses by status string (e.g., 'Approved', 'Pending', 'Rejected').")] string status = "")
         {
             return action switch
             {
                 "list" => SafeGetAsync($"api/admin/expense/list{BuildQs(("branchId", branchId), ("categoryId", categoryId), ("fromDate", fromDate), ("toDate", toDate), ("status", status))}"),
+                "paged" => SafeGetAsync($"api/admin/expense/paged{BuildQs(("branchId", branchId), ("categoryId", categoryId), ("fromDate", fromDate), ("toDate", toDate), ("status", status))}"),
+                "summary" => SafeGetAsync($"api/admin/expense/summary{BuildQs(("branchId", branchId), ("fromDate", fromDate), ("toDate", toDate))}"),
                 "detail" => SafeGetAsync($"api/admin/expense/{id}"),
                 "categories-all" => SafeGetAsync("api/admin/expense/categories"),
                 "categories-active" => SafeGetAsync("api/admin/expense/categories/active"),
@@ -275,48 +287,34 @@ namespace AIAssistantService.Plugins
             };
         }
 
-        // 5. Inventory
+        // ==========================================
+        // 5. Inventory & Warehouse (api/admin/inventory)
+        // ==========================================
         [KernelFunction]
-        [Description("Retrieves stock levels and movements. DO NOT fetch 'all' stock. Always filter by ID, Branch, or use 'total-actual'.")]
+        [Description("Retrieves stock levels and movements. DO NOT fetch 'all' stock. Always filter by Product ID, Warehouse ID, Branch ID, or use 'total-actual'.")]
         public Task<string> GetStockData(
             [Description("The inventory action. VALID VALUES: 'all', 'filter', 'by-branch', 'by-id', 'movements', 'total-actual'")] string action,
-            [Description("Specific Stock ID.")] int id = 0,
+            [Description("Specific Stock Item ID.")] int id = 0,
             [Description("Filter stock by Branch ID.")] int branchId = 1,
             [Description("Filter stock by Product ID.")] int productId = 0,
             [Description("Filter stock by Warehouse ID.")] int warehouseId = 0,
             [Description("Pagination start index.")] int start = 0,
             [Description("Pagination length.")] int length = 10,
-            [Description("Type of stock movement to filter by.")] string type = "",
+            [Description("Type of stock movement to filter by (e.g., 'IN', 'OUT').")] string type = "",
             [Description("Filter from date.")] string fromDate = "",
             [Description("Filter to date.")] string toDate = "",
             [Description("Search query keyword.")] string keyword = "")
         {
             return action switch
             {
-                "all" => SafeGetAsync("api/admin/inventory/stock/all"),
-                "filter" => SafeGetAsync($"api/admin/inventory/stock/filter{BuildQs(("productId", productId), ("warehouseId", warehouseId))}"),
-                "by-branch" => SafeGetAsync($"api/admin/inventory/stock/by-branch{BuildQs(("branchId", branchId))}"),
-                "by-id" => SafeGetAsync($"api/admin/inventory/stock/{id}"),
+                "all" => SafeGetAsync("api/admin/inventory/items"),
+                "filter" => SafeGetAsync($"api/admin/inventory/items{BuildQs(("productId", productId), ("warehouseId", warehouseId), ("branchId", branchId))}"),
+                "by-branch" => SafeGetAsync($"api/admin/inventory/items{BuildQs(("branchId", branchId))}"),
+                "by-id" => SafeGetAsync($"api/admin/inventory/items/{id}"),
                 "movements" => SafeGetAsync($"api/admin/inventory/stock/movements{BuildQs(("start", start), ("length", length), ("warehouseId", warehouseId), ("type", type), ("fromDate", fromDate), ("toDate", toDate), ("keyword", keyword))}"),
                 "total-actual" => SafeGetAsync($"api/admin/inventory/stock/total-actual{BuildQs(("productId", productId), ("warehouseId", warehouseId))}"),
                 _ => Task.FromResult($"Error: Invalid action '{action}'.")
             };
-        }
-
-        [KernelFunction]
-        [Description("Fetches detailed stock capacities given a JSON list of Product IDs.")]
-        public Task<string> PostStockData(
-            [Description("VALID VALUES: 'by-product-ids'")] string action,
-            [Description("A valid JSON array representing an array of product IDs. Example: [1,2,3]")] string jsonPayload,
-            [Description("Warehouse ID filter.")] int warehouseId = 0,
-            [Description("Branch ID filter.")] int branchId = 1)
-        {
-            if (action == "by-product-ids")
-            {
-                var payload = System.Text.Json.JsonSerializer.Deserialize<object>(jsonPayload);
-                return SafePostAsync($"api/admin/inventory/stock/by-product-ids{BuildQs(("warehouseId", warehouseId), ("branchId", branchId))}", payload);
-            }
-            return Task.FromResult($"Error: Invalid action '{action}'.");
         }
 
         [KernelFunction]
@@ -344,9 +342,9 @@ namespace AIAssistantService.Plugins
         }
 
         [KernelFunction]
-        [Description("Retrieves Debt records. Prefer 'overdue', 'near-due', or 'by-id'. Avoid generic 'all'.")]
+        [Description("Retrieves Debt records. Prefer 'summary', 'overdue', 'near-due', or 'by-id'. Avoid generic 'all'.")]
         public Task<string> GetDebtData(
-            [Description("Debt query action. VALID VALUES: 'all', 'list', 'by-id', 'by-purchase', 'overdue', 'near-due', 'payments-by-debt', 'payment-mail-info'")] string action,
+            [Description("Debt query action. VALID VALUES: 'all', 'list', 'summary', 'by-id', 'by-purchase', 'overdue', 'near-due', 'payments-by-debt'")] string action,
             [Description("Debt ID.")] int id = 0,
             [Description("Search keyword.")] string keyword = "",
             [Description("Filter by Supplier ID.")] int supplierId = 0,
@@ -360,25 +358,12 @@ namespace AIAssistantService.Plugins
             {
                 "all" => SafeGetAsync("api/admin/inventory/debt/all"),
                 "list" => SafeGetAsync($"api/admin/inventory/debt/list{BuildQs(("keyword", keyword), ("supplierId", supplierId), ("status", status), ("fromDate", fromDate), ("toDate", toDate))}"),
+                "summary" => SafeGetAsync($"api/admin/inventory/debt/summary{BuildQs(("keyword", keyword), ("supplierId", supplierId), ("status", status), ("fromDate", fromDate), ("toDate", toDate))}"),
                 "by-id" => SafeGetAsync($"api/admin/inventory/debt/{id}"),
-                "by-purchase" => SafeGetAsync($"api/admin/inventory/debt/by-purchase/{purchaseOrderId}"),
+                "by-purchase" => SafeGetAsync($"api/admin/inventory/debt/by-purchase-order/{purchaseOrderId}"),
                 "overdue" => SafeGetAsync("api/admin/inventory/debt/overdue"),
                 "near-due" => SafeGetAsync($"api/admin/inventory/debt/near-due{BuildQs(("days", days))}"),
                 "payments-by-debt" => SafeGetAsync($"api/admin/inventory/debt/{id}/payments"),
-                "payment-mail-info" => SafeGetAsync($"api/admin/inventory/debt/payment-mail-info/{id}"),
-                _ => Task.FromResult($"Error: Invalid action '{action}'.")
-            };
-        }
-
-        [KernelFunction]
-        [Description("Fetches detailed internal supplier debt records given a JSON array payload of IDs.")]
-        public Task<string> PostDebtData([Description("VALID VALUES: 'by-ids', 'internal-detail'")] string action, [Description("JSON payload array representing Debt IDs.")] string jsonPayload)
-        {
-            var payload = System.Text.Json.JsonSerializer.Deserialize<object>(jsonPayload);
-            return action switch
-            {
-                "by-ids" => SafePostAsync("api/admin/inventory/debt/by-ids", payload),
-                "internal-detail" => SafePostAsync("api/admin/inventory/debt/internal-detail", payload),
                 _ => Task.FromResult($"Error: Invalid action '{action}'.")
             };
         }
@@ -393,28 +378,18 @@ namespace AIAssistantService.Plugins
         {
             return action switch
             {
-                "all" => SafeGetAsync("api/admin/inventory/warehouses/all"),
-                "by-branch" => SafeGetAsync($"api/admin/inventory/warehouses{BuildQs(("branchId", branchId))}"),
-                "search" => SafeGetAsync($"api/admin/inventory/warehouses/search{BuildQs(("name", name), ("branchId", branchId))}"),
+                "all" => SafeGetAsync($"api/admin/inventory/warehouses/all{BuildQs(("name", name), ("branchId", branchId))}"),
+                "by-branch" => SafeGetAsync($"api/admin/inventory/warehouses/by-branch/{branchId}"),
+                "search" => SafeGetAsync($"api/admin/inventory/warehouses/all{BuildQs(("name", name), ("branchId", branchId))}"),
                 "detail" => SafeGetAsync($"api/admin/inventory/warehouses/{id}"),
-                "dict" => SafeGetAsync("api/admin/inventory/warehouses/dict"),
+                "dict" => SafeGetAsync("api/admin/inventory/warehouses/all"),
                 _ => Task.FromResult($"Error: Invalid action '{action}'.")
             };
         }
 
-        [KernelFunction]
-        [Description("Fetches warehouse properties given a JSON payload of warehouse IDs.")]
-        public Task<string> PostWarehouseData([Description("VALID VALUES: 'by-ids'")] string action, [Description("JSON Array string containing warehouse IDs.")] string jsonPayload)
-        {
-            if (action == "by-ids")
-            {
-                var payload = System.Text.Json.JsonSerializer.Deserialize<object>(jsonPayload);
-                return SafePostAsync("api/admin/inventory/warehouses/by-ids", payload);
-            }
-            return Task.FromResult($"Error: Invalid action '{action}'.");
-        }
-
-        // 6. Log
+        // ==========================================
+        // 6. Log & Audit (api/admin/logs)
+        // ==========================================
         [KernelFunction]
         [Description("Retrieves system logs and statistics. DO NOT list large logs. Prefer 'statistics' or 'system-events'.")]
         public Task<string> GetLogData(
@@ -424,6 +399,7 @@ namespace AIAssistantService.Plugins
             [Description("Pagination start offset.")] int start = 0,
             [Description("Pagination batch length.")] int length = 10,
             [Description("Target database table for audit search.")] string tableName = "",
+            [Description("Action type in audit log (e.g., 'INSERT', 'UPDATE', 'DELETE').")] string logAction = "",
             [Description("Keyword to search through the logs.")] string search = "",
             [Description("Filter from date.")] string fromDate = "",
             [Description("Filter to date.")] string toDate = "",
@@ -433,16 +409,18 @@ namespace AIAssistantService.Plugins
             return logType switch
             {
                 "audit" => action == "detail" ? SafeGetAsync($"api/admin/logs/audit/{id}") : 
-                           SafeGetAsync($"api/admin/logs/audit{BuildQs(("start", start), ("length", length), ("tableName", tableName), ("action", search), ("search", search), ("fromDate", fromDate), ("toDate", toDate))}"),
+                           SafeGetAsync($"api/admin/logs/audit{BuildQs(("start", start), ("length", length), ("tableName", tableName), ("action", logAction), ("search", search), ("fromDate", fromDate), ("toDate", toDate))}"),
                 "app" => action == "detail" ? SafeGetAsync($"api/admin/logs/app/{id}") : 
                          SafeGetAsync($"api/admin/logs/app{BuildQs(("start", start), ("length", length), ("logLevel", logLevel), ("logger", logger), ("search", search), ("fromDate", fromDate), ("toDate", toDate))}"),
-                "statistics" => SafeGetAsync("api/admin/logs/statistics"),
+                "statistics" or "stats" => SafeGetAsync("api/admin/logs/statistics"),
                 "system-events" => SafeGetAsync("api/admin/logs/system-events"),
                 _ => Task.FromResult($"Error: Invalid logType '{logType}'.")
             };
         }
 
-        // 7. Product
+        // ==========================================
+        // 7. Product Management (api/admin/product)
+        // ==========================================
         [KernelFunction]
         [Description("Retrieves product information. DO NOT list all. Use 'search', 'by-id', 'low-stock-alerts'.")]
         public Task<string> GetProductData(
@@ -457,27 +435,27 @@ namespace AIAssistantService.Plugins
         {
             return action switch
             {
-                "list" => SafeGetAsync("api/admin/product-management/products"),
-                "search" => SafeGetAsync($"api/admin/product-management/products/search{BuildQs(("keyword", keyword), ("categoryId", categoryId), ("branchId", branchId), ("supplierId", supplierId), ("warehouseId", warehouseId))}"),
-                "search-simple" => SafeGetAsync($"api/admin/product-management/products/search-simple{BuildQs(("keyword", keyword), ("branchId", branchId))}"),
-                "by-id" => SafeGetAsync($"api/admin/product-management/products/{id}"),
-                "inactive" => SafeGetAsync($"api/admin/product-management/products/inactive{BuildQs(("keyword", keyword), ("categoryId", categoryId), ("branchId", branchId), ("supplierId", supplierId), ("warehouseId", warehouseId))}"),
-                "low-stock-alerts" => SafeGetAsync($"api/admin/product-management/products/low-stock-alerts{BuildQs(("top", top))}"),
-                "images" => SafeGetAsync($"api/admin/product-management/products/{id}/images"),
-                "image-by-id" => SafeGetAsync($"api/admin/product-management/products/images/{id}"),
+                "list" => SafeGetAsync("api/admin/product/products"),
+                "search" => SafeGetAsync($"api/admin/product/products/search{BuildQs(("keyword", keyword), ("categoryId", categoryId), ("branchId", branchId), ("supplierId", supplierId), ("warehouseId", warehouseId))}"),
+                "search-simple" => SafeGetAsync($"api/admin/product/products/search-simple{BuildQs(("keyword", keyword), ("branchId", branchId))}"),
+                "by-id" => SafeGetAsync($"api/admin/product/products/{id}"),
+                "inactive" => SafeGetAsync($"api/admin/product/products/inactive{BuildQs(("keyword", keyword), ("categoryId", categoryId), ("branchId", branchId), ("supplierId", supplierId), ("warehouseId", warehouseId))}"),
+                "low-stock-alerts" => SafeGetAsync($"api/admin/product/products/low-stock-alerts{BuildQs(("top", top))}"),
+                "images" => SafeGetAsync($"api/admin/product/products/{id}/images"),
+                "image-by-id" => SafeGetAsync($"api/admin/product/products/images/{id}"),
                 _ => Task.FromResult($"Error: Invalid action '{action}'.")
             };
         }
 
         [KernelFunction]
         [Description("Fetches detailed objects or names for multiple products given an array of Product IDs.")]
-        public Task<string> PostProductData([Description("VALID VALUES: 'by-ids', 'names-by-ids'")] string action, [Description("Valid JSON array of Product IDs.")] string jsonPayload)
+        public Task<string> PostProductData([Description("VALID VALUES: 'by-ids', 'names-by-ids'")] string action, [Description("Valid JSON array of Product IDs. Example: [1, 2, 3]")] string jsonPayload)
         {
             var payload = System.Text.Json.JsonSerializer.Deserialize<object>(jsonPayload);
             return action switch
             {
-                "by-ids" => SafePostAsync("api/admin/product-management/products/by-ids", payload),
-                "names-by-ids" => SafePostAsync("api/admin/product-management/products/names-by-ids", payload),
+                "by-ids" => SafePostAsync("api/admin/product/products/by-ids", payload),
+                "names-by-ids" => SafePostAsync("api/admin/product/products/names-by-ids", payload),
                 _ => Task.FromResult($"Error: Invalid action '{action}'.")
             };
         }
@@ -493,24 +471,24 @@ namespace AIAssistantService.Plugins
         {
             return action switch
             {
-                "all" => SafeGetAsync("api/admin/product-management/lots"),
-                "by-product" => SafeGetAsync($"api/admin/product-management/products/{productId}/lots"),
-                "lot-detail" => SafeGetAsync($"api/admin/product-management/lots/{lotId}"),
-                "lot-ids-by-product" => SafeGetAsync($"api/admin/product-management/lots/by-product/{productId}/lot-ids"),
-                "find-existing" => SafeGetAsync($"api/admin/product-management/lots/find-existing{BuildQs(("productId", productId), ("manufacturingDate", manufacturingDate), ("expiryDate", expiryDate))}"),
+                "all" => SafeGetAsync("api/admin/product/lots"),
+                "by-product" => SafeGetAsync($"api/admin/product/products/{productId}/lots"),
+                "lot-detail" => SafeGetAsync($"api/admin/product/lots/{lotId}"),
+                "lot-ids-by-product" => SafeGetAsync($"api/admin/product/lots/by-product/{productId}/lot-ids"),
+                "find-existing" => SafeGetAsync($"api/admin/product/lots/find-existing{BuildQs(("productId", productId), ("manufacturingDate", manufacturingDate), ("expiryDate", expiryDate))}"),
                 _ => Task.FromResult($"Error: Invalid action '{action}'.")
             };
         }
 
         [KernelFunction]
         [Description("Fetches comprehensive details for lots given an array of Lot IDs.")]
-        public Task<string> PostLotData([Description("VALID VALUES: 'by-ids', 'details-by-ids'")] string action, [Description("Valid JSON array of Lot IDs.")] string jsonPayload)
+        public Task<string> PostLotData([Description("VALID VALUES: 'by-ids', 'details-by-ids'")] string action, [Description("Valid JSON array of Lot IDs. Example: [1, 2, 3]")] string jsonPayload)
         {
             var payload = System.Text.Json.JsonSerializer.Deserialize<object>(jsonPayload);
             return action switch
             {
-                "by-ids" => SafePostAsync("api/admin/product-management/lots/by-ids", payload),
-                "details-by-ids" => SafePostAsync("api/admin/product-management/lots/details-by-ids", payload),
+                "by-ids" => SafePostAsync("api/admin/product/lots/by-ids", payload),
+                "details-by-ids" => SafePostAsync("api/admin/product/lots/details-by-ids", payload),
                 _ => Task.FromResult($"Error: Invalid action '{action}'.")
             };
         }
@@ -523,7 +501,7 @@ namespace AIAssistantService.Plugins
             [Description("ID of category or supplier.")] int id = 0, 
             [Description("Search by name.")] string name = "")
         {
-            string basePath = type == "category" ? "api/admin/product-management/categories" : "api/admin/product-management/suppliers";
+            string basePath = type == "category" ? "api/admin/product/categories" : "api/admin/product/suppliers";
             return action switch
             {
                 "list" => SafeGetAsync(basePath),
@@ -535,22 +513,24 @@ namespace AIAssistantService.Plugins
 
         [KernelFunction]
         [Description("Fetches categories or suppliers in bulk via an array of IDs.")]
-        public Task<string> PostCategorySupplierData([Description("VALID VALUES: 'category', 'supplier'")] string type, [Description("VALID VALUES: 'by-ids'")] string action, [Description("Valid JSON array of IDs.")] string jsonPayload)
+        public Task<string> PostCategorySupplierData([Description("VALID VALUES: 'category', 'supplier'")] string type, [Description("VALID VALUES: 'by-ids'")] string action, [Description("Valid JSON array of IDs. Example: [1, 2, 3]")] string jsonPayload)
         {
             if (action == "by-ids")
             {
-                string basePath = type == "category" ? "api/admin/product-management/categories" : "api/admin/product-management/suppliers";
+                string basePath = type == "category" ? "api/admin/product/categories" : "api/admin/product/suppliers";
                 var payload = System.Text.Json.JsonSerializer.Deserialize<object>(jsonPayload);
                 return SafePostAsync($"{basePath}/by-ids", payload);
             }
             return Task.FromResult($"Error: Invalid action '{action}'.");
         }
 
-        // 8. Quotation
+        // ==========================================
+        // 8. Quotation (api/admin/quotation)
+        // ==========================================
         [KernelFunction]
         [Description("Retrieves business quotations, price estimates, and sales quotes sent to customers.")]
         public Task<string> GetQuotationData(
-            [Description("Quotation query action. VALID VALUES: 'list', 'detail'")] string action, 
+            [Description("Quotation query action. VALID VALUES: 'list', 'paged', 'detail'")] string action, 
             [Description("Quotation ID.")] int id = 0, 
             [Description("Keyword search for client name or quote reference.")] string keyword = "", 
             [Description("Filter by Branch ID.")] int branchId = 1, 
@@ -561,12 +541,15 @@ namespace AIAssistantService.Plugins
             return action switch
             {
                 "list" => SafeGetAsync($"api/admin/quotation/list{BuildQs(("keyword", keyword), ("branchId", branchId), ("status", status), ("fromDate", fromDate), ("toDate", toDate))}"),
+                "paged" => SafeGetAsync($"api/admin/quotation/paged{BuildQs(("keyword", keyword), ("branchId", branchId), ("status", status), ("fromDate", fromDate), ("toDate", toDate))}"),
                 "detail" => SafeGetAsync($"api/admin/quotation/{id}"),
                 _ => Task.FromResult($"Error: Invalid action '{action}'.")
             };
         }
 
-        // 9. Sales
+        // ==========================================
+        // 9. Sales Management (api/admin/sales)
+        // ==========================================
         [KernelFunction]
         [Description("Retrieves sales orders. DO NOT use 'all' or 'list' for general queries. Use 'detail' for specific IDs or 'by-branch' with strict dates.")]
         public Task<string> GetOrderData(
@@ -616,7 +599,27 @@ namespace AIAssistantService.Plugins
             };
         }
 
-        // 10. User Management
+        // ==========================================
+        // 10. System Configuration (api/admin/system-config)
+        // ==========================================
+        [KernelFunction]
+        [Description("Retrieves system-wide configurations including VAT, Bank Accounts, Loyalty Point exchange rates, Telegram, and Email settings.")]
+        public Task<string> GetSystemConfigData(
+            [Description("Configuration query action. VALID VALUES: 'overview', 'all', 'value'")] string action,
+            [Description("Configuration Key name (required for 'value' action, e.g., 'EMarketVAT', 'VIPDiscount').")] string key = "")
+        {
+            return action switch
+            {
+                "overview" => SafeGetAsync("api/admin/system-config"),
+                "all" => SafeGetAsync("api/admin/system-config/all"),
+                "value" => SafeGetAsync($"api/admin/system-config/value/{key}"),
+                _ => Task.FromResult($"Error: Invalid action '{action}'.")
+            };
+        }
+
+        // ==========================================
+        // 11. User Management (api/admin/user-management)
+        // ==========================================
         [KernelFunction]
         [Description("Retrieves users. Avoid 'list'. Use 'search', 'by-id', or 'stats'.")]
         public Task<string> GetUserData(
@@ -642,7 +645,7 @@ namespace AIAssistantService.Plugins
 
         [KernelFunction]
         [Description("Fetches detailed user objects via an array of User IDs.")]
-        public Task<string> PostUserData([Description("VALID VALUES: 'by-ids'")] string action, [Description("JSON array containing User IDs.")] string jsonPayload)
+        public Task<string> PostUserData([Description("VALID VALUES: 'by-ids'")] string action, [Description("JSON array containing User IDs. Example: [1, 2, 3]")] string jsonPayload)
         {
             if (action == "by-ids")
             {
@@ -656,7 +659,7 @@ namespace AIAssistantService.Plugins
         [Description("Retrieves organizational structures, branches (Chi nhánh), roles, and permission levels. Use this tool exclusively to get Branch info, Role policies, or system privileges!")]
         public Task<string> GetBranchRolePermissionData(
             [Description("The organizational dimension. MUST BE EXACTLY ONE OF: 'branch', 'role', 'permission'")] string type,
-            [Description("The query operation. VALID VALUES: 'list', 'search', 'by-id', 'dict', 'role-permissions'")] string action,
+            [Description("The query operation. VALID VALUES: 'list', 'search', 'nearest', 'by-id', 'dict', 'role-permissions'")] string action,
             [Description("ID of the Branch, Role, or Permission.")] int id = 0,
             [Description("Name to search for.")] string name = "",
             [Description("Latitude coordinate for spatial search.")] double lat = 0,
@@ -678,6 +681,7 @@ namespace AIAssistantService.Plugins
                 "list" => SafeGetAsync(basePath),
                 "by-id" => SafeGetAsync($"{basePath}/{id}"),
                 "search" => SafeGetAsync($"{basePath}/search{BuildQs(("name", name), ("lat", lat), ("lng", lng), ("maxDist", maxDist))}"),
+                "nearest" => SafeGetAsync($"{basePath}/nearest{BuildQs(("lat", lat), ("lng", lng), ("maxDist", maxDist))}"),
                 "dict" => SafeGetAsync($"{basePath}/dict"),
                 "role-permissions" => SafeGetAsync($"{basePath}/{id}/permissions"),
                 _ => Task.FromResult($"Error: Invalid action '{action}'.")
@@ -686,7 +690,7 @@ namespace AIAssistantService.Plugins
 
         [KernelFunction]
         [Description("Fetches detailed Branch configurations given a JSON payload array of Branch IDs.")]
-        public Task<string> PostBranchData([Description("VALID VALUES: 'by-ids'")] string action, [Description("JSON array of Branch IDs.")] string jsonPayload)
+        public Task<string> PostBranchData([Description("VALID VALUES: 'by-ids'")] string action, [Description("JSON array of Branch IDs. Example: [1, 2, 3]")] string jsonPayload)
         {
             if (action == "by-ids")
             {
@@ -696,7 +700,9 @@ namespace AIAssistantService.Plugins
             return Task.FromResult($"Error: Invalid action '{action}'.");
         }
 
-        // 11. Composite Reports
+        // ==========================================
+        // 12. Composite Aggregated Reports
+        // ==========================================
         [KernelFunction]
         [Description("Retrieves a comprehensive business report for a specific branch by its name. Use this tool when the user asks about the overall situation, sales, or business of a specific branch like 'Bến Cát'. It automatically finds the branch ID and aggregates dashboard overview, performance, and AI insights into a single dataset.")]
         public async Task<string> GetComprehensiveBranchReport(
@@ -706,7 +712,6 @@ namespace AIAssistantService.Plugins
         {
             try
             {
-                // Lấy toàn bộ danh sách chi nhánh (Dict) thay vì gọi Search có dấu để tránh lỗi Encoding URL
                 var branchDictUrl = "api/admin/user-management/branches/dict";
                 var branchDictRaw = await SafeGetAsync(branchDictUrl);
                 
@@ -716,27 +721,21 @@ namespace AIAssistantService.Plugins
                 try
                 {
                     var node = JsonNode.Parse(branchDictRaw);
-
-                    // Ép kiểu về JsonObject vì root lúc này là một Dictionary, không phải Array
                     var jsonObject = node as JsonObject;
 
                     if (jsonObject != null && jsonObject.Count > 0)
                     {
-                        // Trích xuất tất cả các object chi nhánh (values) vào một list để dễ dùng LINQ
-                        var branches = jsonObject.Select(kvp => kvp.Value).Where(v => v != null).ToList();
+                        var branches = jsonObject.Select(kvp => kvp.Value).Where(v => v != null).Cast<JsonNode>().ToList();
 
-                        // 1. Khớp chính xác 100% (Lưu ý: dùng "Name" thay vì "name")
                         var exactMatch = branches.FirstOrDefault(b =>
                             string.Equals(b?["Name"]?.GetValue<string>(), branchName, StringComparison.OrdinalIgnoreCase));
 
-                        // 2. Khớp tương đối 
                         var containsMatches = exactMatch == null
                             ? branches.Where(b => (b?["Name"]?.GetValue<string>() ?? "").Contains(branchName, StringComparison.OrdinalIgnoreCase)).ToList()
                             : new List<JsonNode>();
 
                         if (exactMatch != null)
                         {
-                            // Lưu ý: dùng "BranchId" thay vì "id"
                             branchId = exactMatch["BranchId"]?.GetValue<int>() ?? 0;
                             branchFullName = exactMatch["Name"]?.GetValue<string>() ?? branchName;
                         }
@@ -753,11 +752,6 @@ namespace AIAssistantService.Plugins
                     }
                 }
                 catch { /* Parse error, branchId remains 0 */ }
-
-                if (branchId == 0)
-                {
-                    return $"Không tìm thấy chi nhánh nào có tên '{branchName}'. Vui lòng kiểm tra lại tên chi nhánh.";
-                }
 
                 if (branchId == 0)
                 {
@@ -799,7 +793,7 @@ namespace AIAssistantService.Plugins
         {
             try
             {
-                var productSearchUrl = $"api/admin/product-management/products/search-simple?keyword={Uri.EscapeDataString(productName)}&branchId={branchId}";
+                var productSearchUrl = $"api/admin/product/products/search-simple?keyword={Uri.EscapeDataString(productName)}&branchId={branchId}";
                 var productSearchRaw = await SafeGetAsync(productSearchUrl);
                 
                 int productId = 0;
@@ -831,8 +825,8 @@ namespace AIAssistantService.Plugins
                     return $"Không tìm thấy sản phẩm nào có tên '{productName}' tại chi nhánh {branchId}.";
                 }
 
-                var productDetailTask = SafeGetAsync($"api/admin/product-management/products/{productId}");
-                var stockTask = SafeGetAsync($"api/admin/inventory/stock/filter{BuildQs(("productId", productId))}");
+                var productDetailTask = SafeGetAsync($"api/admin/product/products/{productId}");
+                var stockTask = SafeGetAsync($"api/admin/inventory/items{BuildQs(("productId", productId), ("branchId", branchId))}");
                 var salesForecastTask = SafeGetAsync($"api/admin/ai-analysis/sales-forecast/{productId}/{branchId}");
 
                 await Task.WhenAll(productDetailTask, stockTask, salesForecastTask);

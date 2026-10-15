@@ -1,4 +1,4 @@
-﻿using Dapper;
+using Dapper;
 using EMarket.Forecast.Services.Interfaces;
 using EMarket.Models;
 using EMarket.Modules.CustomerModule.Services.Interfaces;
@@ -83,8 +83,32 @@ namespace EMarket.Modules.DashboardModule.Services.Implementations
                     "sp_Admin_Dashboard_Summary",
                     new { BranchId = branchId },
                     commandType: CommandType.StoredProcedure
-                );
-                return result ?? new DashboardSummaryDTO();
+                ) ?? new DashboardSummaryDTO();
+
+                if (result.TotalSales == 0 && result.TotalOrders == 0)
+                {
+                    try
+                    {
+                        var fDate = DateTime.Today.AddDays(-30);
+                        var tDate = DateTime.Today.AddDays(1).AddSeconds(-1);
+                        var salesData = await conn.QueryFirstOrDefaultAsync<dynamic>(@"
+                            SELECT ISNULL(SUM(total_amount), 0) AS TotalSales, COUNT(*) AS TotalOrders
+                            FROM Orders
+                            WHERE (@BranchId IS NULL OR branch_id = @BranchId)
+                              AND order_date BETWEEN @FromDate AND @ToDate
+                              AND status IN ('Completed', 'Processing');",
+                            new { BranchId = branchId, FromDate = fDate, ToDate = tDate });
+
+                        if (salesData != null)
+                        {
+                            result.TotalSales = (decimal)salesData.TotalSales;
+                            result.TotalOrders = (int)salesData.TotalOrders;
+                        }
+                    }
+                    catch { }
+                }
+
+                return result;
             }
         }
 

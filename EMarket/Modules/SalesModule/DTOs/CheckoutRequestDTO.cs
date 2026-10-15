@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace EMarket.Modules.SalesModule.DTOs
@@ -6,6 +6,8 @@ namespace EMarket.Modules.SalesModule.DTOs
     // Class này dùng để nhận Request từ Frontend (JS gửi lên)
     public class CheckoutRequestDTO
     {
+        public int? UserId { get; set; } // ID người dùng đăng nhập (Thu ngân/Admin)
+        public int? BranchId { get; set; } // ID chi nhánh làm việc
         public int? CustomerId { get; set; } // Nullable vì có thể là khách vãng lai
 
         // Thông tin điểm

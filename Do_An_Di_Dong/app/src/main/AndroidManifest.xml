@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Quyền truy cập mạng, camera, ghi âm (AI chat) và xác thực vân tay/khuôn mặt -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
+
+    <!-- Chỉ định app sử dụng camera -->
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Do_An_Di_Dong"
+        android:usesCleartextTraffic="true"
+        android:networkSecurityConfig="@xml/network_security_config"
+        tools:targetApi="34">
+
+        <!-- Màn hình Đăng nhập (Màn hình chính khi khởi chạy) -->
+        <activity
+            android:name=".ui.auth.LoginActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Do_An_Di_Dong.Login"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Màn hình chính của ứng dụng -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/Theme.Do_An_Di_Dong" />
+
+        <!-- Màn hình Quét mã vạch camera -->
+        <activity
+            android:name=".ui.product.BarcodeScanActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Do_An_Di_Dong" />
+
+        <!-- Màn hình Thêm / Sửa Sản phẩm -->
+        <activity
+            android:name=".ui.product.ProductCreateEditActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Do_An_Di_Dong" />
+
+        <!-- Màn hình Chi tiết Đơn hàng -->
+        <activity
+            android:name=".ui.sales.OrderDetailActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Do_An_Di_Dong" />
+
+        <!-- Màn hình Danh sách Khuyến mãi -->
+        <activity
+            android:name=".ui.sales.PromotionsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Do_An_Di_Dong" />
+
+        <!-- Màn hình Danh sách Báo giá -->
+        <activity
+            android:name=".ui.quotation.QuotationsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Do_An_Di_Dong" />
+
+        <!-- Màn hình Tạo/Sửa Báo giá -->
+        <activity
+            android:name=".ui.quotation.QuotationEditorActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/Theme.Do_An_Di_Dong" />
+
+        <!-- Màn hình Chi tiết Sản phẩm -->
+        <activity
+            android:name=".ui.product.ProductDetailActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Do_An_Di_Dong" />
+
+        <!-- Màn hình Thêm/Sửa Sản phẩm -->
+        <activity
+            android:name=".ui.product.ProductEditorActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/Theme.Do_An_Di_Dong" />
+
+        <!-- Màn hình Quản lý Kho & Tồn kho thực tế -->
+        <activity
+            android:name=".ui.inventory.WarehouseInventoryActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/Theme.Do_An_Di_Dong" />
+
+        <!-- Màn hình Biến động Kho -->
+        <activity
+            android:name=".ui.inventory.StockMovementsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Do_An_Di_Dong" />
+
+        <!-- Màn hình Kiểm kê/Điều chỉnh Kho -->
+        <activity
+            android:name=".ui.inventory.StockAdjustmentActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/Theme.Do_An_Di_Dong" />
+
+        <!-- Màn hình Đơn nhập hàng PO -->
+        <activity
+            android:name=".ui.inventory.PurchaseOrdersActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Do_An_Di_Dong" />
+
+        <!-- Màn hình Trung tâm Cố vấn AI -->
+        <activity
+            android:name=".ui.ai.AIAdvisorHubActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Do_An_Di_Dong" />
+
+        <!-- Màn hình Dự báo & Rủi ro AI -->
+        <activity
+            android:name=".ui.ai.AIPredictionDashboardActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Do_An_Di_Dong" />
+
+        <!-- Màn hình Báo cáo Tài chính -->
+        <activity
+            android:name=".ui.dashboard.FinanceDashboardActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Do_An_Di_Dong" />
+
+        <!-- Màn hình Quản lý Công nợ NCC -->
+        <activity
+            android:name=".ui.dashboard.SupplierDebtActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Do_An_Di_Dong" />
+
+        <!-- Màn hình Quản lý Khách hàng CRM -->
+        <activity
+            android:name=".ui.admin.CustomersActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Do_An_Di_Dong" />
+
+        <!-- Màn hình Nhật ký Giám sát Hệ thống -->
+        <activity
+            android:name=".ui.admin.SystemLogsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Do_An_Di_Dong" />
+
+        <!-- Màn hình Quản lý Chi phí -->
+        <activity
+            android:name=".ui.admin.ExpensesActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Do_An_Di_Dong" />
+
+    </application>
+
+</manifest>

@@ -303,3 +303,122 @@ venv.bak/
 # Project specific
 EMarket/Temp/
 EMarket/Uploads/
+!EMarket/Uploads/.gitkeep
+
+# ===================================================================
+# 1. TÀI LIỆU VĂN BẢN, BÁO CÁO (CHỈ CHẶN Ở CẤP ROOT NGOÀI CÙNG)
+# ===================================================================
+/*.docx
+/*.doc
+/*.docm
+/*.dotx
+/~$*.doc*
+/~$*.xls*
+/~$*.ppt*
+/*.xlsx
+/*.xls
+/*.xlsm
+/*.pptx
+/*.ppt
+/*.ppsx
+/*.pdf
+/*.odt
+/*.rtf
+
+# ===================================================================
+# 2. HÌNH ẢNH / DIAGRAM / TÀI LIỆU SƠ ĐỒ (CHỈ CHẶN Ở CẤP ROOT NGOÀI CÙNG)
+# ===================================================================
+/*.png
+/*.jpg
+/*.jpeg
+/*.gif
+/*.bmp
+/*.webp
+/*.svg
+/usecase_rendered.png
+/*usecase*.*
+/*diagram*.*
+/*flowchart*.*
+/*architecture*.*
+/*.drawio
+/*.drawio.*
+/*.puml
+/*.plantuml
+
+# ===================================================================
+# 3. TỆP NÉN & BACKUP TẠM THỜI (CHỈ CHẶN Ở CẤP ROOT NGOÀI CÙNG)
+# ===================================================================
+/*.zip
+/*.rar
+/*.7z
+/*.tar
+/*.gz
+/*.bak
+/*.backup
+/*.old
+/*.orig
+/*.tmp
+
+# ===================================================================
+# 4. HỆ ĐIỀU HÀNH & CÔNG CỤ SOẠN THẢO (OS, VS CODE, JETBRAINS)
+# ===================================================================
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+.vscode/
+!.vscode/extensions.json
+.idea/
+*.iml
+**/*.iml
+
+# ===================================================================
+# 5. DỰ ÁN ANDROID NATIVE (Do_An_Di_Dong)
+# ===================================================================
+Do_An_Di_Dong/.gradle/
+Do_An_Di_Dong/build/
+Do_An_Di_Dong/*/build/
+Do_An_Di_Dong/local.properties
+Do_An_Di_Dong/.idea/
+Do_An_Di_Dong/*.iml
+Do_An_Di_Dong/*/*.iml
+Do_An_Di_Dong/.externalNativeBuild/
+Do_An_Di_Dong/.cxx/
+*.apk
+*.ap_
+*.aab
+*.keystore
+*.jks
+
+# ===================================================================
+# 6. DỰ ÁN FLUTTER (do_an_flutter)
+# ===================================================================
+do_an_flutter/.dart_tool/
+do_an_flutter/build/
+do_an_flutter/.flutter-plugins
+do_an_flutter/.flutter-plugins-dependencies
+do_an_flutter/.pub-cache/
+do_an_flutter/.pub/
+do_an_flutter/android/local.properties
+do_an_flutter/android/.gradle/
+do_an_flutter/android/app/debug/
+do_an_flutter/android/app/profile/
+do_an_flutter/android/app/release/
+do_an_flutter/ios/Flutter/.last_build_id
+do_an_flutter/ios/Flutter/Generated.xcconfig
+do_an_flutter/ios/Flutter/flutter_export_environment.sh
+do_an_flutter/ios/Pods/
+do_an_flutter/ios/.symlinks/
+do_an_flutter/linux/flutter/ephemeral/
+do_an_flutter/macos/Flutter/ephemeral/
+do_an_flutter/windows/flutter/ephemeral/
+
+# ===================================================================
+# 7. BACKEND .NET & API ASSISTANT SERVICE
+# ===================================================================
+AIAssistantService/bin/
+AIAssistantService/obj/
+**/appsettings.Local.json
+**/appsettings.*.local.json
+**/secrets.json
+
